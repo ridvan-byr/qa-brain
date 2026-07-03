@@ -1,0 +1,10 @@
+{
+  "expectedFindings": ["brittle_locator"],
+  "expectedSeverity": {
+    "brittle_locator": "High"
+  },
+  "expectedRecommendation": {
+    "brittle_locator": "Replace brittle CSS chain with getByRole"
+  },
+  "targetQualityScore": 80
+}

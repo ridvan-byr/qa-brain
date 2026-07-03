@@ -92,6 +92,27 @@ export class GeminiProvider implements LLMProvider {
       };
     }
 
+    if (fileName.includes('brittle-css')) {
+      return {
+        summary: 'Review for brittle css locator chain.',
+        findings: [
+          {
+            title: 'Brittle CSS Selector Chain',
+            description: 'The test uses a deep nested CSS selector chain.',
+            severity: 'High',
+            confidence: { level: 98, justification: ['Deep nesting matched'] },
+            evidence: "await page.locator('div > div.form-container > form > div:nth-child(3) > input').fill('test');",
+            recommendation: "Replace brittle CSS chain with getByRole",
+          }
+        ],
+        strengths: [],
+        improvements: ['[ ] Replace nested locators'],
+        observations: [],
+        references: ['locator-review.md'],
+        finalVerdict: 'Needs Improvement',
+      };
+    }
+
     if (fileName.includes('pom-leak')) {
       return {
         summary: 'Review for page object selector leakage.',

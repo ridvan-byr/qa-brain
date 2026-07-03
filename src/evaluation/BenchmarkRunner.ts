@@ -61,15 +61,29 @@ export class BenchmarkRunner {
       const tpList: string[] = [];
       const fpList: string[] = [];
       const fnList: string[] = [];
+      let severityMatched = true;
+      let recommendationMatched = true;
 
       for (const expected of gt.expectedFindings) {
-        const found = result.findings.some(f => 
+        const matchingFinding = result.findings.find(f => 
           this.matchFinding(expected, f.title) || 
           this.matchFinding(expected, f.description)
         );
-        if (found) {
+        if (matchingFinding) {
           tpList.push(expected);
           totalTP++;
+
+          // Verify Severity
+          const expectedSev = gt.expectedSeverity[expected];
+          if (expectedSev && matchingFinding.severity !== expectedSev) {
+            severityMatched = false;
+          }
+
+          // Verify Recommendation (checks substring match to prevent minor variations)
+          const expectedRec = gt.expectedRecommendation[expected];
+          if (expectedRec && !matchingFinding.recommendation.toLowerCase().includes(expectedRec.toLowerCase().slice(0, 12))) {
+            recommendationMatched = false;
+          }
         } else {
           fnList.push(expected);
           totalFN++;
@@ -90,25 +104,33 @@ export class BenchmarkRunner {
 
       const isScoreMatch = result.score.qualityScore === gt.targetQualityScore;
       const isFindingsMatch = fnList.length === 0 && fpList.length === 0;
+      const isPassed = isScoreMatch && isFindingsMatch && severityMatched && recommendationMatched;
 
-      if (isScoreMatch && isFindingsMatch) {
+      const durationMs = duration * 1000;
+      const durationStr = durationMs < 1000 ? `${durationMs.toFixed(0)}ms` : `${duration.toFixed(2)}s`;
+
+      if (isPassed) {
         passed++;
-        console.log(`✓ ${specPath} - PASSED (Score: ${result.score.qualityScore}, Time: ${duration.toFixed(2)}s)`);
-        resultsLog.push(`| ${specPath} | PASS | ${gt.targetQualityScore} | ${result.score.qualityScore} | ${duration.toFixed(2)}s |`);
+        console.log(`✓ ${specPath} - PASSED (Score: ${result.score.qualityScore}, Findings: ${tpList.length}/${gt.expectedFindings.length}, Severity: ✓, Recommendation: ✓, Time: ${durationStr})`);
+        resultsLog.push(`| ${specPath} | PASS | ${gt.targetQualityScore} | ${result.score.qualityScore} | ${durationStr} |`);
       } else {
         failed++;
-        console.log(`✗ ${specPath} - FAILED (Time: ${duration.toFixed(2)}s)`);
-        console.log(`  - Expected Score: ${gt.targetQualityScore}, Actual: ${result.score.qualityScore}`);
+        console.log(`✗ ${specPath} - FAILED (Time: ${durationStr})`);
+        console.log(`  - Score Match: ${isScoreMatch ? '✓' : `✗ (Expected ${gt.targetQualityScore}, Got ${result.score.qualityScore})`}`);
+        console.log(`  - Findings Match: ${isFindingsMatch ? '✓' : '✗'}`);
+        console.log(`  - Severity Match: ${severityMatched ? '✓' : '✗'}`);
+        console.log(`  - Recommendation Match: ${recommendationMatched ? '✓' : '✗'}`);
         if (fnList.length > 0) console.log(`  - Missing expected findings: ${fnList.join(', ')}`);
         if (fpList.length > 0) console.log(`  - False positives flagged: ${fpList.join(', ')}`);
-        resultsLog.push(`| ${specPath} | FAIL | ${gt.targetQualityScore} | ${result.score.qualityScore} | ${duration.toFixed(2)}s |`);
+        resultsLog.push(`| ${specPath} | FAIL | ${gt.targetQualityScore} | ${result.score.qualityScore} | ${durationStr} |`);
       }
     }
 
     // Final calculations
     const precision = totalTP + totalFP > 0 ? (totalTP / (totalTP + totalFP)) * 100 : 100;
     const recall = totalTP + totalFN > 0 ? (totalTP / (totalTP + totalFN)) * 100 : 100;
-    const averageTime = totalTests > 0 ? totalDuration / totalTests : 0;
+    const averageTimeMs = totalTests > 0 ? (totalDuration * 1000) / totalTests : 0;
+    const averageTimeStr = averageTimeMs < 1000 ? `${averageTimeMs.toFixed(1)}ms` : `${(averageTimeMs / 1000).toFixed(2)}s`;
 
     console.log(`\n==========================================`);
     console.log(`Passed: ${passed}`);
@@ -117,7 +139,7 @@ export class BenchmarkRunner {
     console.log(`Recall: ${recall.toFixed(1)}%`);
     console.log(`False Positives: ${totalFP}`);
     console.log(`False Negatives: ${totalFN}`);
-    console.log(`Average Review Time: ${averageTime.toFixed(2)}s`);
+    console.log(`Average Review Time: ${averageTimeStr}`);
     console.log(`Regression: None`);
     console.log(`==========================================`);
 
@@ -137,7 +159,7 @@ Date: ${new Date().toISOString()}
 - **Recall**: ${recall.toFixed(1)}%
 - **False Positives**: ${totalFP}
 - **False Negatives**: ${totalFN}
-- **Average Review Time**: ${averageTime.toFixed(2)}s
+- **Average Review Time**: ${averageTimeStr}
 - **Regression**: None
 
 ## Test Runs Detail
@@ -151,13 +173,16 @@ ${resultsLog.join('\n')}
   private static matchFinding(expectedKey: string, actualText: string): boolean {
     const text = actualText.toLowerCase();
     if (expectedKey === 'brittle_locator') {
-      return text.includes('xpath') || text.includes('brittle selector') || text.includes('seçici');
+      return text.includes('xpath') || text.includes('brittle selector') || text.includes('seçici') || text.includes('brittle css');
     }
     if (expectedKey === 'selector_leak') {
       return text.includes('selector leak') || text.includes('seçici sızıntısı') || text.includes('leak');
     }
     if (expectedKey === 'shared_state') {
       return text.includes('isolation') || text.includes('shared state') || text.includes('izolasyon');
+    }
+    if (expectedKey === 'hardcoded_wait') {
+      return text.includes('hardcoded wait') || text.includes('waitfortimeout') || text.includes('timeout');
     }
     return false;
   }
@@ -166,7 +191,8 @@ ${resultsLog.join('\n')}
     const dirs = [
       'benchmarks/playwright/locator',
       'benchmarks/playwright/fixtures',
-      'benchmarks/playwright/pom'
+      'benchmarks/playwright/pom',
+      'benchmarks/playwright/waiting'
     ];
     for (const d of dirs) {
       const p = path.resolve('.', d, fileName);

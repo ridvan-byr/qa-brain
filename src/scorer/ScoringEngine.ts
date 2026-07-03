@@ -16,7 +16,12 @@ export class ScoringEngine {
 
     // 2. Quality and Maintainability Checklists
     const pomEncapsulation = this.checkPomEncapsulation(context, findings);
-    const resilientLocators = !findings.some(f => f.title.toLowerCase().includes('xpath') || f.title.toLowerCase().includes('brittle selector'));
+    const resilientLocators = !findings.some(f => 
+      f.title.toLowerCase().includes('xpath') || 
+      f.title.toLowerCase().includes('brittle selector') ||
+      f.title.toLowerCase().includes('brittle css') ||
+      f.description.toLowerCase().includes('brittle')
+    );
     const stateIsolation = !findings.some(f => f.title.toLowerCase().includes('isolation') || f.title.toLowerCase().includes('shared state'));
     const autoWaiting = !findings.some(f => f.title.toLowerCase().includes('waitfortimeout') || f.title.toLowerCase().includes('hardcoded wait'));
     const strongAssertions = !findings.some(f => f.title.toLowerCase().includes('missing assertion') || f.title.toLowerCase().includes('weak assertion'));

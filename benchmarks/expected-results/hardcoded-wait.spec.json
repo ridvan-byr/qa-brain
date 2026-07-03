@@ -1,0 +1,10 @@
+{
+  "expectedFindings": ["hardcoded_wait"],
+  "expectedSeverity": {
+    "hardcoded_wait": "High"
+  },
+  "expectedRecommendation": {
+    "hardcoded_wait": "Remove hardcoded wait and rely on Playwright auto-waiting assertions."
+  },
+  "targetQualityScore": 85
+}
