@@ -1,0 +1,10 @@
+{
+  "expectedFindings": ["brittle_locator"],
+  "expectedSeverity": {
+    "brittle_locator": "High"
+  },
+  "expectedRecommendation": {
+    "brittle_locator": "Encapsulate locator inside LoginPage class"
+  },
+  "targetQualityScore": 60
+}

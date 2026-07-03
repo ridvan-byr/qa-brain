@@ -1,10 +1,11 @@
 import type { ReviewResult } from '../types/ReviewResult';
+import type { ReviewContext } from '../types/ReviewContext';
 
 export class ReportGenerator {
   /**
    * Formats the final ReviewResult object into a structured Markdown report.
    */
-  public generateMarkdown(result: ReviewResult): string {
+  public generateMarkdown(result: ReviewResult, context: ReviewContext): string {
     let report = '';
 
     report += `# QA Brain Review Report\n\n`;
@@ -41,10 +42,19 @@ export class ReportGenerator {
     report += `  - [${result.score.maintainabilityChecklist.modularLocators ? 'x' : ' '}] Modular Locators\n\n`;
 
     report += `---\n\n## Strengths\n\n`;
-    for (const s of result.strengths) {
+    // Filter and adjust strengths based on POM bypasses
+    const strengths = [...result.strengths];
+    if (!result.score.qualityChecklist.pomEncapsulation) {
+      const index = strengths.indexOf('✓ POM encapsulation');
+      if (index !== -1) {
+        strengths.splice(index, 1);
+      }
+      strengths.push('POM structure detected but bypassed in some areas.');
+    }
+    for (const s of strengths) {
       report += `- ${s}\n`;
     }
-    if (result.strengths.length === 0) report += `None\n`;
+    if (strengths.length === 0) report += `None\n`;
 
     report += `\n---\n\n## Improvements\n\n`;
     for (const imp of result.improvements) {
@@ -53,10 +63,25 @@ export class ReportGenerator {
     if (result.improvements.length === 0) report += `None\n`;
 
     report += `\n---\n\n## Observations\n\n`;
-    for (const obs of result.observations) {
+    // Generate dynamic context-based observations
+    const observations = [...result.observations];
+    if (context.dependencies.playwrightVersion) {
+      observations.push(`✓ Repository uses Playwright ${context.dependencies.playwrightVersion}`);
+    }
+    if (context.pageObjects.length > 0) {
+      observations.push(`✓ ${context.pageObjects.length} Page Object files mapped`);
+    }
+    if (context.fixtures.length > 0) {
+      observations.push(`✓ ${context.fixtures.length} custom fixtures loaded`);
+    }
+    if (context.targetFile.detectedFeature) {
+      observations.push(`✓ Target feature domain mapped: ${context.targetFile.detectedFeature}`);
+    }
+
+    for (const obs of observations) {
       report += `- ${obs}\n`;
     }
-    if (result.observations.length === 0) report += `None\n`;
+    if (observations.length === 0) report += `None\n`;
 
     report += `\n---\n\n## References\n\n`;
     for (const ref of result.references) {

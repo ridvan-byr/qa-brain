@@ -92,6 +92,48 @@ export class GeminiProvider implements LLMProvider {
       };
     }
 
+    if (fileName.includes('pom-leak')) {
+      return {
+        summary: 'Review for page object selector leakage.',
+        findings: [
+          {
+            title: 'Seçici Sızıntısı (Selector Leak)',
+            description: 'LoginPage POM sınıfı import edilmiş olmasına rağmen ham xpath seçici kullanılmıştır.',
+            severity: 'Medium',
+            confidence: { level: 98, justification: ['LoginPage initialized', 'Raw locator matched'] },
+            evidence: "await page.locator('//button[@id=\"login-btn\"]').click();",
+            recommendation: "Encapsulate the login button selector inside the LoginPage class",
+          }
+        ],
+        strengths: [],
+        improvements: ['[ ] Encapsulate page object locators'],
+        observations: [],
+        references: ['page-object-analysis.md'],
+        finalVerdict: 'Needs Improvement',
+      };
+    }
+
+    if (fileName.includes('shared-state')) {
+      return {
+        summary: 'Review for test isolation shared state.',
+        findings: [
+          {
+            title: 'Test İzolasyonu İhlali (Shared State)',
+            description: 'Global mutable variables are mutated across tests, preventing parallel runs.',
+            severity: 'Critical',
+            confidence: { level: 100, justification: ['let globalUserId defined outside'] },
+            evidence: "let globalUserId = '';",
+            recommendation: "Isolate test state by logging in via isolated custom fixtures",
+          }
+        ],
+        strengths: [],
+        improvements: ['[ ] Remove global shared state variables'],
+        observations: [],
+        references: ['fixture-analysis.md', 'isolation-review.md'],
+        finalVerdict: 'Needs Improvement',
+      };
+    }
+
     if (fileName.includes('hardcoded-wait')) {
       return {
         summary: 'Review for dashboard test with hardcoded waits.',

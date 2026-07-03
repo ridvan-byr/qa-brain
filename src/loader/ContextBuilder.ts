@@ -207,13 +207,32 @@ export class ContextBuilder {
   }
 
   private detectFeature(filePath: string, content: string): string {
-    const combined = (filePath + ' ' + content).toLowerCase();
+    const describeMatch = content.match(/test\.describe\s*\(\s*['"]([^'"]+)['"]/i);
+    const describeTitle = describeMatch ? describeMatch[1].toLowerCase() : '';
+
+    const importedPOMs: string[] = [];
+    const importMatches = content.matchAll(/import\s+.*\b([a-zA-Z0-9_]+Page)\b/g);
+    for (const match of importMatches) {
+      if (match[1]) importedPOMs.push(match[1].toLowerCase());
+    }
+
+    const combined = (filePath + ' ' + describeTitle + ' ' + importedPOMs.join(' ') + ' ' + content).toLowerCase();
     
-    if (combined.includes('login') || combined.includes('auth') || combined.includes('session')) return 'Authentication';
-    if (combined.includes('search') || combined.includes('filter')) return 'Search';
-    if (combined.includes('checkout') || combined.includes('payment') || combined.includes('cart')) return 'Checkout';
-    if (combined.includes('upload') || combined.includes('download')) return 'File Management';
-    if (combined.includes('api/') || combined.includes('request.')) return 'API';
+    if (combined.includes('login') || combined.includes('auth') || combined.includes('session') || combined.includes('signin') || combined.includes('loginpage')) {
+      return 'Authentication';
+    }
+    if (combined.includes('search') || combined.includes('filter') || combined.includes('searchpage')) {
+      return 'Search';
+    }
+    if (combined.includes('checkout') || combined.includes('payment') || combined.includes('cart') || combined.includes('checkoutpage') || combined.includes('cartpage')) {
+      return 'Checkout';
+    }
+    if (combined.includes('upload') || combined.includes('download') || combined.includes('file')) {
+      return 'File Management';
+    }
+    if (combined.includes('api/') || combined.includes('request.') || combined.includes('http')) {
+      return 'API';
+    }
     
     return 'General UI';
   }

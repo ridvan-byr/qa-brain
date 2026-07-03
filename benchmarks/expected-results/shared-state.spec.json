@@ -1,0 +1,10 @@
+{
+  "expectedFindings": ["shared_state"],
+  "expectedSeverity": {
+    "shared_state": "Critical"
+  },
+  "expectedRecommendation": {
+    "shared_state": "Isolate test state by logging in via isolated custom fixtures"
+  },
+  "targetQualityScore": 80
+}

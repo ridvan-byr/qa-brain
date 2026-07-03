@@ -1,0 +1,10 @@
+{
+  "expectedFindings": ["selector_leak"],
+  "expectedSeverity": {
+    "selector_leak": "Medium"
+  },
+  "expectedRecommendation": {
+    "selector_leak": "Encapsulate the login button selector inside the LoginPage class"
+  },
+  "targetQualityScore": 80
+}
