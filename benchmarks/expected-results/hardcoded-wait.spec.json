@@ -1,4 +1,6 @@
 {
+  "id": "WAITING_001",
+  "category": "Waiting",
   "expectedFindings": ["hardcoded_wait"],
   "expectedSeverity": {
     "hardcoded_wait": "High"

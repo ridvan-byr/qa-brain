@@ -1,13 +1,17 @@
 {
   "name": "qa-brain",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "AI-powered QA Knowledge Base for Playwright Test Design, Review and Test Generation.",
   "main": "index.js",
+  "bin": {
+    "qa-brain": "./dist/src/cli.js"
+  },
   "directories": {
     "doc": "docs",
     "example": "examples"
   },
   "scripts": {
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

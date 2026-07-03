@@ -1,4 +1,6 @@
 {
+  "id": "FIXTURE_001",
+  "category": "Fixture",
   "expectedFindings": ["shared_state"],
   "expectedSeverity": {
     "shared_state": "Critical"

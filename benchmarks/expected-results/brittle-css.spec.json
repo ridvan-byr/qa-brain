@@ -1,4 +1,6 @@
 {
+  "id": "LOCATOR_002",
+  "category": "Locator",
   "expectedFindings": ["brittle_locator"],
   "expectedSeverity": {
     "brittle_locator": "High"

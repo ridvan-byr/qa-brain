@@ -55,15 +55,22 @@ This roadmap details completed sprints and outlines the path toward building the
 - [x] Implemented decoupled ReviewPipeline, neutral ContextBuilder, and Gemini LLM provider.
 - [x] Decoupled mathematical ScoringEngine and ReportGenerator.
 
+### ✅ Sprint 7 — Calibration & Benchmark Suite
+- [x] Established programmatic evaluation and benchmark dataset under `benchmarks/`.
+- [x] Coded `BenchmarkRunner.ts` to calculate Precision, Recall, and False Positives.
+- [x] Integrated rule-routing optimization stats and millisecond-based execution tracking.
+- [x] Calibrated findings deduplication and css/xpath resilient locator checks.
+
 ---
 
 ## Future Roadmap
 
-### ⬜ Sprint 7 — Calibration & Benchmark Suite
-- **Objective**: Establish evaluation/ benchmarks dataset and calculate Precision, Recall, and False Positives to calibrate AI review quality to Senior QA levels.
-
-### ⬜ Sprint 8 — CLI
-- **Objective**: Develop a command-line interface supporting `qa-brain review .` for local terminal-based analysis.
+### ✅ Sprint 8 — CLI & Real Repository Scanning
+- [x] CLI entry point (`src/cli.ts`) with `review`, `benchmark`, `--help`, `--version`, `--verbose`, `--format`, `--output`, `--provider`, `--config` support.
+- [x] Recursive directory scanning with progress tracking and Repository Summary output.
+- [x] Exit Code 1 on critical/high findings for CI/CD compatibility.
+- [x] TypeScript compilation to `dist/` and global `npm link` registration.
+- [x] Professional `README.md` with CLI usage guide, architecture diagram, and benchmark results.
 
 ### ⬜ Sprint 9 — GitHub Action
 - **Objective**: Integrate with CI/CD to scan PR diffs and post structured markdown review comments directly to GitHub PRs.

@@ -1,4 +1,6 @@
 {
+  "id": "POM_001",
+  "category": "POM",
   "expectedFindings": ["selector_leak"],
   "expectedSeverity": {
     "selector_leak": "Medium"
