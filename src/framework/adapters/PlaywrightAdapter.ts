@@ -5,6 +5,7 @@ import type {
   FrameworkSignal,
   KnowledgeProfile,
 } from '../types';
+import { getBaseKnowledgeFiles, getKnowledgeFilesForSignals } from '../KnowledgeProfiles';
 
 export class PlaywrightAdapter implements FrameworkAdapter {
   public readonly name = 'playwright';
@@ -57,35 +58,27 @@ export class PlaywrightAdapter implements FrameworkAdapter {
   }
 
   public knowledgeProfile(signals: FrameworkSignal[]): KnowledgeProfile {
-    const ruleFiles = new Set<string>();
-    const genericKnowledgeFiles = new Set<string>();
+    const routingSignals = new Set<string>();
 
     for (const signal of signals) {
       if (signal.ruleHints.includes('locator')) {
-        ruleFiles.add('knowledge/playwright/review-rules/locator-review.md');
-        ruleFiles.add('knowledge/playwright/fundamentals/locators.md');
-        genericKnowledgeFiles.add('knowledge/google/maintainability.md');
+        routingSignals.add('Locator');
       }
       if (signal.ruleHints.includes('waiting')) {
-        ruleFiles.add('knowledge/playwright/review-rules/waiting-review.md');
-        ruleFiles.add('knowledge/playwright/fundamentals/auto-waiting.md');
-        genericKnowledgeFiles.add('knowledge/google/flaky-tests.md');
+        routingSignals.add('Timeout');
       }
       if (signal.ruleHints.includes('isolation')) {
-        ruleFiles.add('knowledge/playwright/review-rules/isolation-review.md');
-        ruleFiles.add('knowledge/playwright/review-rules/parallel-review.md');
-        genericKnowledgeFiles.add('knowledge/google/test-isolation.md');
+        routingSignals.add('Isolation');
       }
       if (signal.ruleHints.includes('assertion')) {
-        ruleFiles.add('knowledge/playwright/review-rules/assertion-review.md');
-        ruleFiles.add('knowledge/playwright/fundamentals/assertions.md');
+        routingSignals.add('Assertion');
       }
     }
 
     return {
-      baseKnowledgeFiles: ['knowledge/playwright/README.md'],
-      ruleFiles: Array.from(ruleFiles),
-      genericKnowledgeFiles: Array.from(genericKnowledgeFiles),
+      baseKnowledgeFiles: getBaseKnowledgeFiles('playwright'),
+      ruleFiles: getKnowledgeFilesForSignals('playwright', routingSignals),
+      genericKnowledgeFiles: [],
     };
   }
 

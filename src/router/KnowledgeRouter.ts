@@ -1,6 +1,6 @@
 import type { ReviewContext } from '../types/ReviewContext';
-import type { FrameworkSignal } from '../framework/types';
-import { getKnowledgeFilesForSignals } from './RuleMapping';
+import type { FrameworkName, FrameworkSignal } from '../framework/types';
+import { getBaseKnowledgeFiles, getKnowledgeFilesForSignals } from '../framework/KnowledgeProfiles';
 
 export class KnowledgeRouter {
   /**
@@ -11,19 +11,17 @@ export class KnowledgeRouter {
     const content = context.targetFile.content;
     const frameworkBehaviorContext = this.isFrameworkBehaviorContext(context.targetFile.filePath, content);
 
-    // Framework-specific base load
-    if (context.targetFile.detectedFramework === 'Playwright') {
-      files.push('knowledge/playwright/README.md');
-    }
-
     // Stop Loading Rule: If not a supported framework, stop loading rules
     if (context.targetFile.detectedFramework === 'Unknown') {
       return [];
     }
 
+    const framework = this.resolveFrameworkName(context);
+    files.push(...getBaseKnowledgeFiles(framework));
+
     const signals = this.resolveRoutingSignals(context, frameworkBehaviorContext);
 
-    files.push(...getKnowledgeFilesForSignals(signals));
+    files.push(...getKnowledgeFilesForSignals(framework, signals));
 
     // Feature-specific routing
     if (context.targetFile.detectedFeature === 'Authentication') {
@@ -35,6 +33,18 @@ export class KnowledgeRouter {
     }
 
     return files;
+  }
+
+  private resolveFrameworkName(context: ReviewContext): FrameworkName {
+    if (context.framework?.adapterName) {
+      return context.framework.adapterName;
+    }
+
+    if (context.targetFile.detectedFramework === 'Playwright') {
+      return 'playwright';
+    }
+
+    return 'unknown';
   }
 
   private resolveRoutingSignals(context: ReviewContext, frameworkBehaviorContext: boolean): Set<string> {

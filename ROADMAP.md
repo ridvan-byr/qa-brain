@@ -155,8 +155,9 @@ Out of scope:
 - [x] Keep benchmark suite and validation smoke green.
 
 Architecture Freeze milestone before Sprint 13C:
-- Run one focused dependency and routing review before Selenium implementation starts.
-- Do not add new product features during this milestone.
+- [x] Run one focused dependency and routing review before Selenium implementation starts.
+- [x] Do not add new product features during this milestone.
+- [x] Publish `docs/architecture-freeze-sprint-13.md`.
 
 ### ⬜ Sprint 13C — Selenium WebDriver Adapter
 - **Objective**: Add first-class adapter foundation for Selenium WebDriver for Node.js.
