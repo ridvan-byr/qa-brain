@@ -1,0 +1,116 @@
+{
+  "name": "qa-brain-vscode-client",
+  "displayName": "QA Brain",
+  "description": "VS Code client for QA Brain rule-only Playwright test reviews.",
+  "version": "0.1.0",
+  "publisher": "qa-brain",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Testing",
+    "Linters"
+  ],
+  "activationEvents": [
+    "onCommand:qaBrain.reviewCurrentFile",
+    "onCommand:qaBrain.reviewSelection",
+    "onCommand:qaBrain.reviewChangedFiles",
+    "onCommand:qaBrain.openLatestReport",
+    "onCommand:qaBrain.clearDiagnostics",
+    "onLanguage:typescript",
+    "onLanguage:javascript"
+  ],
+  "main": "./out/src/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "qaBrain.reviewCurrentFile",
+        "title": "QA Brain: Review Current Test File"
+      },
+      {
+        "command": "qaBrain.reviewSelection",
+        "title": "QA Brain: Review Selection"
+      },
+      {
+        "command": "qaBrain.reviewChangedFiles",
+        "title": "QA Brain: Review Changed Files"
+      },
+      {
+        "command": "qaBrain.openLatestReport",
+        "title": "QA Brain: Open Latest Report"
+      },
+      {
+        "command": "qaBrain.clearDiagnostics",
+        "title": "QA Brain: Clear Diagnostics"
+      }
+    ],
+    "configuration": {
+      "title": "QA Brain",
+      "properties": {
+        "qaBrain.reviewMode": {
+          "type": "string",
+          "default": "rule-only",
+          "enum": [
+            "rule-only"
+          ],
+          "description": "Review mode. Sprint 12 supports rule-only mode."
+        },
+        "qaBrain.reviewOnSave": {
+          "type": "boolean",
+          "default": false,
+          "description": "Run QA Brain when a supported test file is saved."
+        },
+        "qaBrain.openReportAfterReview": {
+          "type": "boolean",
+          "default": false,
+          "description": "Open the generated Markdown report after each review."
+        },
+        "qaBrain.includePatterns": {
+          "type": "array",
+          "default": [
+            "**/*.spec.ts",
+            "**/*.test.ts",
+            "**/*.spec.js",
+            "**/*.test.js"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "File patterns eligible for QA Brain review."
+        },
+        "qaBrain.excludePatterns": {
+          "type": "array",
+          "default": [
+            "**/node_modules/**",
+            "**/dist/**",
+            "**/build/**"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "File patterns excluded from QA Brain review."
+        },
+        "qaBrain.showDiagnostics": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show QA Brain findings in the Problems panel."
+        },
+        "qaBrain.showCodeLens": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show QA Brain CodeLens summary on supported test files."
+        },
+        "qaBrain.showStatusBar": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show QA Brain status bar item."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ."
+  },
+  "devDependencies": {}
+}

@@ -109,8 +109,18 @@ Follow-up after Sprint 11:
 - Add per-test-block assertion analysis instead of file-level assertion detection.
 - Run LLM provider comparison after OpenAI/Gemini/Claude API usage is available.
 
-### ⬜ Sprint 12 — VS Code Extension
-- **Objective**: Provide native VS Code integration for inline test review feedback.
+### ✅ Sprint 12 — VS Code Client
+- **Objective**: Provide native VS Code client integration for rule-only Playwright test review feedback.
+- **Status**: Completed.
+- [x] Planned VS Code Client MVP scope in `docs/implementation-plan.md`.
+- [x] Created isolated extension package under `extensions/vscode`.
+- [x] Added rule-only review integration using the existing QA Brain core pipeline.
+- [x] Added commands for current file, selection, changed files, latest report, and diagnostics clearing.
+- [x] Added Problems panel diagnostics, Output Channel report, Status Bar, and CodeLens support.
+- [x] Added config defaults for `reviewOnSave`, `openReportAfterReview`, diagnostics, CodeLens, and Status Bar.
+- [x] Added graceful review error handling with user-facing notifications.
+- [x] Verified Extension Development Host smoke test on local VS Code setup.
+- [x] Completed final build/test/benchmark validation with no regression.
 
 ### ⬜ Sprint 13 — Multi-framework Support
 - **Objective**: Expand rule sets to support Cypress, Selenium, and other test frameworks.

@@ -233,6 +233,122 @@ Bu rapor, QA Brain'in yalnizca calisan bir review araci degil, dogrulugu olculmu
 
 ## Playwright Tam Destek Track
 
+## Sprint 12 - VS Code Client MVP
+
+### Amac
+
+QA Brain'i VS Code icinde API key gerektirmeyen, hizli, rule-only calisan bir gelistirici deneyimi olarak sunmak.
+
+Bu sprintte yazilan sey sadece bir extension degil, QA Brain'in ilk GUI/client deneyimi olarak ele alinmalidir. Bu nedenle isimlendirme `VS Code Client` olarak dusunulmelidir.
+
+### Ana Kararlar
+
+- Ilk surum Rule Only olacak.
+- Mevcut QA Brain core pipeline yeniden kullanilacak; ikinci bir review motoru yazilmayacak.
+- Extension ayri klasorde tutulacak: `extensions/vscode`.
+- Repository review bu sprintte eklenmeyecek.
+- LLM provider secimi bu sprintte eklenmeyecek.
+- API key olmadan calismak zorunlu olacak.
+
+### Scope
+
+- Aktif Playwright test dosyasi review edilecek.
+- Secili kod blogu review edilecek.
+- Changed files review edilecek.
+- Problems panel diagnostics uretilecek.
+- Output Channel okunabilir review raporu gosterecek.
+- Status Bar durum gosterecek.
+- CodeLens temel ozet ve `Review Again` aksiyonu gosterecek.
+- Markdown report acilabilecek.
+- `reviewOnSave` default kapali olacak.
+- `openReportAfterReview` default kapali olacak.
+- Review hatalari extension'i cokertmeyecek; kullaniciya anlamli notification gosterilecek.
+
+### Komutlar
+
+- `QA Brain: Review Current Test File`
+- `QA Brain: Review Selection`
+- `QA Brain: Review Changed Files`
+- `QA Brain: Open Latest Report`
+- `QA Brain: Clear Diagnostics`
+
+### Config
+
+- `qaBrain.reviewMode`: `rule-only`
+- `qaBrain.reviewOnSave`: `false`
+- `qaBrain.openReportAfterReview`: `false`
+- `qaBrain.includePatterns`
+- `qaBrain.excludePatterns`
+- `qaBrain.showDiagnostics`
+- `qaBrain.showCodeLens`
+- `qaBrain.showStatusBar`
+
+### UX Flow
+
+```text
+Open Playwright test file
+  -> QA Brain Ready
+  -> QA Brain: Review Current Test File
+  -> Progress notification
+  -> Problems panel diagnostics
+  -> Output Channel report
+  -> CodeLens summary
+  -> Optional Markdown report
+```
+
+### Output Channel Format
+
+```text
+QA Brain Review
+login.spec.ts
+
+Quality: 84
+Risk: Medium
+Findings: 2
+
+----------------
+WARNING
+XPath Locator
+Recommendation:
+Use getByRole().
+```
+
+### Acceptance Criteria
+
+- Extension build edilebilmeli.
+- `Review Current Test File` calismali.
+- `Review Selection` calismali.
+- `Review Changed Files` calismali.
+- Problems panel diagnostics uretmeli.
+- Output Channel okunabilir rapor gostermeli.
+- Status Bar durum gostermeli.
+- CodeLens temel ozet gostermeli.
+- `reviewOnSave=false` default olmali.
+- `openReportAfterReview=false` default olmali.
+- API key olmadan calismali.
+- Review sirasinda VS Code UI donmus gibi gorunmemeli.
+- Review hatasi extension'i cokertmemeli; kullaniciya anlamli bildirim gostermeli.
+- Extension, VS Code Extension Development Host uzerinden Windows, macOS ve Linux hedefleriyle uyumlu olacak sekilde path/platform varsayimlarindan kacinmali.
+- Mevcut CLI/build/test/benchmark bozulmamali.
+- README'e VS Code usage bolumu eklenmeli.
+- ROADMAP Sprint 12 sonunda guncellenmeli.
+
+### Out of Scope
+
+- Review Repository
+- Auto-fix
+- Inline quick fix
+- Marketplace publish
+- LLM provider selection
+- OpenAI/Gemini/Claude comparison
+- Webview dashboard
+- Full repository dashboard
+- Selenium support
+
+### Sprint Sonu Beklenen Cikti
+
+Sprint sonunda QA Brain, VS Code icinde aktif Playwright test dosyasini ve secili kod blogunu rule-only mode ile inceleyebilmeli; bulgulari Problems panelinde, ozeti Output Channel'da ve dosya durumunu Status Bar / CodeLens uzerinde gosterebilmelidir.
+
 Playwright icin tam destek su alanlari kapsamalidir:
 
 - Playwright config analizi

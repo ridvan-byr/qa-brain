@@ -1,0 +1,32 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build QA Brain core",
+      "type": "shell",
+      "command": "npm",
+      "args": [
+        "run",
+        "build",
+        "--prefix",
+        "${workspaceFolder}/../.."
+      ],
+      "problemMatcher": "$tsc"
+    },
+    {
+      "label": "compile VS Code client",
+      "type": "npm",
+      "script": "compile",
+      "problemMatcher": "$tsc"
+    },
+    {
+      "label": "build QA Brain VS Code Client",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "build QA Brain core",
+        "compile VS Code client"
+      ],
+      "problemMatcher": []
+    }
+  ]
+}
