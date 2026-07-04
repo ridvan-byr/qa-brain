@@ -4,6 +4,8 @@ import { PRCommentFormatter, type PRReviewSummary } from '../../src/reporter/PRC
 import { ReviewPipeline } from '../../src/core/ReviewPipeline';
 import { GeminiProvider } from '../../src/reviewer/GeminiProvider';
 import { AdapterRegistry } from '../../src/framework/AdapterRegistry';
+import { KnowledgeRouter } from '../../src/router/KnowledgeRouter';
+import { PLAYWRIGHT_ROUTING_RULES } from '../../src/router/RuleMapping';
 
 function testDiffDetector() {
   console.log('Testing DiffDetector...');
@@ -150,6 +152,88 @@ function testFrameworkAdapterRegistry() {
   console.log('✓ FrameworkAdapter registry tests passed.');
 }
 
+function testKnowledgeRouterSignalRouting() {
+  console.log('Testing KnowledgeRouter signal routing...');
+
+  const router = new KnowledgeRouter();
+  const baseContext = {
+    repositoryInfo: { path: '.', structure: {} },
+    dependencies: {
+      devDependencies: {},
+      dependencies: {},
+      hasESLint: false,
+      hasPrettier: false,
+      hasHusky: false,
+      hasLintStaged: false,
+    },
+    configuration: {},
+    pageObjects: [],
+    fixtures: [],
+    targetFile: {
+      filePath: 'tests/login.spec.ts',
+      detectedFramework: 'Playwright',
+      detectedFeature: 'General UI',
+      content: "test('login', async ({ page }) => { await page.click('button'); });",
+    },
+  };
+
+  const signalRoutedFiles = router.routeKnowledge({
+    ...baseContext,
+    framework: {
+      adapterName: 'playwright',
+      context: {
+        framework: 'playwright',
+        targetFile: baseContext.targetFile,
+      },
+      signals: [
+        {
+          type: 'locator',
+          framework: 'playwright',
+          ruleHints: ['locator'],
+          evidence: "await page.click('button');",
+          location: { file: 'tests/login.spec.ts' },
+        },
+      ],
+      knowledgeProfile: {
+        baseKnowledgeFiles: [],
+        ruleFiles: [],
+        genericKnowledgeFiles: [],
+      },
+    },
+  });
+
+  assert.ok(signalRoutedFiles.includes('knowledge/playwright/review-rules/locator-review.md'));
+
+  const fallbackRoutedFiles = router.routeKnowledge({
+    ...baseContext,
+    targetFile: {
+      ...baseContext.targetFile,
+      content: "test('login', async ({ page }) => { await page.locator('//button').click(); });",
+    },
+  });
+
+  assert.ok(fallbackRoutedFiles.includes('knowledge/playwright/review-rules/locator-review.md'));
+
+  console.log('✓ KnowledgeRouter signal routing tests passed.');
+}
+
+function testRuleMappingContract() {
+  console.log('Testing rule mapping contract...');
+
+  const missingAssertion = PLAYWRIGHT_ROUTING_RULES.find(mapping => mapping.rule === 'Missing Assertion');
+  const brittleLocator = PLAYWRIGHT_ROUTING_RULES.find(mapping => mapping.rule === 'Brittle Locator');
+
+  assert.ok(missingAssertion);
+  assert.strictEqual(missingAssertion.generic, true);
+  assert.deepStrictEqual(missingAssertion.adapterEvidence, ['AssertionSignal']);
+
+  assert.ok(brittleLocator);
+  assert.strictEqual(brittleLocator.generic, false);
+  assert.deepStrictEqual(brittleLocator.adapterEvidence, ['Playwright LocatorSignal']);
+
+  console.log('✓ Rule mapping contract tests passed.');
+}
+
 async function testDeterministicRuleFallback() {
   console.log('Testing deterministic rule fallback...');
 
@@ -168,6 +252,8 @@ async function runAll() {
     testPRCommentFormatter();
     testScanner();
     testFrameworkAdapterRegistry();
+    testKnowledgeRouterSignalRouting();
+    testRuleMappingContract();
     await testDeterministicRuleFallback();
     console.log('\nAll integration tests passed successfully!');
   } catch (error) {

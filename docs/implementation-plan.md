@@ -528,6 +528,114 @@ Sprint 13D - Selenium Real Repository Validation
 - Test Design Engine
 - Marketplace publish
 
+### Sprint 13B Final Plan - Playwright Adapter Migration + Generic Rules
+
+Sprint goal:
+
+```text
+Migrate Playwright review flow to the adapter architecture without changing observable behavior.
+```
+
+#### Scope
+
+- `KnowledgeRouter`, `ReviewContext.framework.signals` okumaya baslayacak.
+- Signal varsa signal-based routing kullanilacak.
+- Signal yoksa mevcut heuristic routing fallback olarak korunacak.
+- Playwright locator, wait, assertion, isolation ve POM sinyalleri adapter uzerinden route edilecek.
+- Generic rule ile adapter evidence ayrimi dokumante edilecek.
+- Playwright benchmark ciktilarinda observable behavior degismeyecek.
+- CLI, GitHub Action, MCP ve VS Code Client davranisi korunacak.
+
+#### Out of Scope
+
+- Selenium implementation
+- Cypress/WebdriverIO/Appium support
+- Package/plugin split
+- Report UX polish
+- Test Design Engine
+- Buyuk klasor reorganizasyonu
+
+#### FrameworkSignal Contract
+
+Framework signal sozlesmesi asagidaki prensiplerle korunmalidir:
+
+- Stable: Rule engine tarafinda kullanilan signal alanlari sik degismemelidir.
+- Minimal: Signal sadece routing ve evidence icin gereken bilgiyi tasimalidir.
+- Framework-owned: Signal uretimi framework adapter sorumlulugunda olmalidir.
+- Rule-engine agnostic: Core rule engine framework API detaylarini bilmemelidir.
+
+#### Rule Mapping Matrix
+
+| Rule | Generic | Adapter Evidence |
+| :--- | :---: | :--- |
+| Missing Assertion | Yes | AssertionSignal |
+| Weak Assertion | Yes | AssertionSignal |
+| Test Isolation | Yes | LifecycleSignal |
+| Duplicate Setup | Yes | StructureSignal |
+| POM Encapsulation | Yes | LocatorSignal + StructureSignal |
+| Naming / Readability | Yes | StructureSignal |
+| Brittle Locator | No | Playwright LocatorSignal |
+| Auto Waiting | No | Playwright WaitSignal |
+| Fixture Usage | No | Playwright FixtureSignal |
+| Parallel Execution | No | Playwright LifecycleSignal |
+
+Rule generic olabilir; framework-specific olan kisim adapter tarafindan saglanan evidence/signal'dir.
+
+#### Migration Checklist
+
+- [x] Locator routing migrated
+- [x] Wait routing migrated
+- [x] Assertion routing migrated
+- [x] Isolation routing migrated
+- [x] POM evidence signal preserved without adding new routing behavior
+- [x] Heuristic fallback preserved
+- [x] Adapter registry tests expanded
+- [x] Rule mapping contract tests added
+- [x] Review output unchanged for existing Playwright benchmark cases
+- [x] Benchmark and validation smoke passed
+
+#### Architecture Validation
+
+- `KnowledgeRouter` Playwright-specific module import etmemelidir.
+- PlaywrightAdapter coverage mevcut heuristic coverage'dan dusuk olmamalidir.
+- No measurable increase in false positives on existing benchmark suite.
+- Existing Playwright benchmark cases icin review output semantic olarak degismemelidir.
+
+#### Architecture Diagram
+
+```text
+Repository
+  -> Framework Adapter
+  -> Framework Signals
+  -> Knowledge Router
+  -> Rule Engine
+  -> Scoring
+  -> Report
+```
+
+#### Risk
+
+- Signal generation drift: Adapter signal'lari gelecekte rule beklentileriyle uyumsuz hale gelebilir.
+- Mitigation: Signal contract kucuk tutulacak, adapter tests ile sabitlenecek ve gerekirse version'lanacak.
+
+#### Architecture Freeze Milestone
+
+Sprint 13B tamamlandiktan sonra Sprint 13C Selenium implementasyonuna gecmeden once kisa bir Architecture Freeze milestone'i planlanmalidir.
+
+Bu milestone bir sprint olarak roadmap'e eklenmeyebilir. Amac yeni ozellik eklemek degil; benchmark, validation, dokumantasyon ve bagimlilik analizini temizlemektir.
+
+#### Sprint 13B Implementation Notes
+
+- `KnowledgeRouter`, adapter signal varsa signal-based routing kullanacak sekilde guncellendi.
+- Adapter signal yoksa mevcut heuristic routing fallback olarak korunur.
+- `RuleMapping` modulu eklendi ve generic rule ile adapter evidence ayrimi kod tarafinda sabitlendi.
+- POM icin yeni route eklenmedi; mevcut Playwright POM benchmark davranisi locator evidence uzerinden korunur.
+- `KnowledgeRouter` signal routing ve heuristic fallback davranisi otomatik test ile sabitlendi.
+- Rule mapping contract testleri eklendi.
+- Benchmark sonucu: `7/7`, regression yok.
+- Sprint 11 validation smoke sonucu: 10 repository, 229 dosya, 2 finding.
+- VS Code Client compile smoke gecti.
+
 ## Report UX Improvement Backlog
 
 Bu backlog Sprint 13A mimari isinden ayridir. Amac QA Brain raporlarini sadece finding listesi olmaktan cikarip kanita dayali, ogretici ve enterprise ekipler icin okunabilir kalite raporlarina donusturmektir.

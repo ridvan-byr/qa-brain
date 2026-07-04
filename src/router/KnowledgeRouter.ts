@@ -1,4 +1,6 @@
 import type { ReviewContext } from '../types/ReviewContext';
+import type { FrameworkSignal } from '../framework/types';
+import { getKnowledgeFilesForSignals } from './RuleMapping';
 
 export class KnowledgeRouter {
   /**
@@ -19,6 +21,53 @@ export class KnowledgeRouter {
       return [];
     }
 
+    const signals = this.resolveRoutingSignals(context, frameworkBehaviorContext);
+
+    files.push(...getKnowledgeFilesForSignals(signals));
+
+    // Feature-specific routing
+    if (context.targetFile.detectedFeature === 'Authentication') {
+      files.push('knowledge/owasp/authentication-testing.md');
+      files.push('knowledge/istqb/boundary-value-analysis.md');
+    } else if (context.targetFile.detectedFeature === 'Search') {
+      files.push('knowledge/owasp/input-validation.md');
+      files.push('knowledge/unicode/unicode-testing.md');
+    }
+
+    return files;
+  }
+
+  private resolveRoutingSignals(context: ReviewContext, frameworkBehaviorContext: boolean): Set<string> {
+    const adapterSignals = context.framework?.signals || [];
+    if (adapterSignals.length > 0) {
+      return this.mapAdapterSignals(adapterSignals, frameworkBehaviorContext);
+    }
+
+    return this.detectHeuristicSignals(context.targetFile.content, frameworkBehaviorContext);
+  }
+
+  private mapAdapterSignals(adapterSignals: FrameworkSignal[], frameworkBehaviorContext: boolean): Set<string> {
+    const signals = new Set<string>();
+
+    for (const signal of adapterSignals) {
+      if (signal.type === 'locator') {
+        signals.add('Locator');
+      }
+      if (signal.type === 'wait') {
+        signals.add('Timeout');
+      }
+      if (signal.type === 'lifecycle') {
+        signals.add('Isolation');
+      }
+      if (signal.type === 'assertion' && !frameworkBehaviorContext) {
+        signals.add('Assertion');
+      }
+    }
+
+    return signals;
+  }
+
+  private detectHeuristicSignals(content: string, frameworkBehaviorContext: boolean): Set<string> {
     const signals = new Set<string>();
 
     // 1. Signal: Locator (XPath, CSS, locator calls)
@@ -41,40 +90,7 @@ export class KnowledgeRouter {
       signals.add('Assertion');
     }
 
-    // Map Signals to Knowledge files
-    if (signals.has('Locator')) {
-      files.push('knowledge/playwright/review-rules/locator-review.md');
-      files.push('knowledge/playwright/fundamentals/locators.md');
-      files.push('knowledge/google/maintainability.md');
-    }
-
-    if (signals.has('Timeout')) {
-      files.push('knowledge/playwright/review-rules/waiting-review.md');
-      files.push('knowledge/playwright/fundamentals/auto-waiting.md');
-      files.push('knowledge/google/flaky-tests.md');
-    }
-
-    if (signals.has('Isolation')) {
-      files.push('knowledge/playwright/review-rules/isolation-review.md');
-      files.push('knowledge/playwright/review-rules/parallel-review.md');
-      files.push('knowledge/google/test-isolation.md');
-    }
-
-    if (signals.has('Assertion')) {
-      files.push('knowledge/playwright/review-rules/assertion-review.md');
-      files.push('knowledge/playwright/fundamentals/assertions.md');
-    }
-
-    // Feature-specific routing
-    if (context.targetFile.detectedFeature === 'Authentication') {
-      files.push('knowledge/owasp/authentication-testing.md');
-      files.push('knowledge/istqb/boundary-value-analysis.md');
-    } else if (context.targetFile.detectedFeature === 'Search') {
-      files.push('knowledge/owasp/input-validation.md');
-      files.push('knowledge/unicode/unicode-testing.md');
-    }
-
-    return files;
+    return signals;
   }
 
   private hasTopLevelMutableState(content: string): boolean {

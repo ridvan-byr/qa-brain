@@ -142,13 +142,21 @@ Out of scope:
 - Test Design Engine.
 - Marketplace publish.
 
-### ⬜ Sprint 13B — Playwright Adapter Migration + Generic Rules
+### ✅ Sprint 13B — Playwright Adapter Migration + Generic Rules
 - **Objective**: Move current Playwright behavior behind the adapter layer and separate generic QA rules from framework-specific rules.
-- **Status**: Planned.
-- [ ] Migrate Playwright detection and signals into `PlaywrightAdapter`.
-- [ ] Separate generic rules from Playwright-specific rules.
-- [ ] Preserve existing CLI, GitHub Action, MCP, and VS Code Client behavior.
-- [ ] Keep benchmark suite and validation smoke green.
+- **Status**: Completed.
+- [x] Migrate Playwright routing signals into `PlaywrightAdapter`.
+- [x] Route Playwright knowledge from `FrameworkSignal` when available.
+- [x] Preserve heuristic fallback when framework signals are unavailable.
+- [x] Separate generic rules from Playwright-specific rules through `RuleMapping`.
+- [x] Add rule mapping and architecture validation notes.
+- [x] Preserve existing Playwright benchmark output semantics.
+- [x] Preserve existing CLI, GitHub Action, MCP, and VS Code Client behavior.
+- [x] Keep benchmark suite and validation smoke green.
+
+Architecture Freeze milestone before Sprint 13C:
+- Run one focused dependency and routing review before Selenium implementation starts.
+- Do not add new product features during this milestone.
 
 ### ⬜ Sprint 13C — Selenium WebDriver Adapter
 - **Objective**: Add first-class adapter foundation for Selenium WebDriver for Node.js.
