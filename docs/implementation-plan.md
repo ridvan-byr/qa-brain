@@ -777,6 +777,8 @@ Bir framework README'de Stable / Supported olarak isaretlenmeden once su checkli
 - False positive / false negative calibration
 - Documentation
 
+Framework support seviyeleri ve README terminolojisi `docs/framework-support-policy.md` dosyasinda tanimlanmistir.
+
 #### Sprint 13C Implementation Notes
 
 - `SeleniumAdapter` eklendi.

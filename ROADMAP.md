@@ -6,6 +6,24 @@ This roadmap details completed sprints and outlines the path toward building the
 
 ---
 
+## Product Milestones
+
+| Milestone | Focus | Status |
+| :--- | :--- | :--- |
+| v0.1 | CLI foundation | Completed |
+| v0.2 | GitHub Action and MCP integrations | Completed |
+| v0.3 | VS Code Client | Completed |
+| v1.0 | Playwright Stable | Planned |
+| v2.0 RC | Playwright + Selenium WebDriver for Node.js release candidate | Planned |
+| v2.0 Stable | Playwright + Selenium stable quality gates complete | Planned |
+| v3.0 | Test Design Engine | Planned |
+| v4.0 | Coverage Intelligence | Planned |
+| v5.0 | Quality Engineering Platform | Planned |
+
+Framework support labels are defined in `docs/framework-support-policy.md`.
+
+---
+
 ## Roadmap Overview
 
 ```
@@ -178,7 +196,9 @@ Architecture Freeze milestone before Sprint 13C:
 - [ ] Run rule-only validation.
 - [ ] Triage false positives and false negatives.
 - [ ] Feed validated findings back into benchmarks.
-- [ ] Publish Selenium validation go/no-go report.
+- [ ] Publish `validation/reports/selenium-calibration-report.md`.
+- [ ] Publish `validation/metrics/selenium-calibration-metrics.json`.
+- [ ] Produce GO / CONDITIONAL GO / NO-GO decision.
 
 ### ⬜ v1.0 — Stable Release
 - **Objective**: Reach production stability with validated accuracy metrics and full documentation.
