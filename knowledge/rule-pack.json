@@ -1,0 +1,21 @@
+{
+  "name": "QA Brain Core Rules",
+  "version": "1.0.0",
+  "compatibility": {
+    "qaBrain": ">=3.0.0"
+  },
+  "hash": null,
+  "rules": [
+    "knowledge/playwright/review-rules/locator-review.md",
+    "knowledge/playwright/review-rules/waiting-review.md",
+    "knowledge/playwright/review-rules/isolation-review.md",
+    "knowledge/playwright/review-rules/assertion-review.md",
+    "knowledge/playwright/review-rules/fixture-review.md",
+    "knowledge/playwright/review-rules/parallel-review.md",
+    "knowledge/playwright/review-rules/retry-review.md",
+    "knowledge/playwright/review-rules/naming-review.md",
+    "knowledge/selenium/review-rules/locator-review.md",
+    "knowledge/selenium/review-rules/waiting-review.md",
+    "knowledge/selenium/review-rules/resource-cleanup-review.md"
+  ]
+}

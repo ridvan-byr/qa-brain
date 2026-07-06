@@ -171,8 +171,15 @@ Default configuration:
 | `qaBrain.showDiagnostics` | `true` |
 | `qaBrain.showCodeLens` | `true` |
 | `qaBrain.showStatusBar` | `true` |
+| `qaBrain.telemetryEnabled` | `false` |
 
 The VS Code client is designed to run in VS Code Extension Development Host on Windows, macOS, and Linux by relying on VS Code and Node path APIs rather than platform-specific shell behavior.
+
+### Privacy & Telemetry
+
+QA Brain telemetry is strictly opt-in and disabled by default. When enabled, the VS Code client writes anonymized local telemetry events to extension storage for review, test design, crash, and feature usage events.
+
+Telemetry never records file paths, repository URLs, source code, API keys, or secrets. Every event includes a schema version and the extension version for compatibility tracking.
 
 ---
 

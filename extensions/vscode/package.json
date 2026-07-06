@@ -1,21 +1,41 @@
 {
   "name": "qa-brain-vscode-client",
   "displayName": "QA Brain",
-  "description": "VS Code client for QA Brain rule-only Playwright test reviews.",
+  "description": "Framework-neutral VS Code client for QA Brain deterministic test review and design analysis.",
   "version": "0.1.0",
   "publisher": "qa-brain",
   "license": "MIT",
+  "icon": "assets/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ridvan-byr/qa-brain"
+  },
+  "homepage": "https://github.com/ridvan-byr/qa-brain#readme",
+  "bugs": {
+    "url": "https://github.com/ridvan-byr/qa-brain/issues"
+  },
+  "keywords": [
+    "qa",
+    "testing",
+    "playwright",
+    "selenium",
+    "test-design",
+    "code-review",
+    "quality"
+  ],
   "engines": {
     "vscode": "^1.90.0"
   },
   "categories": [
     "Testing",
-    "Linters"
+    "Linters",
+    "Other"
   ],
   "activationEvents": [
     "onCommand:qaBrain.reviewCurrentFile",
     "onCommand:qaBrain.reviewSelection",
     "onCommand:qaBrain.reviewChangedFiles",
+    "onCommand:qaBrain.runTestDesign",
     "onCommand:qaBrain.openLatestReport",
     "onCommand:qaBrain.clearDiagnostics",
     "onLanguage:typescript",
@@ -27,35 +47,77 @@
     "commands": [
       {
         "command": "qaBrain.reviewCurrentFile",
-        "title": "QA Brain: Review Current Test File"
+        "title": "QA Brain: Review Current Test File",
+        "category": "QA Brain"
       },
       {
         "command": "qaBrain.reviewSelection",
-        "title": "QA Brain: Review Selection"
+        "title": "QA Brain: Review Selection",
+        "category": "QA Brain"
       },
       {
         "command": "qaBrain.reviewChangedFiles",
-        "title": "QA Brain: Review Changed Files"
+        "title": "QA Brain: Review Changed Files",
+        "category": "QA Brain"
+      },
+      {
+        "command": "qaBrain.runTestDesign",
+        "title": "QA Brain: Run Test Design Analysis",
+        "category": "QA Brain"
       },
       {
         "command": "qaBrain.openLatestReport",
-        "title": "QA Brain: Open Latest Report"
+        "title": "QA Brain: Open Latest Report",
+        "category": "QA Brain"
       },
       {
         "command": "qaBrain.clearDiagnostics",
-        "title": "QA Brain: Clear Diagnostics"
+        "title": "QA Brain: Clear Diagnostics",
+        "category": "QA Brain"
       },
       {
         "command": "qaBrain.showFindingDetails",
-        "title": "QA Brain: Show Finding Details"
+        "title": "QA Brain: Show Finding Details",
+        "category": "QA Brain"
       }
     ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "qaBrain.reviewSelection",
+          "when": "editorHasSelection && resourceLangId =~ /^(typescript|javascript|python)$/",
+          "group": "navigation@1"
+        },
+        {
+          "command": "qaBrain.reviewCurrentFile",
+          "when": "resourceLangId =~ /^(typescript|javascript|python)$/",
+          "group": "navigation@2"
+        },
+        {
+          "command": "qaBrain.clearDiagnostics",
+          "when": "resourceLangId =~ /^(typescript|javascript|python)$/",
+          "group": "navigation@3"
+        },
+        {
+          "command": "qaBrain.runTestDesign",
+          "when": "resourceLangId =~ /^(typescript|javascript|python)$/",
+          "group": "navigation@4"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "qaBrain.reviewCurrentFile",
+          "when": "resourceLangId =~ /^(typescript|javascript|python)$/",
+          "group": "navigation@10"
+        }
+      ]
+    },
     "viewsContainers": {
       "activitybar": [
         {
           "id": "qa-brain-sidebar",
           "title": "QA Brain",
-          "icon": "$(beaker)"
+          "icon": "assets/activity-icon.svg"
         }
       ]
     },
@@ -78,6 +140,27 @@
             "rule-only"
           ],
           "description": "Review mode. Supports rule-only mode."
+        },
+        "qaBrain.apiProvider": {
+          "type": "string",
+          "default": "Gemini",
+          "enum": ["Gemini", "OpenAI", "Anthropic", "OpenRouter"],
+          "description": "The LLM Provider to use as a fallback if no active native IDE Language Model is found."
+        },
+        "qaBrain.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "The API Key for the selected LLM Provider."
+        },
+        "qaBrain.apiModel": {
+          "type": "string",
+          "default": "",
+          "description": "Optional override for the model name (e.g. gpt-4o, claude-3-5-sonnet-latest). Leave blank for default."
+        },
+        "qaBrain.apiEndpoint": {
+          "type": "string",
+          "default": "",
+          "description": "Optional custom API endpoint URL for the selected provider (e.g., custom OpenAI proxies or OpenRouter target)."
         },
         "qaBrain.frameworkOverride": {
           "type": "string",
@@ -148,12 +231,20 @@
           "default": "icon",
           "enum": ["off", "icon", "background"],
           "description": "How the status bar draws attention on errors. 'icon' changes emoji to warning, 'background' colors the entire status bar, 'off' disables indicators."
+        },
+        "qaBrain.telemetryEnabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Opt in to local anonymized QA Brain telemetry. Disabled by default. Telemetry never records file paths, repository URIs, source code, or secrets."
         }
       }
     }
   },
   "scripts": {
-    "compile": "tsc -p ."
+    "compile": "tsc -p .",
+    "prepare:core": "node scripts/prepare-package.js",
+    "vscode:prepublish": "npm --prefix ../.. run build && npm run compile && npm run prepare:core",
+    "package": "npm run vscode:prepublish && npx @vscode/vsce package"
   },
   "devDependencies": {}
 }

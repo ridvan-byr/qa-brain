@@ -100,3 +100,99 @@ The next focus is extension release packaging and marketplace hardening:
 ---
 
 *AI Assistant Handoff Directive: When starting a new session, read this file to synchronize your context with the latest project changes. When finishing a session, append a new dated entry detailing your changes, files modified, and next steps.*
+
+---
+
+## 2026-07-05 - Codex
+
+### Completed Sprint 19: VS Code Marketplace Release & Hardening
+- **Packaging**:
+  - Added VS Code extension packaging metadata and scripts in `extensions/vscode/package.json`.
+  - Added `extensions/vscode/scripts/prepare-package.js` to copy compiled QA Brain core and `knowledge/` assets into `extensions/vscode/qa-brain-core/` before packaging.
+  - Added `extensions/vscode/.vscodeignore` to exclude TypeScript source, tests, benchmarks, validation data, screenshots, source maps, and generated files.
+  - Added `extensions/vscode/LICENSE` so `vsce package` passes marketplace license checks.
+- **Packaged Runtime Pathing**:
+  - Added `extensions/vscode/src/extensionPaths.ts`.
+  - Updated `reviewRunner`, `sidebarView`, and `dashboardViewModel` to prefer packaged `qa-brain-core/` assets and fall back to the repository root in Extension Development Host.
+- **Telemetry & Privacy**:
+  - Added `extensions/vscode/src/telemetry.ts` with strict opt-in local JSONL logging.
+  - Telemetry default remains disabled via `qaBrain.telemetryEnabled: false`.
+  - Logged anonymized `review`, `testDesign`, `crash`, and `featureUsage` events without file paths, repository URLs, code, API keys, or secrets.
+  - Documented telemetry privacy behavior in `README.md`.
+- **Rule Packs & Release Docs**:
+  - Added `knowledge/rule-pack.json`.
+  - Added `docs/versioning-policy.md`, `docs/release-checklist.md`, and `docs/release-artifacts.md`.
+  - Added `CHANGELOG.md`.
+  - Updated `ROADMAP.md` Sprint 19 status.
+- **Verification**:
+  - `npm run build` passed.
+  - `npm run compile` in `extensions/vscode` passed.
+  - `npm test` passed.
+  - `npx @vscode/vsce package` succeeded.
+  - Generated VSIX checksum: `D7E61493369C4D09EF245D9FC1C56801EE50821044D7E3CD9B39450C7D440434`.
+
+### Remaining Manual Release Steps
+- Install `extensions/vscode/qa-brain-vscode-client-0.1.0.vsix` in a clean VS Code profile.
+- Verify sidebar, review, test design, diagnostics, CodeLens, and telemetry opt-in behavior manually.
+- Publish the RC to VS Code Marketplace after publisher token setup.
+
+---
+
+## 2026-07-06 - Codex
+
+### VS Code Client RC Hardening Continuation
+- **Activity Bar / Marketplace Assets**:
+  - Added and iterated on `extensions/vscode/assets/icon.png` for marketplace/listing usage.
+  - Added `extensions/vscode/assets/activity-icon.svg` for the Activity Bar contribution.
+  - Updated `extensions/vscode/package.json` to reference `assets/icon.png` and `assets/activity-icon.svg`.
+  - Updated `.vscodeignore` so VSIX includes only the required icon assets and excludes extra source images under `assets/`.
+- **Packaged Runtime Fix**:
+  - Fixed installed-extension failure: `Cannot find module 'dotenv'`.
+  - Root cause: `GeminiProvider` loaded `dotenv` with a hard import before deterministic rule-only fallback could run.
+  - Updated `src/reviewer/GeminiProvider.ts` to load `dotenv` optionally inside `try/catch`; packaged VS Code extension no longer requires root `node_modules/dotenv`.
+- **Dashboard & Review UX**:
+  - Added editor context menu commands in `extensions/vscode/package.json`:
+    - `QA Brain: Review Selection`
+    - `QA Brain: Review Current Test File`
+    - `QA Brain: Run Test Design Analysis`
+    - `QA Brain: Clear Diagnostics`
+  - Added `qaBrain.runTestDesign` to activation events and contributed commands.
+  - Added `ReviewRun.reviewScope` in `extensions/vscode/src/types.ts`.
+  - Updated `extensions/vscode/src/reviewRunner.ts` so full-file reviews report `reviewScope: 'file'` and selection reviews report `reviewScope: 'selection'`.
+  - Updated `extensions/vscode/src/dashboardViewModel.ts` with active file name, active file path, review scope, and `contextLimited` state.
+  - Updated `extensions/vscode/src/sidebarView.ts`:
+    - Dashboard now shows active file name and `Full File` / `Selection` badge.
+    - Added Dashboard action row: `Review File`, `Review Selection`, `Run Design`, `Open Report`, `Clear`.
+    - Selection reviews show a context-limited warning for metrics/coverage.
+    - Dashboard `Review File` and `Run Design` now pass the stored active file URI, so after a selection review the user can run full-file review again from the Dashboard.
+- **Manual UX Findings Captured**:
+  - Full file review on `examples/bad/hardcoded-wait.spec.ts` correctly detects `Redundant Hardcoded Timeout (waitForTimeout)`.
+  - Selection review can be context-limited; future improvement should expand selected lines to the enclosing `test(...)` block where possible.
+  - Test Design may report overly optimistic `100%` coverage for tiny/minimal examples; future improvement should support `insufficient domain context` / `not applicable` states.
+- **Verification**:
+  - `npm run build` passed.
+  - `npm test` passed.
+  - `npm run compile` from `extensions/vscode` passed.
+  - `npm run package` from `extensions/vscode` passed.
+  - Latest VSIX: `extensions/vscode/qa-brain-vscode-client-0.1.0.vsix`
+  - Latest VSIX SHA256: `3D96682A19D548C05D2948FDDE111544C64AFA107148AAD7AEE8D52C0B97B364`
+  - `docs/release-artifacts.md` updated with the latest checksum.
+
+### Current Working Tree Notes
+- There are many uncommitted Sprint 19 / VS Code Marketplace RC changes.
+- `extensions/vscode/qa-brain-vscode-client-0.1.0.vsix` is generated locally and intentionally ignored by git.
+- `extensions/vscode/qa-brain-core/` is generated during packaging and intentionally ignored by git.
+
+### Next Manual Checks For User / Next Agent
+- Reinstall latest VSIX:
+  - `code --install-extension "C:\Users\ridva\Desktop\qa-brain\extensions\vscode\qa-brain-vscode-client-0.1.0.vsix" --force`
+- Reload VS Code with `Developer: Reload Window`.
+- Verify:
+  - Activity Bar icon renders acceptably.
+  - Dashboard opens.
+  - Right-click menu shows QA Brain commands.
+  - `Review Selection` works from context menu.
+  - Selection review shows `Selection` badge and context-limited warning.
+  - Dashboard `Review File` runs full-file review after a selection review.
+  - Dashboard `Run Design`, `Open Report`, and `Clear` work.
+- Remaining release step: VS Code Marketplace publish after clean-profile smoke test, screenshot prep, and publisher token setup.

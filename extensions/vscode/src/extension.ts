@@ -9,6 +9,7 @@ import { ReviewRunner } from './reviewRunner';
 import { QaBrainCodeActionProvider } from './codeActions';
 import { DashboardViewModel } from './dashboardViewModel';
 import { QaBrainSidebarViewProvider } from './sidebarView';
+import { TelemetryManager } from './telemetry';
 import type { ReviewRun } from './types';
 
 let latestReportPath: string | undefined;
@@ -18,8 +19,9 @@ export function activate(context: vscode.ExtensionContext): void {
   const diagnostics = new DiagnosticManager();
   const output = new ReviewOutput();
   const codeLens = new QaBrainCodeLensProvider();
+  const telemetry = new TelemetryManager(context);
   const dashboardViewModel = new DashboardViewModel(context);
-  const sidebarProvider = new QaBrainSidebarViewProvider(context, dashboardViewModel);
+  const sidebarProvider = new QaBrainSidebarViewProvider(context, dashboardViewModel, telemetry);
   const statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
   statusBar.command = 'qaBrain.reviewCurrentFile';
 
@@ -79,7 +81,13 @@ export function activate(context: vscode.ExtensionContext): void {
     const workspaceRoot = runner.getWorkspaceRoot(document);
     await runWithProgress(`Analyzing test design in ${path.basename(document.fileName)}...`, async token => {
       if (token.isCancellationRequested) return;
+      const startedAt = Date.now();
       await dashboardViewModel.runTestDesign(document.fileName, workspaceRoot);
+      telemetry.track('testDesign', {
+        durationMs: Date.now() - startedAt,
+        success: true,
+        context: 'currentFile',
+      });
     });
   };
 
@@ -92,8 +100,14 @@ export function activate(context: vscode.ExtensionContext): void {
     const selectedText = editor.document.getText(editor.selection);
     await runWithProgress(`Reviewing selection in ${path.basename(editor.document.fileName)}...`, async token => {
       if (token.isCancellationRequested) return;
+      const startedAt = Date.now();
       const run = await runner.reviewSelection(editor.document, selectedText, editor.selection.start.line);
       await publishReview(editor.document, run);
+      telemetry.track('review', {
+        durationMs: Date.now() - startedAt,
+        success: true,
+        context: 'selection',
+      });
     });
   };
 
@@ -113,9 +127,15 @@ export function activate(context: vscode.ExtensionContext): void {
     await runWithProgress(`Reviewing ${changedFiles.length} changed test file(s)...`, async token => {
       for (const file of changedFiles) {
         if (token.isCancellationRequested) break;
+        const startedAt = Date.now();
         const document = await vscode.workspace.openTextDocument(vscode.Uri.file(file));
         const run = await runner.reviewFile(file, workspaceRoot);
         await publishReview(document, run);
+        telemetry.track('review', {
+          durationMs: Date.now() - startedAt,
+          success: true,
+          context: 'changedFile',
+        });
       }
     });
   };
@@ -123,8 +143,14 @@ export function activate(context: vscode.ExtensionContext): void {
   const reviewDocument = async (document: vscode.TextDocument): Promise<void> => {
     await runWithProgress(`Reviewing ${path.basename(document.fileName)}...`, async token => {
       if (token.isCancellationRequested) return;
+      const startedAt = Date.now();
       const run = await runner.reviewFile(document.fileName, runner.getWorkspaceRoot(document));
       await publishReview(document, run);
+      telemetry.track('review', {
+        durationMs: Date.now() - startedAt,
+        success: true,
+        context: 'currentFile',
+      });
     });
   };
 
@@ -170,6 +196,7 @@ export function activate(context: vscode.ExtensionContext): void {
       updateStatus('🧠 QA Brain | Ready');
     } catch (error: any) {
       updateStatus('🧠 QA Brain | Ready');
+      telemetry.trackCrash(error, 'runWithProgress');
       const errMsg = error?.message || String(error);
       if (errMsg.includes('planned in v4.0') || errMsg.includes('disabled by configuration')) {
         await vscode.window.showInformationMessage(`QA Brain: ${errMsg}`);

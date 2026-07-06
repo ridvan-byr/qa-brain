@@ -3,15 +3,88 @@ import type { ReviewContext } from '../types/ReviewContext';
 import type { Finding } from '../types/Finding';
 import type { ReviewResult } from '../types/ReviewResult';
 import type { TestDesignResult } from '../types/TestDesignResult';
-import * as dotenv from 'dotenv';
 
-dotenv.config();
+try {
+  require('dotenv').config();
+} catch {
+  // The VS Code extension runs from a packaged core without root node_modules.
+  // Missing dotenv should not prevent deterministic rule-only reviews.
+}
 
 export class GeminiProvider implements LLMProvider {
   private apiKey?: string;
+  private provider: string;
+  private model: string;
+  private endpoint: string;
 
-  constructor(apiKey?: string) {
-    this.apiKey = apiKey === undefined ? process.env.GEMINI_API_KEY : apiKey;
+  constructor(apiKey?: string, provider?: string, model?: string, endpoint?: string) {
+    this.provider = provider || process.env.QA_BRAIN_PROVIDER || 'Gemini';
+    this.apiKey = apiKey === undefined
+      ? (this.provider === 'Gemini' ? (process.env.GEMINI_API_KEY || process.env.QA_BRAIN_API_KEY) : process.env.QA_BRAIN_API_KEY)
+      : apiKey;
+    this.model = model || process.env.QA_BRAIN_MODEL || '';
+    this.endpoint = endpoint || process.env.QA_BRAIN_ENDPOINT || '';
+  }
+
+  private async makeRequest(url: string, headers: Record<string, string>, body: any): Promise<any> {
+    const payload = JSON.stringify(body);
+    if (typeof globalThis.fetch === 'function') {
+      const response = await globalThis.fetch(url, {
+        method: 'POST',
+        headers,
+        body: payload,
+      });
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`HTTP Error ${response.status}: ${errorText}`);
+      }
+      return await response.json();
+    } else {
+      const https = require('https');
+      const { URL } = require('url');
+      return new Promise((resolve, reject) => {
+        const parsedUrl = new URL(url);
+        const options = {
+          method: 'POST',
+          hostname: parsedUrl.hostname,
+          port: parsedUrl.port || 443,
+          path: parsedUrl.pathname + parsedUrl.search,
+          headers: {
+            ...headers,
+            'Content-Length': Buffer.byteLength(payload),
+            'Content-Type': 'application/json'
+          },
+        };
+        const req = https.request(options, (res: any) => {
+          let data = '';
+          res.on('data', (chunk: any) => { data += chunk; });
+          res.on('end', () => {
+            if (res.statusCode && (res.statusCode < 200 || res.statusCode >= 300)) {
+              reject(new Error(`HTTP Error ${res.statusCode}: ${data}`));
+            } else {
+              try {
+                resolve(JSON.parse(data));
+              } catch (e) {
+                reject(e);
+              }
+            }
+          });
+        });
+        req.on('error', reject);
+        req.write(payload);
+        req.end();
+      });
+    }
+  }
+
+  private cleanJsonText(raw: string): string {
+    let clean = raw.trim();
+    if (clean.startsWith('```')) {
+      clean = clean.replace(/^```(?:json)?\r?\n/, '');
+      clean = clean.replace(/\r?\n```$/, '');
+      clean = clean.trim();
+    }
+    return clean;
   }
 
   public async review(context: ReviewContext, ruleContents: string[]): Promise<Omit<ReviewResult, 'score'>> {
@@ -19,13 +92,8 @@ export class GeminiProvider implements LLMProvider {
       return this.generateRuleEngineReview(context);
     }
 
-    try {
-      const { GoogleGenAI } = await import('@google/genai');
-      const ai = new GoogleGenAI({ apiKey: this.apiKey });
-
-      const systemInstruction = 'You are QA Brain Reviewer. Match findings and output JSON matching response-format.md schema.';
-
-      const userPrompt = `
+    const systemInstruction = 'You are QA Brain Reviewer. Match findings and output JSON matching response-format.md schema.';
+    const userPrompt = `
       Review Context:
       ${JSON.stringify(context, null, 2)}
 
@@ -34,19 +102,97 @@ export class GeminiProvider implements LLMProvider {
 
       Target Code to Review:
       ${context.targetFile.content}
-      `;
+    `;
 
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: userPrompt,
-        config: {
-          systemInstruction,
-          responseMimeType: 'application/json',
-        },
-      });
+    try {
+      let rawText = '';
 
-      const rawText = response.text || '{}';
-      const parsed = JSON.parse(rawText);
+      if (this.provider === 'Gemini') {
+        const modelName = this.model || 'gemini-2.5-flash';
+        if (this.endpoint) {
+          const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.apiKey}`
+          };
+          const body = {
+            model: modelName,
+            messages: [
+              { role: 'system', content: systemInstruction },
+              { role: 'user', content: userPrompt }
+            ]
+          };
+          const response = await this.makeRequest(this.endpoint, headers, body);
+          rawText = response.choices?.[0]?.message?.content || '{}';
+        } else {
+          const { GoogleGenAI } = await import('@google/genai');
+          const ai = new GoogleGenAI({ apiKey: this.apiKey });
+          const response = await ai.models.generateContent({
+            model: modelName,
+            contents: userPrompt,
+            config: {
+              systemInstruction,
+              responseMimeType: 'application/json',
+            },
+          });
+          rawText = response.text || '{}';
+        }
+      } else if (this.provider === 'OpenAI') {
+        const modelName = this.model || 'gpt-4o';
+        const url = this.endpoint || 'https://api.openai.com/v1/chat/completions';
+        const headers = {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.apiKey}`
+        };
+        const body = {
+          model: modelName,
+          messages: [
+            { role: 'system', content: systemInstruction },
+            { role: 'user', content: userPrompt }
+          ],
+          response_format: { type: 'json_object' }
+        };
+        const response = await this.makeRequest(url, headers, body);
+        rawText = response.choices?.[0]?.message?.content || '{}';
+      } else if (this.provider === 'Anthropic') {
+        const modelName = this.model || 'claude-3-5-sonnet-latest';
+        const url = this.endpoint || 'https://api.anthropic.com/v1/messages';
+        const headers = {
+          'Content-Type': 'application/json',
+          'x-api-key': this.apiKey,
+          'anthropic-version': '2023-06-01'
+        };
+        const body = {
+          model: modelName,
+          max_tokens: 4000,
+          system: systemInstruction,
+          messages: [
+            { role: 'user', content: userPrompt }
+          ]
+        };
+        const response = await this.makeRequest(url, headers, body);
+        rawText = response.content?.[0]?.text || '{}';
+      } else if (this.provider === 'OpenRouter') {
+        const modelName = this.model || 'google/gemini-2.5-flash';
+        const url = this.endpoint || 'https://openrouter.ai/api/v1/chat/completions';
+        const headers = {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.apiKey}`,
+          'HTTP-Referer': 'https://github.com/ridvan-byr/qa-brain',
+          'X-Title': 'QA Brain'
+        };
+        const body = {
+          model: modelName,
+          messages: [
+            { role: 'system', content: systemInstruction },
+            { role: 'user', content: userPrompt }
+          ],
+          response_format: { type: 'json_object' }
+        };
+        const response = await this.makeRequest(url, headers, body);
+        rawText = response.choices?.[0]?.message?.content || '{}';
+      }
+
+      const parsed = JSON.parse(this.cleanJsonText(rawText));
 
       return {
         summary: parsed.summary || 'No summary provided.',
@@ -58,8 +204,140 @@ export class GeminiProvider implements LLMProvider {
         finalVerdict: parsed.finalVerdict || 'Needs Improvement',
       };
     } catch (error) {
-      console.warn('Gemini API call failed, falling back to deterministic rule review.', error);
+      console.warn(`${this.provider} API call failed, falling back to deterministic rule review.`, error);
       return this.generateRuleEngineReview(context);
+    }
+  }
+
+  public async designTests(context: ReviewContext, ruleContents: string[]): Promise<TestDesignResult> {
+    if (!this.apiKey) {
+      return this.generateRuleEngineTestDesign(context);
+    }
+
+    const systemInstruction = `You are QA Brain Test Design Engine. Analyze target test files, identify missing test design scenarios (applying ISTQB Boundary Value Analysis, Equivalence Partitioning, security validation, and data variation principles), explain the QA rationale for each, and output valid JSON matching the TestDesignResult schema.
+
+For each missing scenario, provide:
+- id: unique string (e.g., TS_001)
+- title: concise title
+- category: one of 'Boundary Value', 'Equivalence Partitioning', 'Security', 'Error Path', 'Data Variation'
+- description: what to verify
+- explanation: educational reason detailing why it is missing and why it's a critical QA practice (e.g. explain what boundary or partition is missed)
+- criticality: 'HIGH' | 'MEDIUM' | 'LOW'
+- evidence: line or context in existing code showing this gap
+- suggestedTemplate: boilerplate test code for both 'playwright' and 'selenium' frameworks.
+
+Output JSON only. Do not wrap in markdown or add notes.`;
+
+    const userPrompt = `
+      Review Context:
+      ${JSON.stringify(context, null, 2)}
+
+      Rule Sets Loaded:
+      ${ruleContents.join('\n\n')}
+
+      Target Code to Analyze:
+      ${context.targetFile.content}
+    `;
+
+    try {
+      let rawText = '';
+
+      if (this.provider === 'Gemini') {
+        const modelName = this.model || 'gemini-2.5-flash';
+        if (this.endpoint) {
+          const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.apiKey}`
+          };
+          const body = {
+            model: modelName,
+            messages: [
+              { role: 'system', content: systemInstruction },
+              { role: 'user', content: userPrompt }
+            ]
+          };
+          const response = await this.makeRequest(this.endpoint, headers, body);
+          rawText = response.choices?.[0]?.message?.content || '{}';
+        } else {
+          const { GoogleGenAI } = await import('@google/genai');
+          const ai = new GoogleGenAI({ apiKey: this.apiKey });
+          const response = await ai.models.generateContent({
+            model: modelName,
+            contents: userPrompt,
+            config: {
+              systemInstruction,
+              responseMimeType: 'application/json',
+            },
+          });
+          rawText = response.text || '{}';
+        }
+      } else if (this.provider === 'OpenAI') {
+        const modelName = this.model || 'gpt-4o';
+        const url = this.endpoint || 'https://api.openai.com/v1/chat/completions';
+        const headers = {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.apiKey}`
+        };
+        const body = {
+          model: modelName,
+          messages: [
+            { role: 'system', content: systemInstruction },
+            { role: 'user', content: userPrompt }
+          ],
+          response_format: { type: 'json_object' }
+        };
+        const response = await this.makeRequest(url, headers, body);
+        rawText = response.choices?.[0]?.message?.content || '{}';
+      } else if (this.provider === 'Anthropic') {
+        const modelName = this.model || 'claude-3-5-sonnet-latest';
+        const url = this.endpoint || 'https://api.anthropic.com/v1/messages';
+        const headers = {
+          'Content-Type': 'application/json',
+          'x-api-key': this.apiKey,
+          'anthropic-version': '2023-06-01'
+        };
+        const body = {
+          model: modelName,
+          max_tokens: 4000,
+          system: systemInstruction,
+          messages: [
+            { role: 'user', content: userPrompt }
+          ]
+        };
+        const response = await this.makeRequest(url, headers, body);
+        rawText = response.content?.[0]?.text || '{}';
+      } else if (this.provider === 'OpenRouter') {
+        const modelName = this.model || 'google/gemini-2.5-flash';
+        const url = this.endpoint || 'https://openrouter.ai/api/v1/chat/completions';
+        const headers = {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.apiKey}`,
+          'HTTP-Referer': 'https://github.com/ridvan-byr/qa-brain',
+          'X-Title': 'QA Brain'
+        };
+        const body = {
+          model: modelName,
+          messages: [
+            { role: 'system', content: systemInstruction },
+            { role: 'user', content: userPrompt }
+          ],
+          response_format: { type: 'json_object' }
+        };
+        const response = await this.makeRequest(url, headers, body);
+        rawText = response.choices?.[0]?.message?.content || '{}';
+      }
+
+      const parsed = JSON.parse(this.cleanJsonText(rawText));
+
+      return {
+        fileName: context.targetFile.filePath,
+        framework: context.framework?.adapterName || (context.targetFile.detectedFramework?.toLowerCase() as any) || 'unknown',
+        coverageScore: parsed.coverageScore !== undefined ? parsed.coverageScore : 50,
+        missingScenarios: parsed.missingScenarios || [],
+      };
+    } catch (error) {
+      console.warn(`${this.provider} API call failed, falling back to deterministic rule test design.`, error);
+      return this.generateRuleEngineTestDesign(context);
     }
   }
 
@@ -330,63 +608,6 @@ export class GeminiProvider implements LLMProvider {
     return Array.from(refs);
   }
 
-  public async designTests(context: ReviewContext, ruleContents: string[]): Promise<TestDesignResult> {
-    if (!this.apiKey) {
-      return this.generateRuleEngineTestDesign(context);
-    }
-
-    try {
-      const { GoogleGenAI } = await import('@google/genai');
-      const ai = new GoogleGenAI({ apiKey: this.apiKey });
-
-      const systemInstruction = `You are QA Brain Test Design Engine. Analyze target test files, identify missing test design scenarios (applying ISTQB Boundary Value Analysis, Equivalence Partitioning, security validation, and data variation principles), explain the QA rationale for each, and output valid JSON matching the TestDesignResult schema.
-
-For each missing scenario, provide:
-- id: unique string (e.g., TS_001)
-- title: concise title
-- category: one of 'Boundary Value', 'Equivalence Partitioning', 'Security', 'Error Path', 'Data Variation'
-- description: what to verify
-- explanation: educational reason detailing why it is missing and why it's a critical QA practice (e.g. explain what boundary or partition is missed)
-- criticality: 'HIGH' | 'MEDIUM' | 'LOW'
-- evidence: line or context in existing code showing this gap
-- suggestedTemplate: boilerplate test code for both 'playwright' and 'selenium' frameworks.
-
-Output JSON only. Do not wrap in markdown or add notes.`;
-
-      const userPrompt = `
-      Review Context:
-      ${JSON.stringify(context, null, 2)}
-
-      Rule Sets Loaded:
-      ${ruleContents.join('\n\n')}
-
-      Target Code to Analyze:
-      ${context.targetFile.content}
-      `;
-
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: userPrompt,
-        config: {
-          systemInstruction,
-          responseMimeType: 'application/json',
-        },
-      });
-
-      const rawText = response.text || '{}';
-      const parsed = JSON.parse(rawText);
-
-      return {
-        fileName: context.targetFile.filePath,
-        framework: context.framework?.adapterName || (context.targetFile.detectedFramework?.toLowerCase() as any) || 'unknown',
-        coverageScore: parsed.coverageScore !== undefined ? parsed.coverageScore : 50,
-        missingScenarios: parsed.missingScenarios || [],
-      };
-    } catch (error) {
-      console.warn('Gemini API call failed, falling back to deterministic rule test design.', error);
-      return this.generateRuleEngineTestDesign(context);
-    }
-  }
 
   private generateRuleEngineTestDesign(context: ReviewContext): TestDesignResult {
     const content = context.targetFile.content;

@@ -844,6 +844,94 @@ Onerilen iyilestirmeler:
 
 Bu backlog Sprint 13B oncesinde mini polish olarak veya Sprint 13B icinde ayri bir alt is olarak planlanabilir.
 
+## Sprint 19.5 - Core Hardening Before Python Expansion
+
+### Amac
+
+Claude tarafindan yapilan proje incelemesinde isaretlenen cekirdek dogruluk ve bakim risklerini, Python/SARIF/Enterprise gibi yeni genisleme islerine gecmeden once kapatmak.
+
+Bu sprintin amaci yeni ozellik eklemek degil, mevcut QA Brain cekirdeginin daha guvenilir, daha az kirilgan ve genislemeye daha hazir hale gelmesini saglamaktir.
+
+### Neden Simdi?
+
+Sprint 19 ile VS Code Marketplace RC paketleme hazirligi yapildi. Sprint 20 ise Python Core & Scanner olarak planli. Python destegine gecmeden once asagidaki riskler kapatilmazsa, yeni framework ve yeni dil destegi mevcut kirilgan noktalari buyutebilir:
+
+- MCP server repository root varsayimi.
+- LLM JSON output sekil dogrulamasi eksikligi.
+- Adapter ve fallback tarafinda tekrar eden assertion detection regexleri.
+- Finding deduplication severity merge davranisinin belirsizligi.
+- Scoring/signal tarafinda benchmark'a fazla ozel string kontrolleri.
+- CLI/MCP tarafinda dil/encoding tutarsizliklari.
+
+### Scope
+
+- MCP root detection duzeltilecek:
+  - Absolute file path geldiginde en yakin `package.json` veya workspace root bulunmali.
+  - `ReviewPipeline(".", provider)` varsayimi MCP file review icin kaldirilmali.
+- LLM response schema validation eklenecek:
+  - Zorunlu alanlar normalize edilmeli.
+  - Eksik/bozuk `findings`, `confidence`, `score`, `severity` alanlari runtime crash'e sebep olmamali.
+  - Invalid LLM output deterministic fallback veya safe empty result ile ele alinmali.
+- Shared assertion detection helper cikarilacak:
+  - PlaywrightAdapter
+  - SeleniumAdapter
+  - deterministic fallback
+  ayni assertion detection sozlesmesini kullanmali.
+- Deduplication davranisi netlestirilecek:
+  - Ayni title ile birlesen finding'lerde en yuksek severity korunmali.
+  - Confidence justification birlestirme deterministik olmali.
+- Benchmark-overfit heuristic'ler izole edilecek:
+  - ScoringEngine icindeki cok spesifik string kontrolleri generic signal/helper seviyesine tasinmali veya dokumante edilmeli.
+- CLI/MCP mesajlari temizlenecek:
+  - User-facing mesajlarda tutarli Ingilizce kullanilmali.
+  - Bozuk encoding kalintilari temizlenmeli.
+
+### Out of Scope
+
+- Python scanner implementation.
+- Python adapter.
+- SARIF export.
+- Marketplace publish.
+- New framework support.
+- Report UX redesign.
+- Full AST migration.
+
+AST / ts-morph tabanli analiz bu sprintte baslatilmayacak; ayri bir mimari sprint olarak planlanacak.
+
+### Acceptance Criteria
+
+- `npm run build` gecmeli.
+- `npm test` gecmeli.
+- VS Code extension compile gecmeli.
+- VSIX package command gecmeli.
+- MCP file review, farkli cwd'den absolute file path ile dogru repository context bulmali.
+- Invalid LLM JSON shape runtime crash uretmemeli.
+- Assertion detection helper parity testleri gecmeli.
+- Deduplication en yuksek severity'yi korudugunu test ile kanitlamali.
+- Playwright ve Selenium benchmark davranisi semantic olarak korunmali.
+- Sprint 19 release packaging dosyalari bozulmamali.
+
+### Deliverables
+
+- MCP root detection fix.
+- `ReviewResult` / LLM output validator veya normalizer.
+- Shared assertion detection helper.
+- Deduplication severity merge tests.
+- Hardening regression tests.
+- ROADMAP ve implementation plan guncellemesi.
+
+### Riskler
+
+- LLM normalization eski rapor formatlariyla uyumsuz olabilir.
+- Dedup severity merge davranisi finding sayisini degistirmeden severity dagilimini degistirebilir.
+- MCP root fix monorepo icinde yanlis package root secebilir.
+
+Mitigation:
+
+- Degisiklikler testlerle sabitlenecek.
+- Monorepo root selection icin nearest package root + workspace fallback mantigi uygulanacak.
+- Observable behavior degisiklikleri acceptance kriterlerinde acikca raporlanacak.
+
 ### Sprint 13 Acceptance Gate
 
 Her Sprint 13 alt sprinti sonunda su kontroller gecmeden sonraki adima gecilmemelidir:

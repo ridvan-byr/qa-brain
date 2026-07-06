@@ -51,6 +51,7 @@ export interface ReviewRun {
   report: string;
   result: ReviewResult;
   selectionStartLine?: number;
+  reviewScope?: 'file' | 'selection';
   framework?: string;
 }
 

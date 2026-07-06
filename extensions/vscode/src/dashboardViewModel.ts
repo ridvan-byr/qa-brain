@@ -1,6 +1,8 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
+import { resolveQaBrainRoot } from './extensionPaths';
 import type { ReviewRun } from './types';
+import { VsCodeLanguageModelProvider } from './lmProvider';
 
 export interface TestDesignCoverage {
   category: string;
@@ -16,6 +18,9 @@ export interface WorkspaceInsights {
 
 export interface DashboardState {
   activeFilePath?: string;
+  activeFileName?: string;
+  reviewScope?: 'file' | 'selection';
+  contextLimited: boolean;
   framework?: string;
   hasReview: boolean;
   qualityScore: number;
@@ -31,6 +36,10 @@ export interface DashboardState {
   };
   testDesignCoverage: TestDesignCoverage[];
   insights: WorkspaceInsights;
+  apiKey?: string;
+  apiProvider?: string;
+  apiModel?: string;
+  apiEndpoint?: string;
 }
 
 export class DashboardViewModel {
@@ -84,6 +93,9 @@ export class DashboardViewModel {
 
     this.currentState = {
       activeFilePath: filePath,
+      activeFileName: path.basename(filePath),
+      reviewScope: run.reviewScope || 'file',
+      contextLimited: run.reviewScope === 'selection',
       framework: run.framework,
       hasReview: true,
       qualityScore: score.qualityScore,
@@ -109,14 +121,20 @@ export class DashboardViewModel {
 
   public async runTestDesign(filePath: string, workspaceRoot: string): Promise<void> {
     try {
-      const repoRoot = path.resolve(__dirname, '../../../..');
+      const repoRoot = resolveQaBrainRoot();
       const corePath = path.join(repoRoot, 'dist', 'src');
       
       const { TestDesignEngine } = require(path.join(corePath, 'design', 'TestDesignEngine.js'));
       const { GeminiProvider } = require(path.join(corePath, 'reviewer', 'GeminiProvider.js'));
 
-      const gemini = new GeminiProvider();
-      const engine = new TestDesignEngine(workspaceRoot, gemini);
+      const config = vscode.workspace.getConfiguration('qaBrain');
+      const apiProvider = config.get<string>('apiProvider', 'Gemini');
+      const apiKeySetting = config.get<string>('apiKey', '') || (apiProvider === 'Gemini' ? process.env.GEMINI_API_KEY : '') || process.env.QA_BRAIN_API_KEY || '';
+      const apiModel = config.get<string>('apiModel', '');
+      const apiEndpoint = config.get<string>('apiEndpoint', '');
+      const geminiFallback = new GeminiProvider(apiKeySetting, apiProvider, apiModel, apiEndpoint);
+      const lmProvider = new VsCodeLanguageModelProvider(geminiFallback);
+      const engine = new TestDesignEngine(workspaceRoot, lmProvider, repoRoot);
 
       const result = await engine.designTests(filePath);
 
@@ -158,6 +176,14 @@ export class DashboardViewModel {
   }
 
   public getCurrentState(): DashboardState | undefined {
+    if (this.currentState) {
+      const config = vscode.workspace.getConfiguration('qaBrain');
+      const apiProvider = config.get<string>('apiProvider', 'Gemini');
+      this.currentState.apiKey = config.get<string>('apiKey', '') || (apiProvider === 'Gemini' ? process.env.GEMINI_API_KEY : '') || process.env.QA_BRAIN_API_KEY || '';
+      this.currentState.apiProvider = apiProvider;
+      this.currentState.apiModel = config.get<string>('apiModel', '');
+      this.currentState.apiEndpoint = config.get<string>('apiEndpoint', '');
+    }
     return this.currentState;
   }
 
@@ -165,6 +191,10 @@ export class DashboardViewModel {
     const insights = this.calculateInsights();
     this.currentState = {
       hasReview: false,
+      activeFileName: undefined,
+      activeFilePath: undefined,
+      reviewScope: undefined,
+      contextLimited: false,
       qualityScore: 0,
       qualityDelta: 0,
       riskScore: 0,

@@ -246,12 +246,29 @@ Architecture Freeze milestone before Sprint 13C:
 - [x] Implement Insights Tab showing workspace risks, top violated rules, and suggestions.
 - [x] Add copy and editor insert workflow for generated test code templates.
 
-### ⬜ Sprint 19 — VS Code Marketplace Release & Hardening
-- **Objective**: Configure packaging, set up opt-in telemetry, organize rule packs, and publish.
+### ✅ Sprint 19 — VS Code Marketplace Release & Hardening
+- **Objective**: Configure packaging, set up opt-in telemetry, organize rule packs, and prepare RC packaging.
+- **Status**: Completed for local RC packaging; Marketplace publish remains a manual release step.
+- [x] Added strict opt-in telemetry with `qaBrain.telemetryEnabled` defaulting to `false`.
+- [x] Added anonymized local telemetry events for review, test design, crash, and feature usage.
+- [x] Added versioned rule pack manifest at `knowledge/rule-pack.json`.
+- [x] Added extension package asset preparation for compiled QA Brain core and knowledge files.
+- [x] Added `.vscodeignore` exclusions for source, tests, benchmarks, validation data, screenshots, and generated files.
+- [x] Added extension marketplace metadata, package scripts, root license copy, changelog, versioning policy, and release checklist.
+- [x] Generated local VSIX RC package and SHA256 checksum.
+- [ ] Publish extension Release Candidate (RC) to VS Code Marketplace after clean-profile smoke test and publisher token setup.
+
+### ⬜ Sprint 19.5 — Core Hardening Before Python Expansion
+- **Objective**: Address critical correctness and maintainability risks found during external project review before expanding to Python support.
 - **Status**: Planned.
-- [ ] Add Opt-in Telemetry and crash reporting.
-- [ ] Organize modular, versioned Rule Packs under `knowledge/`.
-- [ ] Publish extension Release Candidate (RC) to VS Code Marketplace.
+- [ ] Fix MCP repository root detection so absolute file paths resolve their nearest project root instead of assuming server `cwd`.
+- [ ] Add LLM response schema validation and normalization before scoring/reporting.
+- [ ] Extract shared assertion detection helpers used by adapters and deterministic fallback.
+- [ ] Define deterministic finding deduplication severity merge behavior.
+- [ ] Remove or isolate benchmark-overfit string heuristics from scoring and signal extraction.
+- [ ] Clean mixed-language/encoding leftovers in user-facing CLI/MCP messages.
+- [ ] Add regression tests for MCP root detection, invalid LLM JSON shape, assertion helper parity, and dedup severity behavior.
+- [ ] Keep existing benchmark, validation, VS Code compile, and VSIX packaging checks green.
 
 ### ⬜ Sprint 20 — Python Core & Scanner (v4.0 Core)
 - **Objective**: Generalize scanning engine to parse Python test folders and package structures.

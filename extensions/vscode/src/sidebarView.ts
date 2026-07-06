@@ -1,7 +1,9 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
+import { resolveQaBrainRoot } from './extensionPaths';
 import type { DashboardViewModel, DashboardState } from './dashboardViewModel';
+import type { TelemetryManager } from './telemetry';
 
 export class QaBrainSidebarViewProvider implements vscode.WebviewViewProvider {
   private view?: vscode.WebviewView;
@@ -9,9 +11,10 @@ export class QaBrainSidebarViewProvider implements vscode.WebviewViewProvider {
 
   constructor(
     private readonly context: vscode.ExtensionContext,
-    private readonly viewModel: DashboardViewModel
+    private readonly viewModel: DashboardViewModel,
+    private readonly telemetry?: TelemetryManager
   ) {
-    this.repoRoot = path.resolve(__dirname, '../../../..');
+    this.repoRoot = resolveQaBrainRoot();
   }
 
   public resolveWebviewView(
@@ -32,6 +35,7 @@ export class QaBrainSidebarViewProvider implements vscode.WebviewViewProvider {
     webviewView.webview.onDidReceiveMessage(async (message) => {
       switch (message.command) {
         case 'jumpToLine': {
+          this.telemetry?.track('featureUsage', { feature: 'jumpToLine' });
           const editor = vscode.window.activeTextEditor;
           if (editor) {
             const line = this.findEvidenceLine(editor.document, message.evidence);
@@ -43,6 +47,7 @@ export class QaBrainSidebarViewProvider implements vscode.WebviewViewProvider {
         }
 
         case 'revealRule': {
+          this.telemetry?.track('featureUsage', { feature: 'revealRule' });
           const rule: string = message.rule;
           const parts = rule.split('#');
           const ruleFile = parts[0];
@@ -78,11 +83,13 @@ export class QaBrainSidebarViewProvider implements vscode.WebviewViewProvider {
         }
 
         case 'copyTemplate':
+          this.telemetry?.track('featureUsage', { feature: 'copyTemplate' });
           await vscode.env.clipboard.writeText(message.code);
           vscode.window.showInformationMessage('QA Brain: Test template copied to clipboard.');
           break;
 
         case 'insertTemplate': {
+          this.telemetry?.track('featureUsage', { feature: 'insertTemplate' });
           const editor = vscode.window.activeTextEditor;
           if (editor) {
             editor.edit(editBuilder => {
@@ -95,12 +102,64 @@ export class QaBrainSidebarViewProvider implements vscode.WebviewViewProvider {
           break;
         }
 
+        case 'tabChanged':
+          this.telemetry?.track('featureUsage', { feature: `tab:${message.tab || 'unknown'}` });
+          break;
+
         case 'runReview':
-          vscode.commands.executeCommand('qaBrain.reviewCurrentFile');
+          this.telemetry?.track('featureUsage', { feature: 'runReviewFromSidebar' });
+          {
+            const activeFilePath = this.viewModel.getCurrentState()?.activeFilePath;
+            const targetUri = activeFilePath ? vscode.Uri.file(activeFilePath) : undefined;
+            vscode.commands.executeCommand('qaBrain.reviewCurrentFile', targetUri);
+          }
+          break;
+
+        case 'runSelection':
+          this.telemetry?.track('featureUsage', { feature: 'runSelectionFromSidebar' });
+          vscode.commands.executeCommand('qaBrain.reviewSelection');
           break;
 
         case 'runDesign':
-          vscode.commands.executeCommand('qaBrain.runTestDesign');
+          this.telemetry?.track('featureUsage', { feature: 'runDesignFromSidebar' });
+          {
+            const activeFilePath = this.viewModel.getCurrentState()?.activeFilePath;
+            const targetUri = activeFilePath ? vscode.Uri.file(activeFilePath) : undefined;
+            vscode.commands.executeCommand('qaBrain.runTestDesign', targetUri);
+          }
+          break;
+
+        case 'openReport':
+          this.telemetry?.track('featureUsage', { feature: 'openReportFromSidebar' });
+          vscode.commands.executeCommand('qaBrain.openLatestReport');
+          break;
+
+        case 'clear':
+          this.telemetry?.track('featureUsage', { feature: 'clearFromSidebar' });
+          vscode.commands.executeCommand('qaBrain.clearDiagnostics');
+          break;
+
+        case 'saveApiKey':
+          this.telemetry?.track('featureUsage', { feature: 'saveApiKey' });
+          {
+            const key: string = message.apiKey || '';
+            await vscode.workspace.getConfiguration('qaBrain').update('apiKey', key.trim(), vscode.ConfigurationTarget.Global);
+            vscode.window.showInformationMessage('QA Brain: API Key successfully saved and configured.');
+            this.pushState();
+          }
+          break;
+
+        case 'saveApiConfig':
+          this.telemetry?.track('featureUsage', { feature: 'saveApiConfig' });
+          {
+            const config = vscode.workspace.getConfiguration('qaBrain');
+            await config.update('apiProvider', message.apiProvider, vscode.ConfigurationTarget.Global);
+            await config.update('apiKey', (message.apiKey || '').trim(), vscode.ConfigurationTarget.Global);
+            await config.update('apiModel', (message.apiModel || '').trim(), vscode.ConfigurationTarget.Global);
+            await config.update('apiEndpoint', (message.apiEndpoint || '').trim(), vscode.ConfigurationTarget.Global);
+            vscode.window.showInformationMessage('QA Brain: API Configuration successfully saved.');
+            this.pushState();
+          }
           break;
 
         case 'ready':
@@ -217,6 +276,35 @@ export class QaBrainSidebarViewProvider implements vscode.WebviewViewProvider {
       text-align: center;
       padding: 30px 15px;
       opacity: 0.8;
+    }
+    .file-meta {
+      font-size: 0.9em;
+      opacity: 0.85;
+      margin: -6px 0 10px;
+      word-break: break-word;
+    }
+    .scope-badge {
+      display: inline-block;
+      background-color: var(--vscode-badge-background);
+      color: var(--vscode-badge-foreground);
+      padding: 1px 6px;
+      border-radius: 3px;
+      margin-left: 4px;
+      font-size: 0.85em;
+    }
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0 0 14px;
+    }
+    .context-note {
+      border-left: 3px solid var(--vscode-editorWarning-foreground, #cca700);
+      background-color: var(--vscode-inputValidation-warningBackground, transparent);
+      color: var(--vscode-sideBar-foreground);
+      padding: 8px 10px;
+      margin-bottom: 12px;
+      font-size: 0.9em;
     }
     .card {
       background-color: var(--vscode-editor-background);
@@ -351,7 +439,47 @@ export class QaBrainSidebarViewProvider implements vscode.WebviewViewProvider {
 <body>
   <div class="header">
     <div class="title">🧠 QA Brain Dashboard</div>
-    <div id="framework-badge" class="framework-badge" style="display: none;">Unknown</div>
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <div id="framework-badge" class="framework-badge" style="display: none;">Unknown</div>
+      <button class="btn secondary" style="padding: 2px 6px; font-size: 1.1em; line-height: 1;" onclick="toggleSettings()">⚙️</button>
+    </div>
+  </div>
+
+  <!-- Settings Panel -->
+  <div id="settings-panel" class="card" style="display: none; margin-bottom: 12px; border: 1px solid var(--vscode-editorWarning-foreground, #cca700); padding: 10px;">
+    <div style="font-weight: bold; margin-bottom: 10px; font-size: 1em; border-bottom: 1px solid var(--vscode-panel-border); padding-bottom: 4px;">Direct LLM Configuration</div>
+    
+    <div style="margin-bottom: 8px;">
+      <label for="api-provider-select" style="display: block; font-size: 0.85em; margin-bottom: 4px; opacity: 0.9; font-weight: 500;">Provider:</label>
+      <select id="api-provider-select" onchange="onProviderChanged()" style="width: 100%; padding: 4px 6px; background-color: var(--vscode-select-background); color: var(--vscode-select-foreground); border: 1px solid var(--vscode-select-border); border-radius: 2px; font-size: 0.9em;">
+        <option value="Gemini">Gemini API</option>
+        <option value="OpenAI">OpenAI (ChatGPT)</option>
+        <option value="Anthropic">Anthropic (Claude)</option>
+        <option value="OpenRouter">OpenRouter</option>
+      </select>
+    </div>
+
+    <div style="margin-bottom: 8px;">
+      <label for="api-key-input" style="display: block; font-size: 0.85em; margin-bottom: 4px; opacity: 0.9; font-weight: 500;">API Key:</label>
+      <input type="password" id="api-key-input" placeholder="Paste API Key..." style="width: 100%; padding: 4px 6px; background-color: var(--vscode-input-background); color: var(--vscode-input-foreground); border: 1px solid var(--vscode-input-border); border-radius: 2px; font-size: 0.9em; box-sizing: border-box;" />
+    </div>
+
+    <div style="margin-bottom: 8px;">
+      <label for="api-model-input" style="display: block; font-size: 0.85em; margin-bottom: 4px; opacity: 0.9; font-weight: 500;">Model Name (optional):</label>
+      <input type="text" id="api-model-input" placeholder="Default: gemini-2.5-flash" style="width: 100%; padding: 4px 6px; background-color: var(--vscode-input-background); color: var(--vscode-input-foreground); border: 1px solid var(--vscode-input-border); border-radius: 2px; font-size: 0.9em; box-sizing: border-box;" />
+    </div>
+
+    <div style="margin-bottom: 12px;">
+      <label for="api-endpoint-input" style="display: block; font-size: 0.85em; margin-bottom: 4px; opacity: 0.9; font-weight: 500;">Custom Endpoint (optional):</label>
+      <input type="text" id="api-endpoint-input" placeholder="Custom URL (e.g. OpenAI proxy)" style="width: 100%; padding: 4px 6px; background-color: var(--vscode-input-background); color: var(--vscode-input-foreground); border: 1px solid var(--vscode-input-border); border-radius: 2px; font-size: 0.9em; box-sizing: border-box;" />
+    </div>
+
+    <div style="display: flex; justify-content: flex-end; gap: 8px; margin-bottom: 8px;">
+      <button class="btn" onclick="saveApiConfig()">Save Configuration</button>
+    </div>
+    <div id="api-key-status" style="font-size: 0.85em; opacity: 0.8; font-style: italic;">
+      Status: Checking...
+    </div>
   </div>
 
   <div class="tabs">
@@ -423,6 +551,7 @@ export class QaBrainSidebarViewProvider implements vscode.WebviewViewProvider {
     });
 
     function switchTab(tabId) {
+      vscode.postMessage({ command: 'tabChanged', tab: tabId });
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
 
@@ -434,24 +563,89 @@ export class QaBrainSidebarViewProvider implements vscode.WebviewViewProvider {
       vscode.postMessage({ command: 'runReview' });
     }
 
+    function runSelection() {
+      vscode.postMessage({ command: 'runSelection' });
+    }
+
     function runDesign() {
       vscode.postMessage({ command: 'runDesign' });
     }
 
-    function jumpToLine(evidence) {
-      vscode.postMessage({ command: 'jumpToLine', evidence });
+    function openReport() {
+      vscode.postMessage({ command: 'openReport' });
+    }
+
+    function clearDashboard() {
+      vscode.postMessage({ command: 'clear' });
+    }
+
+    function toggleSettings() {
+      toggleElement('settings-panel');
+    }
+
+    function saveApiKey() {
+      const apiKey = document.getElementById('api-key-input').value;
+      vscode.postMessage({ command: 'saveApiKey', apiKey });
+    }
+
+    function saveApiConfig() {
+      const apiProvider = document.getElementById('api-provider-select').value;
+      const apiKey = document.getElementById('api-key-input').value;
+      const apiModel = document.getElementById('api-model-input').value;
+      const apiEndpoint = document.getElementById('api-endpoint-input').value;
+      vscode.postMessage({ command: 'saveApiConfig', apiProvider, apiKey, apiModel, apiEndpoint });
+    }
+
+    function onProviderChanged() {
+      const provider = document.getElementById('api-provider-select').value;
+      const modelInput = document.getElementById('api-model-input');
+      const endpointInput = document.getElementById('api-endpoint-input');
+      const keyInput = document.getElementById('api-key-input');
+      
+      if (provider === 'Gemini') {
+        keyInput.placeholder = 'Paste Gemini API Key...';
+        modelInput.placeholder = 'Default: gemini-2.5-flash';
+        endpointInput.placeholder = 'Custom URL (optional)';
+      } else if (provider === 'OpenAI') {
+        keyInput.placeholder = 'Paste OpenAI API Key...';
+        modelInput.placeholder = 'Default: gpt-4o';
+        endpointInput.placeholder = 'Custom URL (optional)';
+      } else if (provider === 'Anthropic') {
+        keyInput.placeholder = 'Paste Anthropic API Key...';
+        modelInput.placeholder = 'Default: claude-3-5-sonnet-latest';
+        endpointInput.placeholder = 'Custom URL (optional)';
+      } else if (provider === 'OpenRouter') {
+        keyInput.placeholder = 'Paste OpenRouter API Key...';
+        modelInput.placeholder = 'Default: google/gemini-2.5-flash';
+        endpointInput.placeholder = 'Custom URL (optional)';
+      }
+    }
+
+    function jumpToLineByIndex(idx) {
+      const f = currentFindings[idx];
+      if (f) {
+        vscode.postMessage({ command: 'jumpToLine', evidence: f.evidence });
+      }
     }
 
     function revealRule(rule) {
       vscode.postMessage({ command: 'revealRule', rule });
     }
 
-    function copyTemplate(code) {
-      vscode.postMessage({ command: 'copyTemplate', code });
+    function copyTemplateByIndex(idx) {
+      const s = currentScenarios[idx];
+      if (s) {
+        const code = stateFramework === 'Selenium' ? s.suggestedTemplate.selenium : s.suggestedTemplate.playwright;
+        vscode.postMessage({ command: 'copyTemplate', code });
+      }
     }
 
-    function insertTemplate(code) {
-      vscode.postMessage({ command: 'insertTemplate', code });
+    function insertTemplateByIndex(idx) {
+      const s = currentScenarios[idx];
+      if (s) {
+        const code = stateFramework === 'Selenium' ? s.suggestedTemplate.selenium : s.suggestedTemplate.playwright;
+        vscode.postMessage({ command: 'insertTemplate', code });
+      }
     }
 
     function toggleElement(id) {
@@ -463,7 +657,44 @@ export class QaBrainSidebarViewProvider implements vscode.WebviewViewProvider {
       }
     }
 
+    let currentFindings = [];
+    let currentScenarios = [];
+    let stateFramework = 'Playwright';
+    let settingsInitialized = false;
+
     function renderState(state) {
+      stateFramework = state.framework || 'Playwright';
+      currentFindings = state.findings || [];
+      currentScenarios = (state.testDesign && state.testDesign.missingScenarios) ? state.testDesign.missingScenarios : [];
+
+      // Update API Key Status
+      const keyInput = document.getElementById('api-key-input');
+      const providerSelect = document.getElementById('api-provider-select');
+      const modelInput = document.getElementById('api-model-input');
+      const endpointInput = document.getElementById('api-endpoint-input');
+      const keyStatus = document.getElementById('api-key-status');
+
+      if (!settingsInitialized && (state.apiProvider || state.apiKey)) {
+        if (providerSelect && state.apiProvider) providerSelect.value = state.apiProvider;
+        if (keyInput && state.apiKey) keyInput.value = state.apiKey;
+        if (modelInput && state.apiModel) modelInput.value = state.apiModel;
+        if (endpointInput && state.apiEndpoint) endpointInput.value = state.apiEndpoint;
+        onProviderChanged();
+        settingsInitialized = true;
+      }
+
+      if (state.apiKey) {
+        const masked = state.apiKey.length > 8 
+          ? state.apiKey.substring(0, 4) + '...' + state.apiKey.substring(state.apiKey.length - 4) 
+          : '***';
+        const providerName = state.apiProvider || 'Gemini';
+        keyStatus.innerHTML = 'Status: 🔐 Key Configured for ' + providerName + ' (' + masked + ')';
+        keyStatus.style.color = 'var(--vscode-testing-iconPassedColor, #388a34)';
+      } else {
+        keyStatus.innerHTML = 'Status: ❌ No Key (Using local rules)';
+        keyStatus.style.color = 'var(--vscode-testing-iconFailedColor, #a1260d)';
+      }
+
       const fwBadge = document.getElementById('framework-badge');
       if (state.hasReview && state.framework) {
         fwBadge.textContent = state.framework;
@@ -472,12 +703,23 @@ export class QaBrainSidebarViewProvider implements vscode.WebviewViewProvider {
         fwBadge.style.display = 'none';
       }
 
+      const actionRow = renderActionRow(state);
+      const contextNote = state.contextLimited
+        ? '<div class="context-note">Selection review is context-limited. File-level metrics, coverage, and test design may differ from a full file review.</div>'
+        : '';
+      const fileMeta = state.activeFileName
+        ? \`<div class="file-meta">File: <strong>\${escapeHtml(state.activeFileName)}</strong><span class="scope-badge">\${state.reviewScope === 'selection' ? 'Selection' : 'Full File'}</span></div>\`
+        : '';
+
       // 1. Render Review Tab
       const reviewList = document.getElementById('review-list');
       if (!state.hasReview) {
         reviewList.innerHTML = \`<div class="no-review">
           <p>No active file review. Open a test file and click below to review.</p>
-          <button class="btn" onclick="runReview()">Run QA Brain Review</button>
+          <div class="action-row" style="justify-content:center;">
+            <button class="btn" onclick="runReview()">Review File</button>
+            <button class="btn secondary" onclick="runSelection()">Review Selection</button>
+          </div>
         </div>\`;
         
         document.getElementById('design-list').innerHTML = \`<div class="no-review">
@@ -496,13 +738,12 @@ export class QaBrainSidebarViewProvider implements vscode.WebviewViewProvider {
       }
 
       if (state.findings.length === 0) {
-        reviewList.innerHTML = \`<div class="no-review">
+        reviewList.innerHTML = fileMeta + actionRow + contextNote + \`<div class="no-review">
           <p>🎉 Excellent! No code quality issues found in this file.</p>
-          <button class="btn" onclick="runReview()">Review Again</button>
         </div>\`;
       } else {
-        let html = '';
-        state.findings.forEach(f => {
+        let html = fileMeta + actionRow + contextNote;
+        state.findings.forEach((f, index) => {
           const sevClass = f.severity.toLowerCase();
           
           let ruleRef = '';
@@ -518,7 +759,7 @@ export class QaBrainSidebarViewProvider implements vscode.WebviewViewProvider {
             actionButtons = \`<button class="btn secondary" onclick="event.stopPropagation(); revealRule('\${ruleRef}')">Reveal Rule</button>\`;
           }
 
-          html += \`<div class="card clickable" onclick="jumpToLine('\${f.evidence.replace(/'/g, "\\\\'")}')">
+          html += \`<div class="card clickable" onclick="jumpToLineByIndex(\${index})">
             <div class="card-header">
               <span class="card-title">\${f.title}</span>
               <span class="severity-badge \${sevClass}">\${f.severity}</span>
@@ -562,8 +803,8 @@ export class QaBrainSidebarViewProvider implements vscode.WebviewViewProvider {
             <div style="font-size: 0.9em; font-style: italic; opacity: 0.95; margin-bottom: 6px;">\${s.explanation}</div>
             <div class="card-actions">
               <button class="btn" onclick="toggleElement('tpl-\${idx}')">Toggle Code Template</button>
-              <button class="btn secondary" onclick="copyTemplate('\${targetCode.replace(/\\\\/g, '\\\\\\\\').replace(/'/g, "\\\\'").replace(/\\n/g, '\\\\n')}')">Copy Template</button>
-              <button class="btn secondary" onclick="insertTemplate('\${targetCode.replace(/\\\\/g, '\\\\\\\\').replace(/'/g, "\\\\'").replace(/\\n/g, '\\\\n')}')">Insert (Experimental)</button>
+              <button class="btn secondary" onclick="copyTemplateByIndex(\${idx})">Copy Template</button>
+              <button class="btn secondary" onclick="insertTemplateByIndex(\${idx})">Insert (Experimental)</button>
             </div>
             <div id="tpl-\${idx}" class="template-box" style="display: none;">\${escCode}</div>
           </div>\`;
@@ -574,7 +815,7 @@ export class QaBrainSidebarViewProvider implements vscode.WebviewViewProvider {
       // 3. Render Coverage Tab (Test Design Coverage)
       const coverageView = document.getElementById('coverage-view');
       const covScore = state.testDesign ? state.testDesign.coverageScore : 100;
-      let covHtml = \`<div style="font-size: 1.1em; font-weight: bold; margin-bottom: 12px;">Test Design Coverage Score: \${covScore}%</div>\`;
+      let covHtml = contextNote + \`<div style="font-size: 1.1em; font-weight: bold; margin-bottom: 12px;">Test Design Coverage Score: \${covScore}%</div>\`;
 
       if (state.testDesignCoverage && state.testDesignCoverage.length > 0) {
         covHtml += \`<div class="list-heading">Technique Breakdown</div>\`;
@@ -592,7 +833,7 @@ export class QaBrainSidebarViewProvider implements vscode.WebviewViewProvider {
 
       // 4. Render Metrics Tab
       const metricsView = document.getElementById('metrics-view');
-      metricsView.innerHTML = \`
+      metricsView.innerHTML = contextNote + \`
         <div class="metric-row">
           <span class="metric-name">Quality Score</span>
           <span class="metric-value">
@@ -656,6 +897,20 @@ export class QaBrainSidebarViewProvider implements vscode.WebviewViewProvider {
         insightsHtml = \`<div class="no-review"><p>Run review first to gather insights.</p></div>\`;
       }
       insightsView.innerHTML = insightsHtml;
+    }
+
+    function renderActionRow(state) {
+      const openReportButton = state.hasReview
+        ? '<button class="btn secondary" onclick="openReport()">Open Report</button>'
+        : '';
+
+      return \`<div class="action-row">
+        <button class="btn" onclick="runReview()">Review File</button>
+        <button class="btn secondary" onclick="runSelection()">Review Selection</button>
+        <button class="btn secondary" onclick="runDesign()">Run Design</button>
+        \${openReportButton}
+        <button class="btn secondary" onclick="clearDashboard()">Clear</button>
+      </div>\`;
     }
 
     function renderDelta(delta, higherIsBetter) {

@@ -3,13 +3,15 @@ import * as os from 'os';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import type { ExtensionContext, TextDocument } from 'vscode';
+import { resolveQaBrainRoot } from './extensionPaths';
 import type { ReviewRun } from './types';
+import { VsCodeLanguageModelProvider } from './lmProvider';
 
 export class ReviewRunner {
   private readonly repoRoot: string;
 
   constructor(private readonly context: ExtensionContext) {
-    this.repoRoot = path.resolve(__dirname, '../../../..');
+    this.repoRoot = resolveQaBrainRoot();
   }
 
   public isSupportedTestFile(filePath: string): boolean {
@@ -43,7 +45,13 @@ export class ReviewRunner {
 
     const root = workspaceRoot || this.findNearestPackageRoot(path.dirname(filePath));
     const { ReviewPipeline, GeminiProvider } = this.loadCore();
-    const pipeline = new ReviewPipeline(root, new GeminiProvider(''), this.repoRoot);
+    const apiProvider = config.get<string>('apiProvider', 'Gemini');
+    const apiKeySetting = config.get<string>('apiKey', '') || (apiProvider === 'Gemini' ? process.env.GEMINI_API_KEY : '') || process.env.QA_BRAIN_API_KEY || '';
+    const apiModel = config.get<string>('apiModel', '');
+    const apiEndpoint = config.get<string>('apiEndpoint', '');
+    const geminiFallback = new GeminiProvider(apiKeySetting, apiProvider, apiModel, apiEndpoint);
+    const lmProvider = new VsCodeLanguageModelProvider(geminiFallback);
+    const pipeline = new ReviewPipeline(root, lmProvider, this.repoRoot);
     const { report, result } = await this.runQuietly<{ report: string; result: any }>(() => pipeline.runPipeline(filePath));
 
     // Dynamic framework detection from Core ContextBuilder
@@ -68,7 +76,7 @@ export class ReviewRunner {
       frameworkName = frameworkName.charAt(0).toUpperCase() + frameworkName.slice(1).toLowerCase();
     }
 
-    return { filePath, report, result, framework: frameworkName };
+    return { filePath, report, result, framework: frameworkName, reviewScope: 'file' };
   }
 
   public async reviewSelection(document: TextDocument, selectedText: string, selectionStartLine: number): Promise<ReviewRun> {
@@ -84,6 +92,7 @@ export class ReviewRunner {
         ...run,
         filePath: document.fileName,
         selectionStartLine,
+        reviewScope: 'selection',
       };
     } finally {
       try {

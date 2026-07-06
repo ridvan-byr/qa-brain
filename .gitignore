@@ -4,3 +4,5 @@ node_modules/
 package-lock.json
 dist/
 extensions/vscode/out/
+extensions/vscode/qa-brain-core/
+extensions/vscode/*.vsix

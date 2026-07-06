@@ -61,6 +61,7 @@ declare module 'vscode' {
     lineCount: number;
     getText(range?: Range): string;
     lineAt(line: number): TextLine;
+    positionAt(offset: number): Position;
   }
 
   export interface TextEditorEdit {
@@ -219,11 +220,21 @@ declare module 'vscode' {
     registerWebviewViewProvider(viewId: string, provider: WebviewViewProvider, options?: any): Disposable;
   };
 
+  export interface WorkspaceConfiguration {
+    get<T>(key: string): T | undefined;
+    get<T>(key: string, defaultValue: T): T;
+    update(section: string, value: any, target?: ConfigurationTarget | boolean | null, overrideInLanguage?: boolean): Thenable<void>;
+  }
+
+  export enum ConfigurationTarget {
+    Global = 1,
+    Workspace = 2,
+    WorkspaceFolder = 3
+  }
+
   export const workspace: {
     workspaceFolders?: WorkspaceFolder[];
-    getConfiguration(section?: string): {
-      get<T>(key: string, defaultValue: T): T;
-    };
+    getConfiguration(section?: string): WorkspaceConfiguration;
     createFileSystemWatcher(globPattern: string): Disposable;
     openTextDocument(uri: Uri): Thenable<TextDocument>;
     onDidSaveTextDocument(listener: (document: TextDocument) => any): Disposable;
@@ -251,8 +262,46 @@ declare module 'vscode' {
   };
 
   export const env: {
+    isTelemetryEnabled?: boolean;
     clipboard: {
       writeText(text: string): Thenable<void>;
     };
   };
+
+  export class CancellationTokenSource {
+    constructor();
+    token: CancellationToken;
+    cancel(): void;
+    dispose(): void;
+  }
+
+  export class LanguageModelChatMessage {
+    static User(content: string): LanguageModelChatMessage;
+    static Assistant(content: string): LanguageModelChatMessage;
+    static System(content: string): LanguageModelChatMessage;
+  }
+
+  export interface LanguageModelChatResponse {
+    text: AsyncIterable<string>;
+  }
+
+  export interface LanguageModelChatSelector {
+    vendor?: string;
+    family?: string;
+    version?: string;
+    id?: string;
+  }
+
+  export interface LanguageModelChat {
+    id: string;
+    name?: string;
+    vendor?: string;
+    family?: string;
+    sendRequest(messages: LanguageModelChatMessage[], options?: any, token?: CancellationToken): Thenable<LanguageModelChatResponse>;
+  }
+
+  export const lm: {
+    selectChatModels(selector?: LanguageModelChatSelector): Thenable<LanguageModelChat[]>;
+  };
 }
+
