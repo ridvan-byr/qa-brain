@@ -223,3 +223,24 @@ The next focus is extension release packaging and marketplace hardening:
 - Publish `qa-brain-vscode-client-0.1.2.vsix` to the VS Code Marketplace.
 - Update the marketplace changelog.
 - Kick off Sprint 21 (Python Selenium Adapter & Calibration).
+
+## 2026-07-06 - Sprint 20 Addendum - Discovery-Only Guardrails
+
+- **Python Review Guardrails**:
+  - Kept Python support discovery-only for Sprint 20.
+  - Added `Scanner.isPythonTestFile()` and `Scanner.isReviewableTestFile()` so Python test files can be discovered without entering review/scoring pipelines.
+  - Updated CLI, GitHub Action, MCP, repository scanner, and VS Code Test Design command to skip Python review/test-design execution with explicit user-facing messages.
+- **Mixed Repository Dependency Mapping**:
+  - Updated `ContextBuilder.mapDependencies()` so mixed repositories can merge `package.json` and `requirements.txt` dependencies instead of choosing only one source.
+  - Python dependencies are mapped into the standard dependency model and mirrored into `devDependencies` for backward compatibility.
+- **Regression Coverage**:
+  - Extended `tests/action-integration/action.test.ts` to verify Python test detection, review exclusion, mixed Node + Python dependency mapping, and DiffDetector filtering.
+  - Added Python detection seed fixtures under `benchmarks/python/detection/`.
+- **Verification Completed**:
+  - `npm run build` passed.
+  - `npm test` passed.
+  - `node dist/src/cli.js benchmark` passed with 12/12 benchmark cases.
+  - `npm run compile` from `extensions/vscode` passed.
+  - `npm run package` from `extensions/vscode` passed and generated `qa-brain-vscode-client-0.1.2.vsix`.
+- **Working Tree Note**:
+  - Generated validation/metrics report files contain timing-only drift from verification runs. Do not include those in the Sprint 20 commit unless intentionally refreshing generated reports.

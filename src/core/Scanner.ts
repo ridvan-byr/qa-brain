@@ -52,7 +52,9 @@ export class Scanner {
     const ignorePatterns = options.ignorePatterns || [];
     
     // Apply limit
-    const targetFiles = files.slice(0, maxFiles);
+    const targetFiles = files
+      .filter(file => this.isReviewableTestFile(path.basename(file)))
+      .slice(0, maxFiles);
 
     const summary: ScanSummary = {
       filesReviewed: targetFiles.length,
@@ -125,15 +127,24 @@ export class Scanner {
       || /^tests?-.*\.(ts|js|tsx|jsx)$/.test(lower)
       || /^tests?\.(ts|js|tsx|jsx)$/.test(lower);
 
-    const isPythonTest = lower.endsWith('.py') && (
+    const isPythonTest = this.isPythonTestFile(lower);
+
+    return isJsTsTest || isPythonTest;
+  }
+
+  public static isPythonTestFile(filename: string): boolean {
+    const lower = filename.toLowerCase();
+    return lower.endsWith('.py') && (
       lower.startsWith('test_') ||
       lower.endsWith('_test.py') ||
       lower === 'test.py' ||
       lower.includes('.spec.py') ||
       lower.includes('.test.py')
     );
+  }
 
-    return isJsTsTest || isPythonTest;
+  public static isReviewableTestFile(filename: string): boolean {
+    return this.isTestFile(filename) && !this.isPythonTestFile(filename);
   }
 
   /**

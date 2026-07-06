@@ -1,12 +1,12 @@
 # QA Brain Release Artifacts
 
-## VS Code Client 0.1.0 RC
+## VS Code Client 0.1.2 RC
 
-Generated: 2026-07-05
+Generated: 2026-07-06
 
 | Artifact | SHA256 |
 | :--- | :--- |
-| `extensions/vscode/qa-brain-vscode-client-0.1.0.vsix` | `3D96682A19D548C05D2948FDDE111544C64AFA107148AAD7AEE8D52C0B97B364` |
+| `extensions/vscode/qa-brain-vscode-client-0.1.2.vsix` | `BF749533EB5404AAAC5B5AC6C490D0666A42E0CBF78277E4AAC258D4F7652FBE` |
 
 The VSIX file is generated locally and intentionally ignored by git. Recreate it with:
 

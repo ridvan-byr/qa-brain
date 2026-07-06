@@ -18,6 +18,7 @@ function testDiffDetector() {
     { filename: 'src/cli.ts', status: 'modified' },
     { filename: 'tests/login.spec.ts', status: 'modified' },
     { filename: 'tests/logout.test.ts', status: 'added' },
+    { filename: 'tests/test_login.py', status: 'modified' },
     { filename: 'tests/old.spec.ts', status: 'removed' },
     { filename: 'generated/test.spec.ts', status: 'added' },
     { filename: 'fixtures/fixture.ts', status: 'modified' },
@@ -122,6 +123,9 @@ function testPythonSupport() {
   assert.strictEqual(Scanner.isTestFile('test_login.py'), true);
   assert.strictEqual(Scanner.isTestFile('login_test.py'), true);
   assert.strictEqual(Scanner.isTestFile('test.py'), true);
+  assert.strictEqual(Scanner.isTestFile('login.spec.py'), true);
+  assert.strictEqual(Scanner.isReviewableTestFile('test_login.py'), false);
+  assert.strictEqual(Scanner.isReviewableTestFile('login.spec.ts'), true);
   assert.strictEqual(Scanner.isTestFile('login.py'), false);
   assert.strictEqual(Scanner.isTestFile('utils.py'), false);
 
@@ -136,9 +140,12 @@ selenium>=4.0.0
 playwright
 `;
       }
+      if (filePath === 'package.json') {
+        return null;
+      }
       if (filePath === 'pages/login_page.py') {
         return `
-class LoginPage(BasePage):
+class LoginPage(BasePage, ABC):
     def __init__(self, driver):
         self.driver = driver
     def enter_username(self, username):
@@ -147,10 +154,21 @@ class LoginPage(BasePage):
         pass
 `;
       }
+      if (filePath === 'tests/conftest.py') {
+        return `
+@pytest.fixture
+def auth_token():
+    return "token123"
+
+@pytest.fixture(scope="session")
+def api_client():
+    pass
+`;
+      }
       return null;
     },
     directoryExists(dirPath: string): boolean {
-      return dirPath === 'pages';
+      return dirPath === 'pages' || dirPath === 'tests';
     },
     scanDirectory(dirPath: string, match: string | string[]): string[] {
       if (dirPath === 'pages') return ['pages/login_page.py'];
@@ -166,16 +184,51 @@ class LoginPage(BasePage):
   assert.strictEqual(context.dependencies.seleniumVersion, '4.0.0');
   assert.strictEqual(context.dependencies.dependencies['pytest'], '7.1.2');
 
-  // 3. Test Python framework detection
+  // 3. Test Python framework and runner detection
   assert.strictEqual(context.targetFile.detectedFramework, 'Selenium');
+  assert.strictEqual(context.targetFile.detectedTestRunner, 'pytest');
   
   const playwrightContext = builder.buildContext('test_playwright.py', 'from playwright.sync_api import sync_playwright');
   assert.strictEqual(playwrightContext.targetFile.detectedFramework, 'Playwright');
+  assert.strictEqual(playwrightContext.targetFile.detectedTestRunner, 'pytest');
 
-  // 4. Test Python POM mapping
+  const unittestContext = builder.buildContext('test_unit.py', 'import unittest\nclass MyTest(unittest.TestCase): pass');
+  assert.strictEqual(unittestContext.targetFile.detectedTestRunner, 'unittest');
+
+  // 4. Test Python POM mapping with inheritance (LoginPage(BasePage, ABC))
   assert.strictEqual(context.pageObjects.length, 1);
   assert.strictEqual(context.pageObjects[0].className, 'LoginPage');
   assert.deepStrictEqual(context.pageObjects[0].methods, ['enter_username', 'submit_form']);
+
+  // 5. Test pytest decorated fixtures parsing from conftest.py
+  assert.strictEqual(context.fixtures.length, 2);
+  assert.strictEqual(context.fixtures[0].name, 'auth_token');
+  assert.strictEqual(context.fixtures[1].name, 'api_client');
+
+  // 6. Test Mixed Repository (package.json + requirements.txt) dependency mapping
+  const mixedLoader = {
+    readRawFile(filePath: string): string | null {
+      if (filePath === 'package.json') {
+        return JSON.stringify({
+          devDependencies: { '@playwright/test': '^1.40.0' }
+        });
+      }
+      if (filePath === 'requirements.txt') {
+        return 'selenium>=4.0.0';
+      }
+      return null;
+    },
+    directoryExists(dirPath: string): boolean { return false; },
+    scanDirectory(dirPath: string, match: string | string[]): string[] { return []; }
+  };
+  const mixedBuilder = new ContextBuilder(mixedLoader as any);
+  const mixedContext = mixedBuilder.buildContext('test_mixed.py', 'from selenium import webdriver');
+  // Should merge package.json and requirements.txt without losing either ecosystem.
+  assert.strictEqual(mixedContext.dependencies.playwrightVersion, '^1.40.0');
+  assert.strictEqual(mixedContext.dependencies.seleniumVersion, '4.0.0');
+  assert.strictEqual(mixedContext.dependencies.devDependencies['@playwright/test'], '^1.40.0');
+  assert.strictEqual(mixedContext.dependencies.dependencies['selenium'], '4.0.0');
+  assert.strictEqual(mixedContext.dependencies.devDependencies['selenium'], '4.0.0');
 
   console.log('✓ Python support tests passed.');
 }

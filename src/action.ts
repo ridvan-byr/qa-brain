@@ -50,11 +50,14 @@ async function run(): Promise<void> {
 
       const stat = fs.statSync(resolvedReviewPath);
       if (stat.isFile()) {
-        if (Scanner.isTestFile(resolvedReviewPath)) {
+        if (Scanner.isReviewableTestFile(path.basename(resolvedReviewPath))) {
           testFiles = [resolvedReviewPath];
+        } else if (Scanner.isPythonTestFile(path.basename(resolvedReviewPath))) {
+          core.info('Python test discovery is enabled, but Python review is not enabled yet. Skipping review.');
         }
       } else if (stat.isDirectory()) {
-        testFiles = Scanner.scanDirectory(resolvedReviewPath, ignorePatterns);
+        testFiles = Scanner.scanDirectory(resolvedReviewPath, ignorePatterns)
+          .filter(file => Scanner.isReviewableTestFile(path.basename(file)));
       }
 
       core.info(`Review path: ${reviewPath}`);

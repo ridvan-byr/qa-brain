@@ -28,12 +28,14 @@ export class ContextBuilder {
 
     const detectedFramework = this.detectFramework(dependencies, targetFileContent);
     const detectedFeature = this.detectFeature(targetFilePath, targetFileContent);
+    const detectedTestRunner = this.detectTestRunner(targetFilePath, dependencies, targetFileContent);
 
     const targetFile: TargetFileInfo = {
       filePath: targetFilePath,
       content: targetFileContent,
       detectedFramework,
       detectedFeature,
+      detectedTestRunner,
     };
     const framework = this.adapterRegistry.resolve({
       dependencies,
@@ -85,6 +87,8 @@ export class ContextBuilder {
       hasLintStaged: false,
     };
 
+    let info: DependencyInfo = defaultInfo;
+
     if (rawPackage) {
       try {
         const parsed = JSON.parse(rawPackage);
@@ -94,7 +98,7 @@ export class ContextBuilder {
         const playwrightVersion = devDeps['@playwright/test'] || deps['@playwright/test'];
         const seleniumVersion = devDeps['selenium-webdriver'] || deps['selenium-webdriver'];
 
-        return {
+        info = {
           playwrightVersion,
           seleniumVersion,
           devDependencies: devDeps,
@@ -112,35 +116,45 @@ export class ContextBuilder {
     // Parse Python dependencies from requirements.txt if present
     const rawRequirements = this.loader.readRawFile('requirements.txt');
     if (rawRequirements) {
-      const devDeps: Record<string, string> = {};
-      const deps: Record<string, string> = {};
+      const pythonDeps = this.parseRequirements(rawRequirements);
+      const dependencies = {
+        ...info.dependencies,
+        ...pythonDeps,
+      };
+      const devDependencies = {
+        ...info.devDependencies,
+        ...pythonDeps,
+      };
 
-      for (const line of rawRequirements.split(/\r?\n/)) {
-        const trimmed = line.trim();
-        if (!trimmed || trimmed.startsWith('#')) continue;
-
-        // Parse package name and version (e.g. pytest==7.1.2 or selenium>=4.0.0 or playwright)
-        const match = trimmed.match(/^([a-zA-Z0-9_\-]+)(?:[<=>~]+([0-9\.\*a-zA-Z\-]+))?/);
-        if (match) {
-          const pkg = match[1].toLowerCase();
-          const ver = match[2] || 'latest';
-          deps[pkg] = ver;
-        }
-      }
-
-      return {
-        playwrightVersion: deps['playwright'],
-        seleniumVersion: deps['selenium'],
-        devDependencies: devDeps,
-        dependencies: deps,
-        hasESLint: false,
-        hasPrettier: false,
-        hasHusky: false,
-        hasLintStaged: false,
+      info = {
+        ...info,
+        playwrightVersion: info.playwrightVersion || dependencies['playwright'],
+        seleniumVersion: info.seleniumVersion || dependencies['selenium'],
+        devDependencies,
+        dependencies,
       };
     }
 
-    return defaultInfo;
+    return info;
+  }
+
+  private parseRequirements(rawRequirements: string): Record<string, string> {
+    const deps: Record<string, string> = {};
+
+    for (const line of rawRequirements.split(/\r?\n/)) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#') || trimmed.startsWith('-')) continue;
+
+      const withoutInlineComment = trimmed.split(/\s+#/)[0].trim();
+      const match = withoutInlineComment.match(/^([a-zA-Z0-9_\-]+)(?:\[[^\]]+\])?(?:\s*[<=>~!]+\s*([0-9.*a-zA-Z\-]+))?/);
+      if (match) {
+        const pkg = match[1].toLowerCase();
+        const ver = match[2] || 'latest';
+        deps[pkg] = ver;
+      }
+    }
+
+    return deps;
   }
 
   private mapConfiguration(): ConfigurationInfo {
@@ -198,9 +212,9 @@ export class ContextBuilder {
 
       const isPython = file.endsWith('.py');
 
-      // Match class declaration
+      // Match class declaration (handling optional inheritance LoginPage(BasePage, ABC))
       const classMatch = isPython 
-        ? content.match(/class\s+([a-zA-Z0-9_]+)(?:\s*\([a-zA-Z0-9_]+\))?\s*:/)
+        ? content.match(/class\s+([a-zA-Z0-9_]+)(?:\s*\([^)]*\))?\s*:/)
         : content.match(/class\s+([a-zA-Z0-9_]+)/);
       if (!classMatch) continue;
 
@@ -240,7 +254,29 @@ export class ContextBuilder {
       const files = this.loader.scanDirectory(fixturesDir, ['.ts', '.js', '.tsx', '.jsx', '.py']);
       for (const file of files) {
         const ext = path.extname(file);
-        fixtures.push({ name: path.basename(file, ext), filePath: file });
+        const name = path.basename(file, ext);
+        
+        if (ext === '.py') {
+          // If it is a Python file, parse individual @pytest.fixture functions
+          const content = this.loader.readRawFile(file);
+          if (content) {
+            const fixtureMatches = content.matchAll(/@(?:pytest\.)?fixture(?:\s*\([^)]*\))?\s*\r?\n\s*(?:async\s+)?def\s+([a-zA-Z0-9_]+)\s*\(/g);
+            let foundAny = false;
+            for (const match of fixtureMatches) {
+              if (match[1]) {
+                fixtures.push({ name: match[1], filePath: file });
+                foundAny = true;
+              }
+            }
+            if (!foundAny) {
+              fixtures.push({ name, filePath: file });
+            }
+          } else {
+            fixtures.push({ name, filePath: file });
+          }
+        } else {
+          fixtures.push({ name, filePath: file });
+        }
       }
     }
 
@@ -253,7 +289,23 @@ export class ContextBuilder {
     for (const item of rootFixtures) {
       const content = this.loader.readRawFile(item);
       if (content) {
-        fixtures.push({ name: path.basename(item, path.extname(item)), filePath: item });
+        const ext = path.extname(item);
+        if (ext === '.py') {
+          // Parse conftest.py fixtures
+          const fixtureMatches = content.matchAll(/@(?:pytest\.)?fixture(?:\s*\([^)]*\))?\s*\r?\n\s*(?:async\s+)?def\s+([a-zA-Z0-9_]+)\s*\(/g);
+          let foundAny = false;
+          for (const match of fixtureMatches) {
+            if (match[1]) {
+              fixtures.push({ name: match[1], filePath: item });
+              foundAny = true;
+            }
+          }
+          if (!foundAny) {
+            fixtures.push({ name: path.basename(item, ext), filePath: item });
+          }
+        } else {
+          fixtures.push({ name: path.basename(item, ext), filePath: item });
+        }
       }
     }
 
@@ -305,6 +357,42 @@ export class ContextBuilder {
       content.includes('cy.')
     ) {
       return 'Cypress';
+    }
+
+    return 'Unknown';
+  }
+
+  private detectTestRunner(filePath: string, deps: DependencyInfo, content: string): string {
+    const isPython = filePath.endsWith('.py');
+    if (isPython) {
+      // 1. Differentiate by file content imports first
+      if (content.includes('import pytest') || content.includes('from pytest')) {
+        return 'pytest';
+      }
+      if (content.includes('import unittest') || content.includes('from unittest') || content.includes('unittest.TestCase')) {
+        return 'unittest';
+      }
+      // 2. Differentiate by package dependencies next
+      if (deps.dependencies['pytest']) {
+        return 'pytest';
+      }
+      if (deps.dependencies['unittest']) {
+        return 'unittest';
+      }
+      return 'pytest'; // Default fallback for Python test files
+    }
+
+    if (content.includes('@playwright/test') || deps.playwrightVersion) {
+      return 'playwright-runner';
+    }
+
+    if (content.includes('describe(') || content.includes('it(') || content.includes('test(')) {
+      if (deps.devDependencies['jest'] || deps.dependencies['jest']) {
+        return 'jest';
+      }
+      if (deps.devDependencies['mocha'] || deps.dependencies['mocha']) {
+        return 'mocha';
+      }
     }
 
     return 'Unknown';

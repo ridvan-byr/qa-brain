@@ -54,7 +54,7 @@ export class DiffDetector {
     return files
       .filter(f => f.status !== 'removed')
       .map(f => f.filename)
-      .filter(name => Scanner.isTestFile(name))
+      .filter(name => Scanner.isReviewableTestFile(name))
       .filter(name => !this.matchesIgnorePattern(name, ignorePatterns));
   }
 

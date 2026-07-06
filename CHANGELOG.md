@@ -4,10 +4,12 @@
 
 - Added Python test file scanner to scan `test_*.py`, `*_test.py`, and `test.py` files.
 - Added `requirements.txt` parsing support to map Python dependencies like `pytest`, `selenium`, and `playwright`.
+- Merged `package.json` and `requirements.txt` dependency discovery for mixed Node.js + Python repositories.
 - Added Python Page Object Model (POM) parsing matching Python classes and async/sync methods.
 - Added Python pytest fixture parsing matching `conftest.py` setup files.
 - Added Python Selenium and Playwright framework detection based on library imports.
 - Added regression test suite covering Python scanner integration features.
+- Kept Python support in discovery-only mode by preventing Python test files from entering review, scoring, test design, GitHub Action review, CLI review, and MCP review pipelines.
 
 ## 0.1.1
 

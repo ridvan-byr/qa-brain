@@ -51,6 +51,7 @@ export interface TargetFileInfo {
   content: string;
   detectedFramework: string;
   detectedFeature: string;
+  detectedTestRunner?: string;
 }
 
 export interface ReviewContext {

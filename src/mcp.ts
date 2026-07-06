@@ -135,6 +135,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         if (!Scanner.isTestFile(fileName)) {
           throw new Error(`File must be a valid test file name: ${filePath}`);
         }
+        if (Scanner.isPythonTestFile(fileName)) {
+          throw new Error("Python discovery is enabled, but Python review is not enabled yet.");
+        }
         
         const projectRoot = findNearestProjectRoot(filePath);
         const pipeline = new ReviewPipeline(projectRoot, provider);
@@ -158,6 +161,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const fileName = path.basename(filePath);
         if (!Scanner.isTestFile(fileName)) {
           throw new Error(`File must be a valid test file name: ${filePath}`);
+        }
+        if (Scanner.isPythonTestFile(fileName)) {
+          throw new Error("Python discovery is enabled, but Python test design is not enabled yet.");
         }
 
         const projectRoot = findNearestProjectRoot(filePath);
@@ -187,7 +193,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const maxFiles = (args?.maxFiles as number) || 30;
         const ignorePatterns = (args?.ignorePatterns as string[]) || [];
 
-        const files = Scanner.scanDirectory(dirPath, ignorePatterns);
+        const files = Scanner.scanDirectory(dirPath, ignorePatterns)
+          .filter(file => Scanner.isReviewableTestFile(path.basename(file)));
 
         if (files.length === 0) {
           return {

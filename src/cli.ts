@@ -117,10 +117,19 @@ async function run(): Promise<void> {
     let filesToScan: string[] = [];
 
     if (stats.isFile()) {
+      if (!Scanner.isReviewableTestFile(path.basename(absPath))) {
+        if (Scanner.isPythonTestFile(path.basename(absPath))) {
+          console.log('Python test discovery is enabled, but Python review is not enabled yet. Skipping review.');
+          process.exit(0);
+        }
+        console.error(`Error: File is not a supported reviewable test file: ${targetPath}`);
+        process.exit(1);
+      }
       filesToScan.push(absPath);
     } else {
       // Use the newly abstracted Scanner
-      filesToScan = Scanner.scanDirectory(absPath, ignorePatterns);
+      filesToScan = Scanner.scanDirectory(absPath, ignorePatterns)
+        .filter(file => Scanner.isReviewableTestFile(path.basename(file)));
     }
 
     if (filesToScan.length === 0) {
