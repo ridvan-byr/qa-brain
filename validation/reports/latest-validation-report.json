@@ -1,7 +1,10 @@
 {
-  "generatedAt": "2026-07-06T11:51:23.768Z",
+  "generatedAt": "2026-07-06T14:27:23.006Z",
   "framework": "playwright",
-  "selectionWarnings": [],
+  "selectionWarnings": [
+    "Active validation coverage has 0 repositories with Playwright specs; replace no-spec repositories before final Sprint 11 sign-off.",
+    "Active validation coverage has 0 small repositories with Playwright specs; minimum target is 2."
+  ],
   "repositories": [
     {
       "id": "small-01",
@@ -12,34 +15,18 @@
         "mcp",
         "playwright-tooling"
       ],
-      "exists": true,
-      "filesReviewed": 3,
+      "exists": false,
+      "filesReviewed": 0,
       "findings": 0,
       "criticalFindings": 0,
-      "averageReviewTimeMs": 5,
-      "ruleOnlyPrecision": "Requires manual triage",
-      "ruleOnlyRecall": "Requires manual triage",
-      "geminiPrecision": "Skipped",
-      "geminiRecall": "Skipped",
-      "files": [
-        {
-          "file": "tests/click.spec.ts",
-          "reviewTimeMs": 8,
-          "findings": []
-        },
-        {
-          "file": "tests/core.spec.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "tests/library.spec.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        }
-      ],
+      "averageReviewTimeMs": 0,
+      "ruleOnlyPrecision": "Not run",
+      "ruleOnlyRecall": "Not run",
+      "geminiPrecision": "Not run",
+      "geminiRecall": "Not run",
+      "files": [],
       "notes": [
-        "LLM provider comparison skipped. Set runGeminiComparison=true to enable it."
+        "Local path not found: C:/tmp/qa-cortex-validation-repos/playwright-mcp"
       ]
     },
     {
@@ -51,39 +38,18 @@
         "starter",
         "authentication-heavy"
       ],
-      "exists": true,
-      "filesReviewed": 4,
+      "exists": false,
+      "filesReviewed": 0,
       "findings": 0,
       "criticalFindings": 0,
-      "averageReviewTimeMs": 7,
-      "ruleOnlyPrecision": "Requires manual triage",
-      "ruleOnlyRecall": "Requires manual triage",
-      "geminiPrecision": "Skipped",
-      "geminiRecall": "Skipped",
-      "files": [
-        {
-          "file": "apps/web/e2e/anon/access-to-pages.spec.ts",
-          "reviewTimeMs": 21,
-          "findings": []
-        },
-        {
-          "file": "apps/web/e2e/anon/public-pages.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "apps/web/e2e/user/access-to-pages.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "apps/web/e2e/user/private-items.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        }
-      ],
+      "averageReviewTimeMs": 0,
+      "ruleOnlyPrecision": "Not run",
+      "ruleOnlyRecall": "Not run",
+      "geminiPrecision": "Not run",
+      "geminiRecall": "Not run",
+      "files": [],
       "notes": [
-        "LLM provider comparison skipped. Set runGeminiComparison=true to enable it."
+        "Local path not found: C:/tmp/qa-cortex-validation-repos/nextbase"
       ]
     },
     {
@@ -95,114 +61,18 @@
         "demo",
         "page-object"
       ],
-      "exists": true,
-      "filesReviewed": 19,
+      "exists": false,
+      "filesReviewed": 0,
       "findings": 0,
       "criticalFindings": 0,
-      "averageReviewTimeMs": 3,
-      "ruleOnlyPrecision": "Requires manual triage",
-      "ruleOnlyRecall": "Requires manual triage",
-      "geminiPrecision": "Skipped",
-      "geminiRecall": "Skipped",
-      "files": [
-        {
-          "file": "accessibility/tests/example.spec.ts",
-          "reviewTimeMs": 5,
-          "findings": []
-        },
-        {
-          "file": "android/tests/example.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "basic/1-getting-started.spec.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "basic/2-actions.spec.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "basic/3-assertions.spec.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "basic/4-file-uploads.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "basic/5-networking.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "basic/pom/pom-with-fixtures.spec.ts",
-          "reviewTimeMs": 4,
-          "findings": []
-        },
-        {
-          "file": "basic/pom/pom.spec.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "chrome-extension/tests/example.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "drag-and-drop/tests/example.spec.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "fixtures/tests/express.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "fixtures/tests/test-fixture.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "github-api/tests/example.spec.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "oauth/tests/example.spec.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "performance/tests/example.spec.ts",
-          "reviewTimeMs": 4,
-          "findings": []
-        },
-        {
-          "file": "svgomg/tests/example.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "todomvc/tests/example.spec.ts",
-          "reviewTimeMs": 4,
-          "findings": []
-        },
-        {
-          "file": "visual-comparison/tests/example.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        }
-      ],
+      "averageReviewTimeMs": 0,
+      "ruleOnlyPrecision": "Not run",
+      "ruleOnlyRecall": "Not run",
+      "geminiPrecision": "Not run",
+      "geminiRecall": "Not run",
+      "files": [],
       "notes": [
-        "LLM provider comparison skipped. Set runGeminiComparison=true to enable it."
+        "Local path not found: C:/tmp/qa-cortex-validation-repos/demo-playwright"
       ]
     },
     {
@@ -214,104 +84,18 @@
         "bdd",
         "mixed-architecture"
       ],
-      "exists": true,
-      "filesReviewed": 17,
+      "exists": false,
+      "filesReviewed": 0,
       "findings": 0,
       "criticalFindings": 0,
-      "averageReviewTimeMs": 2,
-      "ruleOnlyPrecision": "Requires manual triage",
-      "ruleOnlyRecall": "Requires manual triage",
-      "geminiPrecision": "Skipped",
-      "geminiRecall": "Skipped",
-      "files": [
-        {
-          "file": "src/cli/commands/test.ts",
-          "reviewTimeMs": 5,
-          "findings": []
-        },
-        {
-          "file": "test/ai-fix-prompt-attachment/check-report/cucumber-report.spec.ts",
-          "reviewTimeMs": 4,
-          "findings": []
-        },
-        {
-          "file": "test/ai-fix-prompt-attachment/check-report/playwright-report.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "test/reporter-cucumber-ext-attachments/check-report/index.spec.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "test/reporter-cucumber-html/features/after-hook/specs/error.feature.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "test/reporter-cucumber-html/features/after-hook/specs/timeout.feature.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "test/reporter-cucumber-html/features/background/specs/attachments.feature.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "test/reporter-cucumber-html/features/background/specs/error.feature.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "test/reporter-cucumber-html/features/background/specs/timeout.feature.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "test/reporter-cucumber-html/features/before-all-hook/specs/fixture.feature.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "test/reporter-cucumber-html/features/before-all-hook/specs/named.feature.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "test/reporter-cucumber-html/features/before-all-hook/specs/timeout.feature.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "test/reporter-cucumber-html/features/before-hook/specs/error.feature.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "test/reporter-cucumber-html/features/before-hook/specs/timeout.feature.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "test/reporter-cucumber-html/features/failing-steps/specs/error.feature.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "test/reporter-cucumber-html/features/failing-steps/specs/timeout.feature.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "test/reporter-cucumber-html/features/success-steps/specs/success.feature.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        }
-      ],
+      "averageReviewTimeMs": 0,
+      "ruleOnlyPrecision": "Not run",
+      "ruleOnlyRecall": "Not run",
+      "geminiPrecision": "Not run",
+      "geminiRecall": "Not run",
+      "files": [],
       "notes": [
-        "LLM provider comparison skipped. Set runGeminiComparison=true to enable it."
+        "Local path not found: C:/tmp/qa-cortex-validation-repos/playwright-bdd"
       ]
     },
     {
@@ -323,276 +107,18 @@
         "web3",
         "fixture-heavy"
       ],
-      "exists": true,
-      "filesReviewed": 50,
-      "findings": 1,
+      "exists": false,
+      "filesReviewed": 0,
+      "findings": 0,
       "criticalFindings": 0,
-      "averageReviewTimeMs": 1,
-      "ruleOnlyPrecision": "Requires manual triage",
-      "ruleOnlyRecall": "Requires manual triage",
-      "geminiPrecision": "Skipped",
-      "geminiRecall": "Skipped",
-      "files": [
-        {
-          "file": "examples/metamask/test/playwright/00_mock.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "examples/metamask/test/playwright/01_basic.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "examples/metamask/test/playwright/02_simple.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "examples/metamask/test/playwright/03_advanced.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "examples/metamask/test/playwright/addNetwork.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "packages/cache/test/utils/createCacheForWalletSetupFunction.test.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "packages/cache/test/utils/waitForExtensionOnLoadPage.test.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/ethereum-wallet-mock/test/playwright/metamask/addNewAccount.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/ethereum-wallet-mock/test/playwright/metamask/importWalletFromPrivateKey.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/ethereum-wallet-mock/test/playwright/metamask/switchAccount.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/ethereum-wallet-mock/test/playwright/metamask/switchNetwork.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/ethereum-wallet-mock/test/playwright/mock/mockEthereum.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/ethereum-wallet-mock/test/playwright/mock/sendTransaction.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/metamask/test/playwright/e2e/PPOM.spec.ts",
-          "reviewTimeMs": 0,
-          "findings": []
-        },
-        {
-          "file": "wallets/metamask/test/playwright/e2e/addNetwork.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/metamask/test/playwright/e2e/addNewAccount.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/metamask/test/playwright/e2e/addNewToken.spec.ts",
-          "reviewTimeMs": 0,
-          "findings": []
-        },
-        {
-          "file": "wallets/metamask/test/playwright/e2e/approveNewNetwork.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/metamask/test/playwright/e2e/approvePermission.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/metamask/test/playwright/e2e/approveSwitchNetwork.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/metamask/test/playwright/e2e/batchTransfer.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/metamask/test/playwright/e2e/closeTransactionDetails.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/metamask/test/playwright/e2e/confirmSignature.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/metamask/test/playwright/e2e/confirmTransaction.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "wallets/metamask/test/playwright/e2e/confirmTransactionAndWaitForMining.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/metamask/test/playwright/e2e/connectToDapp.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/metamask/test/playwright/e2e/encrypt.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/metamask/test/playwright/e2e/goBackToHomePage.spec.ts",
-          "reviewTimeMs": 0,
-          "findings": []
-        },
-        {
-          "file": "wallets/metamask/test/playwright/e2e/importWallet.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "wallets/metamask/test/playwright/e2e/importWalletFromPrivateKey.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/metamask/test/playwright/e2e/lock.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/metamask/test/playwright/e2e/openSettings.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/metamask/test/playwright/e2e/openSidebarMenu.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/metamask/test/playwright/e2e/openTransactionDetails.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/metamask/test/playwright/e2e/rejectAddNetwork.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/metamask/test/playwright/e2e/rejectPermission.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/metamask/test/playwright/e2e/rejectSignature.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/metamask/test/playwright/e2e/rejectSwitchNetwork.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/metamask/test/playwright/e2e/rejectTransaction.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/metamask/test/playwright/e2e/renameAccount.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/metamask/test/playwright/e2e/resetAccount.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": [
-            {
-              "title": "Missing Assertion",
-              "severity": "Medium",
-              "evidence": "test('reset the account', async ({ context, metamaskPage }) => {",
-              "recommendation": "Add an assertion for the expected UI state, navigation, response, or persisted data after the action."
-            }
-          ]
-        },
-        {
-          "file": "wallets/metamask/test/playwright/e2e/switchAccount.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/metamask/test/playwright/e2e/switchNetwork.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/metamask/test/playwright/e2e/toggleDismissSecretRecoveryPhraseReminder.spec.ts",
-          "reviewTimeMs": 0,
-          "findings": []
-        },
-        {
-          "file": "wallets/metamask/test/playwright/e2e/toggleShowTestNetworks.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/metamask/test/playwright/e2e/unlock.spec.ts",
-          "reviewTimeMs": 0,
-          "findings": []
-        },
-        {
-          "file": "wallets/phantom/test/playwright/e2e/addNewAccount.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/phantom/test/playwright/e2e/approveTokenPermission.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/phantom/test/playwright/e2e/confirmSignature.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "wallets/phantom/test/playwright/e2e/confirmTransaction.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        }
-      ],
+      "averageReviewTimeMs": 0,
+      "ruleOnlyPrecision": "Not run",
+      "ruleOnlyRecall": "Not run",
+      "geminiPrecision": "Not run",
+      "geminiRecall": "Not run",
+      "files": [],
       "notes": [
-        "LLM provider comparison skipped. Set runGeminiComparison=true to enable it."
+        "Local path not found: C:/tmp/qa-cortex-validation-repos/synpress"
       ]
     },
     {
@@ -604,269 +130,18 @@
         "reporting",
         "multi-project"
       ],
-      "exists": true,
-      "filesReviewed": 50,
+      "exists": false,
+      "filesReviewed": 0,
       "findings": 0,
       "criticalFindings": 0,
-      "averageReviewTimeMs": 2,
-      "ruleOnlyPrecision": "Requires manual triage",
-      "ruleOnlyRecall": "Requires manual triage",
-      "geminiPrecision": "Skipped",
-      "geminiRecall": "Skipped",
-      "files": [
-        {
-          "file": "packages/allure-bun/test/spec/runtime/attachments.test.ts",
-          "reviewTimeMs": 19,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-codeceptjs/test/spec/runtime/legacy/links.test.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-codeceptjs/test/spec/runtime/modern/links.test.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-codeceptjs/test/spec/steps.test.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-cucumberjs/test/spec/errors.test.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-cucumberjs/test/spec/hookAttachments.test.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-js-commons/test/sdk/reporter/utils/attachments.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-js-commons/test/sdk/utils.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/annotations.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/attachments.spec.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/categories.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/environmentInfo.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/fullName.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/globalLabels.test.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/history.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/hooks.spec.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/labels.test.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/package.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/reporterOptions.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/runtime/legacy/attachments.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/runtime/legacy/labelOverride.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/runtime/legacy/labels.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/runtime/legacy/links.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/runtime/legacy/parameters.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/runtime/legacy/steps.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/runtime/legacy/tags.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/runtime/modern/attachments.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/runtime/modern/globals.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/runtime/modern/labelOverride.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/runtime/modern/labels.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/runtime/modern/links.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/runtime/modern/parameters.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/runtime/modern/steps.spec.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/runtime/modern/tags.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/runtime/sync/globals.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/runtime/sync/labels.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/runtime/sync/links.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/runtime/sync/parameters.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/runtime/sync/steps.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/screenshots.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/skip.test.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/status.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/statusDetails.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/stdio.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/steps.spec.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/suites.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/tags.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/testplan.spec.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/titleMetadata.spec.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "packages/allure-playwright/test/spec/titlePath.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        }
-      ],
+      "averageReviewTimeMs": 0,
+      "ruleOnlyPrecision": "Not run",
+      "ruleOnlyRecall": "Not run",
+      "geminiPrecision": "Not run",
+      "geminiRecall": "Not run",
+      "files": [],
       "notes": [
-        "LLM provider comparison skipped. Set runGeminiComparison=true to enable it."
+        "Local path not found: C:/tmp/qa-cortex-validation-repos/allure-js"
       ]
     },
     {
@@ -879,269 +154,18 @@
         "multi-project",
         "bdd"
       ],
-      "exists": true,
-      "filesReviewed": 50,
+      "exists": false,
+      "filesReviewed": 0,
       "findings": 0,
       "criticalFindings": 0,
-      "averageReviewTimeMs": 1,
-      "ruleOnlyPrecision": "Requires manual triage",
-      "ruleOnlyRecall": "Requires manual triage",
-      "geminiPrecision": "Skipped",
-      "geminiRecall": "Skipped",
-      "files": [
-        {
-          "file": "examples/playwright-test-todomvc/spec/bulk_operations.spec.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "examples/playwright-test-todomvc/spec/completing_items.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "examples/playwright-test-todomvc/spec/editing.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "examples/playwright-test-todomvc/spec/persistence.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "examples/playwright-test-todomvc/spec/recording_items.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "examples/playwright-test-todomvc/spec/routing.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "examples/playwright-test-todomvc/spec/test-api.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "examples/playwright-test-todomvc/spec/vanilla_playwright_test.spec.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "examples/protractor-jasmine-todomvc/spec/managing_a_todo_list_with_plain_old_protractor.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-electron/spec/electron/externally-managed.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-electron/spec/electron/self-launching.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test-ct/src/component-testing.spec.tsx",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/custom_tags/custom_tags_in_title.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/custom_tags/custom_tags_via_tag_api.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/electron/externally-managed-app-per-test.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/electron/self-launching-app-per-test.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/electron/self-launching-app-per-worker.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/events/compatibility/passing-native-api.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/events/compatibility/passing-serenity-api.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/my_super_theme/my_theme/my_capability/my_feature.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/native-reporters/passing-non-screenplay.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/native-reporters/passing-screenplay.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/nested/another-no-describe-blocks.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/no-describe-blocks.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/outcomes/failing/error.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/outcomes/failing/error_configuration.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/outcomes/failing/error_worker_afterAll.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/outcomes/failing/error_worker_beforeAll.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/outcomes/failing/error_worker_generator.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/outcomes/failing/expected_failure.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/outcomes/failing/playwright_assertion.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/outcomes/failing/serenity-js_assertion.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/outcomes/failing/serenity-js_screenplay_assertion.spec.ts",
-          "reviewTimeMs": 0,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/outcomes/failing/serenity-js_screenplay_compromised.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/outcomes/failing/unexpected_pass.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/outcomes/passing.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/outcomes/repeated.spec.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/outcomes/retried.spec.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/outcomes/skipped/fixme.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/outcomes/skipped/skip.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/outcomes/skipped/skip_conditional.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/outcomes/skipped/skip_describe.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/outcomes/skipped/skip_describe_conditional.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/outcomes/skipped/skip_programmatic.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/outcomes/skipped/skip_programmatic_screenplay.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/outcomes/skipped/skip_programmatic_screenplay_message.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/screenplay/ability-discard-error-should-not-affect-stage-cue.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/screenplay/ability-discard-error.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/screenplay/ability-discard-timeout.spec.ts",
-          "reviewTimeMs": 0,
-          "findings": []
-        },
-        {
-          "file": "integration/playwright-test/examples/screenplay/assertion-error.spec.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        }
-      ],
+      "averageReviewTimeMs": 0,
+      "ruleOnlyPrecision": "Not run",
+      "ruleOnlyRecall": "Not run",
+      "geminiPrecision": "Not run",
+      "geminiRecall": "Not run",
+      "files": [],
       "notes": [
-        "LLM provider comparison skipped. Set runGeminiComparison=true to enable it."
+        "Local path not found: C:/tmp/qa-cortex-validation-repos/serenity-js"
       ]
     },
     {
@@ -1153,124 +177,18 @@
         "api-heavy",
         "vscode-extension"
       ],
-      "exists": true,
-      "filesReviewed": 21,
+      "exists": false,
+      "filesReviewed": 0,
       "findings": 0,
       "criticalFindings": 0,
-      "averageReviewTimeMs": 3,
-      "ruleOnlyPrecision": "Requires manual triage",
-      "ruleOnlyRecall": "Requires manual triage",
-      "geminiPrecision": "Skipped",
-      "geminiRecall": "Skipped",
-      "files": [
-        {
-          "file": "tests/auto-close.spec.ts",
-          "reviewTimeMs": 4,
-          "findings": []
-        },
-        {
-          "file": "tests/codegen.spec.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "tests/debug-tests.spec.ts",
-          "reviewTimeMs": 4,
-          "findings": []
-        },
-        {
-          "file": "tests/decorations.spec.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "tests/global-errors.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "tests/highlight-locators.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "tests/list-files.spec.ts",
-          "reviewTimeMs": 4,
-          "findings": []
-        },
-        {
-          "file": "tests/list-tests.spec.ts",
-          "reviewTimeMs": 4,
-          "findings": []
-        },
-        {
-          "file": "tests/pick-selector.spec.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "tests/pnp.spec.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "tests/problems.spec.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "tests/project-setup.spec.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "tests/project-tree.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "tests/run-annotations.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "tests/run-tests.spec.ts",
-          "reviewTimeMs": 5,
-          "findings": []
-        },
-        {
-          "file": "tests/settings.spec.ts",
-          "reviewTimeMs": 4,
-          "findings": []
-        },
-        {
-          "file": "tests/source-map.spec.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "tests/trace-viewer.spec.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "tests/track-configs.spec.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "tests/update-snapshots.spec.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "tests/watch.spec.ts",
-          "reviewTimeMs": 4,
-          "findings": []
-        }
-      ],
+      "averageReviewTimeMs": 0,
+      "ruleOnlyPrecision": "Not run",
+      "ruleOnlyRecall": "Not run",
+      "geminiPrecision": "Not run",
+      "geminiRecall": "Not run",
+      "files": [],
       "notes": [
-        "LLM provider comparison skipped. Set runGeminiComparison=true to enable it."
+        "Local path not found: C:/tmp/qa-cortex-validation-repos/playwright-vscode"
       ]
     },
     {
@@ -1282,140 +200,18 @@
         "authentication-heavy",
         "ai-testing"
       ],
-      "exists": true,
-      "filesReviewed": 13,
-      "findings": 8,
-      "criticalFindings": 1,
-      "averageReviewTimeMs": 3,
-      "ruleOnlyPrecision": "Requires manual triage",
-      "ruleOnlyRecall": "Requires manual triage",
-      "geminiPrecision": "Skipped",
-      "geminiRecall": "Skipped",
-      "files": [
-        {
-          "file": "examples/github.test.ts",
-          "reviewTimeMs": 4,
-          "findings": []
-        },
-        {
-          "file": "examples/google.test.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "packages/shortest/src/core/runner/test-case.ts",
-          "reviewTimeMs": 3,
-          "findings": [
-            {
-              "title": "Missing Assertion",
-              "severity": "Medium",
-              "evidence": "C:\\tmp\\qa-cortex-validation-repos\\shortest\\packages\\shortest\\src\\core\\runner\\test-case.ts",
-              "recommendation": "Add an assertion for the expected UI state, navigation, response, or persisted data after the action."
-            }
-          ]
-        },
-        {
-          "file": "packages/shortest/src/types/test.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "packages/shortest/src/utils/platform.test.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "packages/shortest/tests/e2e/test-ai.ts",
-          "reviewTimeMs": 3,
-          "findings": [
-            {
-              "title": "Missing Assertion",
-              "severity": "Medium",
-              "evidence": "C:\\tmp\\qa-cortex-validation-repos\\shortest\\packages\\shortest\\tests\\e2e\\test-ai.ts",
-              "recommendation": "Add an assertion for the expected UI state, navigation, response, or persisted data after the action."
-            }
-          ]
-        },
-        {
-          "file": "packages/shortest/tests/e2e/test-browser.ts",
-          "reviewTimeMs": 4,
-          "findings": [
-            {
-              "title": "Missing Assertion",
-              "severity": "Medium",
-              "evidence": "C:\\tmp\\qa-cortex-validation-repos\\shortest\\packages\\shortest\\tests\\e2e\\test-browser.ts",
-              "recommendation": "Add an assertion for the expected UI state, navigation, response, or persisted data after the action."
-            }
-          ]
-        },
-        {
-          "file": "packages/shortest/tests/e2e/test-email-rendering.ts",
-          "reviewTimeMs": 4,
-          "findings": [
-            {
-              "title": "Missing Assertion",
-              "severity": "Medium",
-              "evidence": "C:\\tmp\\qa-cortex-validation-repos\\shortest\\packages\\shortest\\tests\\e2e\\test-email-rendering.ts",
-              "recommendation": "Add an assertion for the expected UI state, navigation, response, or persisted data after the action."
-            }
-          ]
-        },
-        {
-          "file": "packages/shortest/tests/e2e/test-github-login.ts",
-          "reviewTimeMs": 5,
-          "findings": [
-            {
-              "title": "Redundant Hardcoded Timeout (waitForTimeout)",
-              "severity": "High",
-              "evidence": "await newPage.waitForTimeout(2000);",
-              "recommendation": "Remove hardcoded wait and rely on Playwright auto-waiting assertions."
-            }
-          ]
-        },
-        {
-          "file": "packages/shortest/tests/e2e/test-helpers.ts",
-          "reviewTimeMs": 2,
-          "findings": [
-            {
-              "title": "Missing Assertion",
-              "severity": "Medium",
-              "evidence": "C:\\tmp\\qa-cortex-validation-repos\\shortest\\packages\\shortest\\tests\\e2e\\test-helpers.ts",
-              "recommendation": "Add an assertion for the expected UI state, navigation, response, or persisted data after the action."
-            }
-          ]
-        },
-        {
-          "file": "packages/shortest/tests/e2e/test-keyboard.ts",
-          "reviewTimeMs": 3,
-          "findings": [
-            {
-              "title": "Missing Assertion",
-              "severity": "Medium",
-              "evidence": "C:\\tmp\\qa-cortex-validation-repos\\shortest\\packages\\shortest\\tests\\e2e\\test-keyboard.ts",
-              "recommendation": "Add an assertion for the expected UI state, navigation, response, or persisted data after the action."
-            }
-          ]
-        },
-        {
-          "file": "packages/shortest/tests/e2e/test-loop.ts",
-          "reviewTimeMs": 4,
-          "findings": [
-            {
-              "title": "Missing Assertion",
-              "severity": "Medium",
-              "evidence": "C:\\tmp\\qa-cortex-validation-repos\\shortest\\packages\\shortest\\tests\\e2e\\test-loop.ts",
-              "recommendation": "Add an assertion for the expected UI state, navigation, response, or persisted data after the action."
-            }
-          ]
-        },
-        {
-          "file": "packages/shortest/tests/unit/config.test.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        }
-      ],
+      "exists": false,
+      "filesReviewed": 0,
+      "findings": 0,
+      "criticalFindings": 0,
+      "averageReviewTimeMs": 0,
+      "ruleOnlyPrecision": "Not run",
+      "ruleOnlyRecall": "Not run",
+      "geminiPrecision": "Not run",
+      "geminiRecall": "Not run",
+      "files": [],
       "notes": [
-        "LLM provider comparison skipped. Set runGeminiComparison=true to enable it."
+        "Local path not found: C:/tmp/qa-cortex-validation-repos/shortest"
       ]
     },
     {
@@ -1427,169 +223,20 @@
         "multi-project",
         "page-object"
       ],
-      "exists": true,
-      "filesReviewed": 12,
-      "findings": 1,
+      "exists": false,
+      "filesReviewed": 0,
+      "findings": 0,
       "criticalFindings": 0,
-      "averageReviewTimeMs": 4,
-      "ruleOnlyPrecision": "Requires manual triage",
-      "ruleOnlyRecall": "Requires manual triage",
-      "geminiPrecision": "Skipped",
-      "geminiRecall": "Skipped",
-      "files": [
-        {
-          "file": "tests/accessibility/Axe.test.ts",
-          "reviewTimeMs": 24,
-          "findings": []
-        },
-        {
-          "file": "tests/api/GET.test.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "tests/api/POST.test.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "tests/db/DB.test.ts",
-          "reviewTimeMs": 2,
-          "findings": [
-            {
-              "title": "Missing Assertion",
-              "severity": "Medium",
-              "evidence": "test('Connect to Postgres DB', async () => {",
-              "recommendation": "Add an assertion for the expected UI state, navigation, response, or persisted data after the action."
-            }
-          ]
-        },
-        {
-          "file": "tests/functional/AlertsFrameWindows.test.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "tests/functional/Elements.test.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "tests/functional/HAR.test.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        },
-        {
-          "file": "tests/functional/Interactions.test.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "tests/functional/Login.test.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "tests/functional/PdfToText.test.ts",
-          "reviewTimeMs": 1,
-          "findings": []
-        },
-        {
-          "file": "tests/functional/Widgets.test.ts",
-          "reviewTimeMs": 3,
-          "findings": []
-        },
-        {
-          "file": "tests/visualComparison/visualComparision.test.ts",
-          "reviewTimeMs": 2,
-          "findings": []
-        }
-      ],
+      "averageReviewTimeMs": 0,
+      "ruleOnlyPrecision": "Not run",
+      "ruleOnlyRecall": "Not run",
+      "geminiPrecision": "Not run",
+      "geminiRecall": "Not run",
+      "files": [],
       "notes": [
-        "LLM provider comparison skipped. Set runGeminiComparison=true to enable it."
+        "Local path not found: C:/tmp/qa-cortex-validation-repos/playwright-typescript"
       ]
     }
   ],
-  "ruleCoverage": [
-    {
-      "rule": "knowledge/google/flaky-tests.md",
-      "triggerCount": 1,
-      "confidence": "Low"
-    },
-    {
-      "rule": "knowledge/google/maintainability.md",
-      "triggerCount": 94,
-      "confidence": "High"
-    },
-    {
-      "rule": "knowledge/google/test-isolation.md",
-      "triggerCount": 2,
-      "confidence": "Low"
-    },
-    {
-      "rule": "knowledge/istqb/boundary-value-analysis.md",
-      "triggerCount": 16,
-      "confidence": "High"
-    },
-    {
-      "rule": "knowledge/owasp/authentication-testing.md",
-      "triggerCount": 16,
-      "confidence": "High"
-    },
-    {
-      "rule": "knowledge/owasp/input-validation.md",
-      "triggerCount": 19,
-      "confidence": "High"
-    },
-    {
-      "rule": "knowledge/playwright/fundamentals/assertions.md",
-      "triggerCount": 9,
-      "confidence": "Medium"
-    },
-    {
-      "rule": "knowledge/playwright/fundamentals/auto-waiting.md",
-      "triggerCount": 1,
-      "confidence": "Low"
-    },
-    {
-      "rule": "knowledge/playwright/fundamentals/locators.md",
-      "triggerCount": 94,
-      "confidence": "High"
-    },
-    {
-      "rule": "knowledge/playwright/README.md",
-      "triggerCount": 147,
-      "confidence": "High"
-    },
-    {
-      "rule": "knowledge/playwright/review-rules/assertion-review.md",
-      "triggerCount": 9,
-      "confidence": "Medium"
-    },
-    {
-      "rule": "knowledge/playwright/review-rules/isolation-review.md",
-      "triggerCount": 2,
-      "confidence": "Low"
-    },
-    {
-      "rule": "knowledge/playwright/review-rules/locator-review.md",
-      "triggerCount": 94,
-      "confidence": "High"
-    },
-    {
-      "rule": "knowledge/playwright/review-rules/parallel-review.md",
-      "triggerCount": 2,
-      "confidence": "Low"
-    },
-    {
-      "rule": "knowledge/playwright/review-rules/waiting-review.md",
-      "triggerCount": 1,
-      "confidence": "Low"
-    },
-    {
-      "rule": "knowledge/unicode/unicode-testing.md",
-      "triggerCount": 19,
-      "confidence": "High"
-    }
-  ]
+  "ruleCoverage": []
 }

@@ -245,25 +245,24 @@ The next focus is extension release packaging and marketplace hardening:
 - **Working Tree Note**:
   - Generated validation/metrics report files contain timing-only drift from verification runs. Do not include those in the Sprint 20 commit unless intentionally refreshing generated reports.
 
-## 2026-07-06 - QA Cortex Brand Migration v0.1.3
+## 2026-07-06 - QA Cortex Brand Migration & Version Reset v0.1.0
 
-- **Brand Decision**:
-  - Product identity standardized as `QA Cortex`.
-  - Package names, CLI commands, MCP server name, VS Code command IDs, configuration keys, generated package directory, docs, and release metadata now use QA Cortex naming.
-- **Rename Scope**:
-  - Updated user-facing docs, rule knowledge, prompts, reports, CLI/MCP/action messages, VS Code dashboard text, commands, notifications, diagnostics, status bar, output channel, and release metadata to use `QA Cortex`.
-  - Updated `extensions/vscode/assets/icon.png` with the new QA Cortex icon asset supplied by the user.
-  - Bumped root and VS Code extension manifests to `0.1.3`.
-  - Added `0.1.3` changelog entry documenting the QA Cortex migration.
+- **Brand & Naming Decisions**:
+  - Reset the package and extension version numbers back to `0.1.0` for a fresh publication of the extension on the marketplace under the name `QA Cortex`.
+  - Consolidated the previous pre-release changelogs into a single initial `0.1.0` release.
+  - **Complete Naming Hardening**: Removed all fallbacks, logic, and environment variable references containing the `QA_BRAIN_*` prefix. Only `QA_CORTEX_*` variables are now used:
+    - `QA_CORTEX_PROVIDER`
+    - `QA_CORTEX_API_KEY`
+    - `QA_CORTEX_MODEL`
+    - `QA_CORTEX_ENDPOINT`
 - **Verification Completed**:
-  - `npm run build` passed.
-  - `npm test` passed.
-  - `node dist/src/cli.js benchmark` passed with 12/12 benchmark cases and no regression.
-  - `npm run compile` from `extensions/vscode` passed.
-  - `npm run package` from `extensions/vscode` passed and generated `qa-cortex-vscode-client-0.1.3.vsix`.
-  - VSIX SHA256: `5D1B975B60FEA7620D19C4174114748BA546203CDC0EAF2271DD41B801F588B3`.
+  - `npm run build` and `npm test` successfully compiled and passed.
+  - `npm run validate` and `node dist/src/cli.js benchmark` passed with 12/12 test cases (100% precision and recall).
+  - VS Code client packaged successfully via `npm run package` into `extensions/vscode/qa-cortex-vscode-client-0.1.0.vsix`.
+  - VSIX SHA256: `1E9A98EC5D98E633AA2B719EFCC510A6643E2008CDCA0FE5126BBF5F74337C65`.
 
 ### Next Steps for User
-- Install or publish `extensions/vscode/qa-cortex-vscode-client-0.1.3.vsix`.
-- Publish the new QA Cortex Marketplace listing/package identity.
+- Install or publish the fresh VSIX: `extensions/vscode/qa-cortex-vscode-client-0.1.0.vsix`.
+- Publish the new QA Cortex Marketplace listing.
 - Run a manual VS Code smoke test to confirm Activity Bar icon, dashboard title, command palette labels, status bar, output channel, and report title show QA Cortex.
+

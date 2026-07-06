@@ -2,7 +2,7 @@
 
 > Repository-aware, rule-driven QA review engine for test automation projects.
 
-**Status**: v0.1.3 - CLI, GitHub Action, MCP, and VS Code client available.
+**Status**: v0.1.0 - CLI, GitHub Action, MCP, and VS Code client available.
 
 ---
 

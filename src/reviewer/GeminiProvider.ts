@@ -20,12 +20,12 @@ export class GeminiProvider implements LLMProvider {
   private endpoint: string;
 
   constructor(apiKey?: string, provider?: string, model?: string, endpoint?: string) {
-    this.provider = provider || process.env.QA_BRAIN_PROVIDER || 'Gemini';
+    this.provider = provider || process.env.QA_CORTEX_PROVIDER || 'Gemini';
     this.apiKey = apiKey === undefined
-      ? (this.provider === 'Gemini' ? (process.env.GEMINI_API_KEY || process.env.QA_BRAIN_API_KEY) : process.env.QA_BRAIN_API_KEY)
+      ? (this.provider === 'Gemini' ? (process.env.GEMINI_API_KEY || process.env.QA_CORTEX_API_KEY) : process.env.QA_CORTEX_API_KEY)
       : apiKey;
-    this.model = model || process.env.QA_BRAIN_MODEL || '';
-    this.endpoint = endpoint || process.env.QA_BRAIN_ENDPOINT || '';
+    this.model = model || process.env.QA_CORTEX_MODEL || '';
+    this.endpoint = endpoint || process.env.QA_CORTEX_ENDPOINT || '';
   }
 
   private async makeRequest(url: string, headers: Record<string, string>, body: any): Promise<any> {

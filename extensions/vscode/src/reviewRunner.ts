@@ -46,7 +46,7 @@ export class ReviewRunner {
     const root = workspaceRoot || this.findNearestPackageRoot(path.dirname(filePath));
     const { ReviewPipeline, GeminiProvider } = this.loadCore();
     const apiProvider = config.get<string>('apiProvider', 'Gemini');
-    const apiKeySetting = config.get<string>('apiKey', '') || (apiProvider === 'Gemini' ? process.env.GEMINI_API_KEY : '') || process.env.QA_BRAIN_API_KEY || '';
+    const apiKeySetting = config.get<string>('apiKey', '') || (apiProvider === 'Gemini' ? process.env.GEMINI_API_KEY : '') || process.env.QA_CORTEX_API_KEY || '';
     const apiModel = config.get<string>('apiModel', '');
     const apiEndpoint = config.get<string>('apiEndpoint', '');
     const geminiFallback = new GeminiProvider(apiKeySetting, apiProvider, apiModel, apiEndpoint);

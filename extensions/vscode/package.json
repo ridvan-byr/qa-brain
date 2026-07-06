@@ -2,7 +2,7 @@
   "name": "qa-cortex-vscode-client",
   "displayName": "QA Cortex",
   "description": "Framework-neutral VS Code client for QA Cortex deterministic test review and design analysis.",
-  "version": "0.1.3",
+  "version": "0.1.0",
   "publisher": "qa-cortex",
   "license": "MIT",
   "icon": "assets/icon.png",
