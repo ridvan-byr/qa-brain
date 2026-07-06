@@ -212,13 +212,13 @@ Latest local validation run:
 | Metric | Value |
 | :--- | :--- |
 | Repositories configured | 10 |
-| Files reviewed | 239 |
-| Findings generated | 10 |
+| Files reviewed | 231 |
+| Findings generated | 2 |
 | Average review time (Rule Engine) | 2ms |
 | Average review time (LLM Mode) | ~1 - 3 seconds |
 | LLM provider comparison | Deferred |
 
-Manual triage of the findings is logged in `validation/reports/latest-validation-report.md`. The local deterministic engine reviewed 239 files in 2ms per file and correctly identified 10 high-confidence findings.
+Manual triage of the findings is logged in `validation/reports/latest-validation-report.md`. The local deterministic engine reviewed 231 files in 2ms per file and correctly identified 2 high-confidence true positives.
 
 The latest generated report is available at `validation/reports/latest-validation-report.md`.
 
