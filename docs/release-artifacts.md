@@ -3,6 +3,11 @@
 ## VS Code Client 0.1.2 RC
 
 Generated: 2026-07-06
+Published: 2026-07-06
+
+Marketplace:
+
+https://marketplace.visualstudio.com/items?itemName=qa-brain.qa-brain-vscode-client
 
 | Artifact | SHA256 |
 | :--- | :--- |

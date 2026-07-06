@@ -1,14 +1,14 @@
 # QA Brain
 
-> Repository-aware, rule-driven QA review engine for Playwright test automation.
+> Repository-aware, rule-driven QA review engine for test automation projects.
 
-**Status**: v0.1.0 - CLI, GitHub Action, and MCP prototype ready.
+**Status**: v0.1.2 - CLI, GitHub Action, MCP, and VS Code Marketplace client available.
 
 ---
 
 ## What is QA Brain?
 
-QA Brain analyzes Playwright test suites and generates structured quality reports. It combines repository context, curated QA knowledge, deterministic local rules, and optional Gemini review output.
+QA Brain analyzes test automation projects and generates structured quality reports. It combines repository context, curated QA knowledge, deterministic local rules, and optional Gemini review output.
 
 When `GEMINI_API_KEY` is available, QA Brain asks Gemini to review the selected test against routed rule files. Without an API key, it runs a local deterministic rule review for common issues such as brittle selectors, hardcoded waits, shared state, and missing assertions.
 
@@ -21,11 +21,27 @@ When `GEMINI_API_KEY` is available, QA Brain asks Gemini to review the selected 
 - **Benchmark suite**: Built-in calibration runner with ground-truth JSON files.
 - **GitHub Action support**: Reviews changed PR test files, or a configured `review-path`.
 - **MCP server support**: Exposes file, repository, and benchmark review tools over stdio.
-- **VS Code client**: Rule-only extension MVP for Problems panel diagnostics, Output reports, Status Bar, and CodeLens.
+- **VS Code client**: Published VS Code extension for Problems panel diagnostics, Output reports, Status Bar, CodeLens, and dashboard workflows.
+
+### Framework Support
+
+| Framework / Language | Support Level | Notes |
+| :--- | :--- | :--- |
+| Playwright TypeScript/JavaScript | Supported | Review, scoring, benchmark, validation, CLI, MCP, GitHub Action, and VS Code workflows. |
+| Selenium WebDriver for Node.js | Preview/Foundation | Adapter and seed benchmarks exist; broader calibration continues. |
+| Python test projects | Discovery-only | Scanner detects Python tests, dependencies, fixtures, and POM structures, but Python review/scoring is intentionally disabled for now. |
 
 ---
 
 ## Installation
+
+### VS Code Marketplace
+
+Install the VS Code client from Marketplace:
+
+https://marketplace.visualstudio.com/items?itemName=qa-brain.qa-brain-vscode-client
+
+### Local CLI / Core
 
 ```bash
 git clone https://github.com/ridvan-byr/qa-brain.git
@@ -142,7 +158,11 @@ The benchmark suite is useful for regression checks, but it is not a substitute 
 
 ## VS Code Client
 
-Sprint 12 adds a rule-only VS Code client under `extensions/vscode`.
+QA Brain is available as a VS Code extension:
+
+https://marketplace.visualstudio.com/items?itemName=qa-brain.qa-brain-vscode-client
+
+The extension source lives under `extensions/vscode`.
 
 Build the root project first so the extension can reuse the compiled QA Brain core:
 

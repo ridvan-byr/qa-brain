@@ -12,7 +12,7 @@ This roadmap details completed sprints and outlines the path toward building the
 | :--- | :--- | :--- |
 | v0.1 | CLI foundation | Completed |
 | v0.2 | GitHub Action and MCP integrations | Completed |
-| v0.3 | VS Code Client | Completed |
+| v0.3 | VS Code Client Marketplace release | Completed |
 | v1.0 | Playwright Stable | Planned |
 | v2.0 RC | Playwright + Selenium WebDriver for Node.js release candidate | Planned |
 | v2.0 Stable | Playwright + Selenium stable quality gates complete | Planned |
@@ -248,7 +248,7 @@ Architecture Freeze milestone before Sprint 13C:
 
 ### ✅ Sprint 19 — VS Code Marketplace Release & Hardening
 - **Objective**: Configure packaging, set up opt-in telemetry, organize rule packs, and prepare RC packaging.
-- **Status**: Completed for local RC packaging; Marketplace publish remains a manual release step.
+- **Status**: Completed and published to the VS Code Marketplace.
 - [x] Added strict opt-in telemetry with `qaBrain.telemetryEnabled` defaulting to `false`.
 - [x] Added anonymized local telemetry events for review, test design, crash, and feature usage.
 - [x] Added versioned rule pack manifest at `knowledge/rule-pack.json`.
@@ -257,6 +257,7 @@ Architecture Freeze milestone before Sprint 13C:
 - [x] Added extension marketplace metadata, package scripts, root license copy, changelog, versioning policy, and release checklist.
 - [x] Generated local VSIX RC package and SHA256 checksum.
 - [x] Publish extension Release Candidate (RC) to VS Code Marketplace after clean-profile smoke test and publisher token setup.
+- [x] Published Marketplace listing: https://marketplace.visualstudio.com/items?itemName=qa-brain.qa-brain-vscode-client
 
 ### ✅ Sprint 19.5 — Core Hardening & Stability
 - **Objective**: Address critical correctness and maintainability risks found during external project review before expanding to Python support.

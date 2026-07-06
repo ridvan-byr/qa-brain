@@ -2,6 +2,7 @@
 
 ## 0.1.2
 
+- Published the QA Brain VS Code client to the Visual Studio Marketplace.
 - Added Python test file scanner to scan `test_*.py`, `*_test.py`, and `test.py` files.
 - Added `requirements.txt` parsing support to map Python dependencies like `pytest`, `selenium`, and `playwright`.
 - Merged `package.json` and `requirements.txt` dependency discovery for mixed Node.js + Python repositories.
