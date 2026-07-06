@@ -8,7 +8,7 @@
 // 4. Recommendation -> Encapsulate the login button selector inside the LoginPage class and invoke it via method.
 
 import { test } from '@playwright/test';
-import { LoginPage } from '../../examples/good/login.spec';
+import { LoginPage } from '../../../examples/good/login.spec';
 
 test('login test with selector leakage', async ({ page }) => {
   const loginPage = new LoginPage(page);

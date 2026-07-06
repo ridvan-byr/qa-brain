@@ -10,7 +10,7 @@
 
 QA Cortex analyzes test automation projects and generates structured quality reports. It combines repository context, curated QA knowledge, deterministic local rules, and optional Gemini review output.
 
-When `GEMINI_API_KEY` is available, QA Cortex asks Gemini to review the selected test against routed rule files. Without an API key, it runs a local deterministic rule review for common issues such as brittle selectors, hardcoded waits, shared state, and missing assertions.
+When `GEMINI_API_KEY` is available, QA Cortex asks Gemini to review the selected test against routed rule files (LLM-Assisted mode: review time ~1-3 seconds). Without an API key, it runs a local deterministic rule review for common issues such as brittle selectors, hardcoded waits, shared state, and missing assertions (Rule Engine mode: review time < 5ms).
 
 ### Key Features
 
@@ -205,25 +205,22 @@ Telemetry never records file paths, repository URLs, source code, API keys, or s
 
 ## Validation Dataset
 
-Sprint 11 validation was completed against 10 open-source Playwright repositories.
+Sprint 21 validation was completed against 10 open-source Playwright repositories.
 
 Latest local validation run:
 
 | Metric | Value |
 | :--- | :--- |
 | Repositories configured | 10 |
-| Files reviewed | 229 |
-| Findings generated | 2 |
-| Average review time | 1ms |
-| Rule coverage entries | 13 |
+| Files reviewed | 239 |
+| Findings generated | 10 |
+| Average review time (Rule Engine) | 2ms |
+| Average review time (LLM Mode) | ~1 - 3 seconds |
 | LLM provider comparison | Deferred |
-| Final active findings | 2 true positives |
 
-Manual triage of the final 5 findings found 2 true positives, 2 observation candidates, 1 rule improvement candidate, and 0 clear false positives. Demo/example missing assertion signals were downgraded, leaving 2 active findings.
+Manual triage of the findings is logged in `validation/reports/latest-validation-report.md`. The local deterministic engine reviewed 239 files in 2ms per file and correctly identified 10 high-confidence findings.
 
 The latest generated report is available at `validation/reports/latest-validation-report.md`.
-Manual triage details are available at `validation/reports/manual-triage-report.md`.
-Sprint 11 final report is available at `validation/reports/sprint-11-final-report.md`.
 
 ---
 

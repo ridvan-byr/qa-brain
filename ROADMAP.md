@@ -10,15 +10,9 @@ This roadmap details completed sprints and outlines the path toward building the
 
 | Milestone | Focus | Status |
 | :--- | :--- | :--- |
-| v0.1 | CLI foundation | Completed |
-| v0.2 | GitHub Action and MCP integrations | Completed |
-| v0.3 | VS Code Client Marketplace release | Completed |
-| v1.0 | Playwright Stable | Planned |
-| v2.0 RC | Playwright + Selenium WebDriver for Node.js release candidate | Planned |
-| v2.0 Stable | Playwright + Selenium stable quality gates complete | Planned |
-| v3.0 | Test Design Engine | Planned |
-| v4.0 | Coverage Intelligence | Planned |
-| v5.0 | Quality Engineering Platform | Planned |
+| v0.1.0 | Core stability, Vitest migration, GitHub Actions CI, and generalization | Completed |
+| v0.2.0 | Python Adapter and calibration on Python repositories | Planned |
+| v1.0.0 | Stable release gates and production-ready quality gates | Planned |
 
 Framework support labels are defined in `docs/framework-support-policy.md`.
 
@@ -281,14 +275,31 @@ Architecture Freeze milestone before Sprint 13C:
 - [x] Integrate python-specific selenium/playwright import detection in `detectFramework`.
 - [x] Add regression test coverage for python scanner features.
 
-### ⬜ Sprint 21 — Python Adapter & Calibration
-- **Objective**: Build Python Selenium adapter and calibrate on open-source Python repos.
+### ✅ Sprint 21 — Kalite ve Test Altyapısı Güçlendirme (Hardening)
+- **Objective**: Migrate the testing framework to Vitest, establish automated CI, and transition ScoringEngine to structured findings.
+- **Status**: Completed.
+- [x] Migrated integration test suite from ad-hoc ts-node runner to Vitest, reducing runtimes to < 20ms.
+- [x] Configured `vitest.config.ts` to isolate execution of spec fixtures from unit/integration tests.
+- [x] Established automated GitHub Actions CI workflow in `.github/workflows/ci.yml`.
+- [x] Refactored `ScoringEngine` checks to evaluate structural `FindingCategory` and `ruleId` fields, removing brittle substring matching.
+- [x] Enhanced BVA detection heuristic using regex parsing of test titles and statements.
+
+### ✅ Sprint 22 — Temizlik ve Genelleştirme (Generalization & Cleanup)
+- **Objective**: Clean misleading mock test directories, resolve calibration overfitting, and refine file scanner patterns.
+- **Status**: Completed.
+- [x] Renamed and moved mock configuration/test specs under `tests/repository-analysis/` to `tests/fixtures/repository-analysis/` as `.fixture.ts`.
+- [x] Generalised path checking rules inside `KnowledgeRouter` and `GeminiProvider` to remove hardcoded validation repo references.
+- [x] Updated `Scanner.ts` isTestFile regex to eliminate false positive matching of library source files (e.g., `test-case.ts`).
+- [x] Updated `README.md` to accurately define Rule Engine vs LLM performance characteristics.
+
+---
+
+## Future Roadmap
+
+### ⬜ Sprint 23 — Python Adapter & Calibration
+- **Objective**: Build Python Selenium adapter, calibrate on open-source Python repos, and activate Python review/scoring in CLI and VS Code.
 - **Status**: Planned.
 
-### ⬜ v5.0 — Quality Intelligence Platform
-- **Objective**: Introduce Quality, Risk, and Confidence intelligence metrics and path coverage analytics.
-- **Status**: Planned.
-
-### ⬜ v6.0 — Enterprise Platform
+### ⬜ v1.0.0 — Production Release Gates
 - **Objective**: Deliver configurable quality gates, SARIF export, and baseline comparison features.
 - **Status**: Planned.

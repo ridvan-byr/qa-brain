@@ -540,27 +540,28 @@ Output JSON only. Do not wrap in markdown or add notes.`;
 
   private isFrameworkBehaviorContext(filePath: string, content: string): boolean {
     const normalizedPath = filePath.replace(/\\/g, '/').toLowerCase();
-    const pathOnlyFrameworkContexts = [
-      /\/serenity-js\/examples\//,
-      /\/serenity-js\/integration\/playwright-test\/examples\//,
-      /\/serenity-js\/integration\/playwright-electron\/spec\/electron\//,
-      /\/demo\.playwright\//,
-      /\/demo-playwright\//,
-      /\/android\/tests\/example\.spec\./,
-      /\/chrome-extension\/tests\/example\.spec\./,
+    
+    // Clean and generalized path patterns representing examples, demos, fixtures, or helpers
+    const generalExamplePathPatterns = [
+      /\/examples?\//,
+      /\/demo[\w.-]*\//,
+      /\/fixtures?\//,
+      /\/helpers?\//,
+      /\/utils\//,
+      /\/spec\/electron\//,
+      /\/android\/tests\//,
+      /\/chrome-extension\/tests\//,
     ];
 
-    if (pathOnlyFrameworkContexts.some(pattern => pattern.test(normalizedPath))) {
+    if (generalExamplePathPatterns.some(pattern => pattern.test(normalizedPath))) {
       return true;
     }
 
     const contextPathPatterns = [
-      /\/examples?\//,
       /\/outcomes?\//,
       /\/skipped?\//,
       /\/failing\//,
       /\/compatibility\//,
-      /\/demo[\w.-]*\//,
       /\/example\.spec\./,
       /\/example\.test\./,
     ];
