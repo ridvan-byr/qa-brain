@@ -2,7 +2,7 @@
   "name": "qa-brain-vscode-client",
   "displayName": "QA Brain",
   "description": "Framework-neutral VS Code client for QA Brain deterministic test review and design analysis.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "qa-brain",
   "license": "MIT",
   "icon": "assets/icon.png",
