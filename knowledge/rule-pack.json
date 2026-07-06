@@ -2,7 +2,7 @@
   "name": "QA Cortex Core Rules",
   "version": "1.0.0",
   "compatibility": {
-    "qaBrain": ">=3.0.0"
+    "qaCortex": ">=3.0.0"
   },
   "hash": null,
   "rules": [

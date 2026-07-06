@@ -6,7 +6,7 @@
     {
       "id": "small-01",
       "name": "microsoft/playwright-mcp",
-      "localPath": "C:/tmp/qa-brain-validation-repos/playwright-mcp",
+      "localPath": "C:/tmp/qa-cortex-validation-repos/playwright-mcp",
       "size": "small",
       "tags": [
         "mcp",
@@ -45,7 +45,7 @@
     {
       "id": "small-02",
       "name": "imbhargav5/nextbase-nextjs-supabase-starter",
-      "localPath": "C:/tmp/qa-brain-validation-repos/nextbase",
+      "localPath": "C:/tmp/qa-cortex-validation-repos/nextbase",
       "size": "small",
       "tags": [
         "starter",
@@ -89,7 +89,7 @@
     {
       "id": "medium-01",
       "name": "MarcusFelling/demo.playwright",
-      "localPath": "C:/tmp/qa-brain-validation-repos/demo-playwright",
+      "localPath": "C:/tmp/qa-cortex-validation-repos/demo-playwright",
       "size": "medium",
       "tags": [
         "demo",
@@ -208,7 +208,7 @@
     {
       "id": "medium-02",
       "name": "vitalets/playwright-bdd",
-      "localPath": "C:/tmp/qa-brain-validation-repos/playwright-bdd",
+      "localPath": "C:/tmp/qa-cortex-validation-repos/playwright-bdd",
       "size": "medium",
       "tags": [
         "bdd",
@@ -317,7 +317,7 @@
     {
       "id": "large-01",
       "name": "synpress-io/synpress",
-      "localPath": "C:/tmp/qa-brain-validation-repos/synpress",
+      "localPath": "C:/tmp/qa-cortex-validation-repos/synpress",
       "size": "large",
       "tags": [
         "web3",
@@ -598,7 +598,7 @@
     {
       "id": "large-02",
       "name": "allure-framework/allure-js",
-      "localPath": "C:/tmp/qa-brain-validation-repos/allure-js",
+      "localPath": "C:/tmp/qa-cortex-validation-repos/allure-js",
       "size": "large",
       "tags": [
         "reporting",
@@ -872,7 +872,7 @@
     {
       "id": "enterprise-01",
       "name": "serenity-js/serenity-js",
-      "localPath": "C:/tmp/qa-brain-validation-repos/serenity-js",
+      "localPath": "C:/tmp/qa-cortex-validation-repos/serenity-js",
       "size": "enterprise",
       "tags": [
         "enterprise-style",
@@ -1147,7 +1147,7 @@
     {
       "id": "api-01",
       "name": "microsoft/playwright-vscode",
-      "localPath": "C:/tmp/qa-brain-validation-repos/playwright-vscode",
+      "localPath": "C:/tmp/qa-cortex-validation-repos/playwright-vscode",
       "size": "medium",
       "tags": [
         "api-heavy",
@@ -1276,7 +1276,7 @@
     {
       "id": "auth-01",
       "name": "antiwork/shortest",
-      "localPath": "C:/tmp/qa-brain-validation-repos/shortest",
+      "localPath": "C:/tmp/qa-cortex-validation-repos/shortest",
       "size": "medium",
       "tags": [
         "authentication-heavy",
@@ -1309,7 +1309,7 @@
             {
               "title": "Missing Assertion",
               "severity": "Medium",
-              "evidence": "C:\\tmp\\qa-brain-validation-repos\\shortest\\packages\\shortest\\src\\core\\runner\\test-case.ts",
+              "evidence": "C:\\tmp\\qa-cortex-validation-repos\\shortest\\packages\\shortest\\src\\core\\runner\\test-case.ts",
               "recommendation": "Add an assertion for the expected UI state, navigation, response, or persisted data after the action."
             }
           ]
@@ -1331,7 +1331,7 @@
             {
               "title": "Missing Assertion",
               "severity": "Medium",
-              "evidence": "C:\\tmp\\qa-brain-validation-repos\\shortest\\packages\\shortest\\tests\\e2e\\test-ai.ts",
+              "evidence": "C:\\tmp\\qa-cortex-validation-repos\\shortest\\packages\\shortest\\tests\\e2e\\test-ai.ts",
               "recommendation": "Add an assertion for the expected UI state, navigation, response, or persisted data after the action."
             }
           ]
@@ -1343,7 +1343,7 @@
             {
               "title": "Missing Assertion",
               "severity": "Medium",
-              "evidence": "C:\\tmp\\qa-brain-validation-repos\\shortest\\packages\\shortest\\tests\\e2e\\test-browser.ts",
+              "evidence": "C:\\tmp\\qa-cortex-validation-repos\\shortest\\packages\\shortest\\tests\\e2e\\test-browser.ts",
               "recommendation": "Add an assertion for the expected UI state, navigation, response, or persisted data after the action."
             }
           ]
@@ -1355,7 +1355,7 @@
             {
               "title": "Missing Assertion",
               "severity": "Medium",
-              "evidence": "C:\\tmp\\qa-brain-validation-repos\\shortest\\packages\\shortest\\tests\\e2e\\test-email-rendering.ts",
+              "evidence": "C:\\tmp\\qa-cortex-validation-repos\\shortest\\packages\\shortest\\tests\\e2e\\test-email-rendering.ts",
               "recommendation": "Add an assertion for the expected UI state, navigation, response, or persisted data after the action."
             }
           ]
@@ -1379,7 +1379,7 @@
             {
               "title": "Missing Assertion",
               "severity": "Medium",
-              "evidence": "C:\\tmp\\qa-brain-validation-repos\\shortest\\packages\\shortest\\tests\\e2e\\test-helpers.ts",
+              "evidence": "C:\\tmp\\qa-cortex-validation-repos\\shortest\\packages\\shortest\\tests\\e2e\\test-helpers.ts",
               "recommendation": "Add an assertion for the expected UI state, navigation, response, or persisted data after the action."
             }
           ]
@@ -1391,7 +1391,7 @@
             {
               "title": "Missing Assertion",
               "severity": "Medium",
-              "evidence": "C:\\tmp\\qa-brain-validation-repos\\shortest\\packages\\shortest\\tests\\e2e\\test-keyboard.ts",
+              "evidence": "C:\\tmp\\qa-cortex-validation-repos\\shortest\\packages\\shortest\\tests\\e2e\\test-keyboard.ts",
               "recommendation": "Add an assertion for the expected UI state, navigation, response, or persisted data after the action."
             }
           ]
@@ -1403,7 +1403,7 @@
             {
               "title": "Missing Assertion",
               "severity": "Medium",
-              "evidence": "C:\\tmp\\qa-brain-validation-repos\\shortest\\packages\\shortest\\tests\\e2e\\test-loop.ts",
+              "evidence": "C:\\tmp\\qa-cortex-validation-repos\\shortest\\packages\\shortest\\tests\\e2e\\test-loop.ts",
               "recommendation": "Add an assertion for the expected UI state, navigation, response, or persisted data after the action."
             }
           ]
@@ -1421,7 +1421,7 @@
     {
       "id": "multi-project-01",
       "name": "akshayp7/playwright-typescript-playwright-test",
-      "localPath": "C:/tmp/qa-brain-validation-repos/playwright-typescript",
+      "localPath": "C:/tmp/qa-cortex-validation-repos/playwright-typescript",
       "size": "medium",
       "tags": [
         "multi-project",

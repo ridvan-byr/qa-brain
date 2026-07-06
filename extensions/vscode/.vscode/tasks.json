@@ -2,7 +2,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "build QA Brain core",
+      "label": "build QA Cortex core",
       "type": "shell",
       "command": "npm",
       "args": [
@@ -20,10 +20,10 @@
       "problemMatcher": "$tsc"
     },
     {
-      "label": "build QA Brain VS Code Client",
+      "label": "build QA Cortex VS Code Client",
       "dependsOrder": "sequence",
       "dependsOn": [
-        "build QA Brain core",
+        "build QA Cortex core",
         "compile VS Code client"
       ],
       "problemMatcher": []

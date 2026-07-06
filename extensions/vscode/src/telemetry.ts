@@ -54,7 +54,7 @@ export class TelemetryManager {
   }
 
   private isEnabled(): boolean {
-    const config = vscode.workspace.getConfiguration('qaBrain');
+    const config = vscode.workspace.getConfiguration('qaCortex');
     const userOptIn = config.get<boolean>('telemetryEnabled', false);
     const editorTelemetryEnabled = vscode.env.isTelemetryEnabled ?? true;
     return Boolean(userOptIn && editorTelemetryEnabled);

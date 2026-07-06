@@ -2,10 +2,10 @@
 
 ## 0.1.3
 
-- Renamed the user-facing product brand from QA Brain to QA Cortex.
-- Updated VS Code extension display name, dashboard text, commands, notifications, reports, docs, and release metadata to use QA Cortex.
+- Completed the QA Cortex brand migration across product text, package metadata, command names, configuration keys, reports, docs, and release metadata.
+- Updated VS Code extension display name, dashboard text, commands, notifications, status bar, diagnostics, and output channel to use QA Cortex.
 - Refreshed the VS Code extension icon asset for the QA Cortex brand.
-- Kept existing `qa-brain` package, command, Marketplace, and repository identifiers for compatibility.
+- Renamed package, CLI, MCP, VS Code command, configuration, and generated package identifiers to QA Cortex naming.
 
 ## 0.1.2
 

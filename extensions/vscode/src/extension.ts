@@ -2,13 +2,13 @@ import * as cp from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { QaBrainCodeLensProvider } from './codeLens';
+import { QaCortexCodeLensProvider } from './codeLens';
 import { DiagnosticManager } from './diagnostics';
 import { ReviewOutput } from './output';
 import { ReviewRunner } from './reviewRunner';
-import { QaBrainCodeActionProvider } from './codeActions';
+import { QaCortexCodeActionProvider } from './codeActions';
 import { DashboardViewModel } from './dashboardViewModel';
-import { QaBrainSidebarViewProvider } from './sidebarView';
+import { QaCortexSidebarViewProvider } from './sidebarView';
 import { TelemetryManager } from './telemetry';
 import type { ReviewRun } from './types';
 
@@ -18,15 +18,15 @@ export function activate(context: vscode.ExtensionContext): void {
   const runner = new ReviewRunner(context);
   const diagnostics = new DiagnosticManager();
   const output = new ReviewOutput();
-  const codeLens = new QaBrainCodeLensProvider();
+  const codeLens = new QaCortexCodeLensProvider();
   const telemetry = new TelemetryManager(context);
   const dashboardViewModel = new DashboardViewModel(context);
-  const sidebarProvider = new QaBrainSidebarViewProvider(context, dashboardViewModel, telemetry);
+  const sidebarProvider = new QaCortexSidebarViewProvider(context, dashboardViewModel, telemetry);
   const statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
-  statusBar.command = 'qaBrain.reviewCurrentFile';
+  statusBar.command = 'qaCortex.reviewCurrentFile';
 
   const updateStatus = (text: string, tooltip = 'QA Cortex', qualityScore?: number, riskScore?: number): void => {
-    const config = vscode.workspace.getConfiguration('qaBrain');
+    const config = vscode.workspace.getConfiguration('qaCortex');
     if (!config.get<boolean>('showStatusBar', true)) {
       statusBar.hide();
       return;
@@ -159,7 +159,7 @@ export function activate(context: vscode.ExtensionContext): void {
   };
 
   const publishReview = async (document: vscode.TextDocument, run: ReviewRun): Promise<void> => {
-    const config = vscode.workspace.getConfiguration('qaBrain');
+    const config = vscode.workspace.getConfiguration('qaCortex');
     latestReportPath = runner.writeReport(run);
     output.show(run);
 
@@ -220,22 +220,22 @@ export function activate(context: vscode.ExtensionContext): void {
   };
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('qaBrain.reviewCurrentFile', reviewCurrentFile),
-    vscode.commands.registerCommand('qaBrain.runTestDesign', runTestDesign),
-    vscode.commands.registerCommand('qaBrain.reviewSelection', reviewSelection),
-    vscode.commands.registerCommand('qaBrain.reviewChangedFiles', reviewChangedFiles),
-    vscode.commands.registerCommand('qaBrain.openLatestReport', openLatestReport),
-    vscode.commands.registerCommand('qaBrain.showFindingDetails', async (message: string) => {
+    vscode.commands.registerCommand('qaCortex.reviewCurrentFile', reviewCurrentFile),
+    vscode.commands.registerCommand('qaCortex.runTestDesign', runTestDesign),
+    vscode.commands.registerCommand('qaCortex.reviewSelection', reviewSelection),
+    vscode.commands.registerCommand('qaCortex.reviewChangedFiles', reviewChangedFiles),
+    vscode.commands.registerCommand('qaCortex.openLatestReport', openLatestReport),
+    vscode.commands.registerCommand('qaCortex.showFindingDetails', async (message: string) => {
       await vscode.window.showInformationMessage(message, { modal: true });
     }),
-    vscode.commands.registerCommand('qaBrain.clearDiagnostics', () => {
+    vscode.commands.registerCommand('qaCortex.clearDiagnostics', () => {
       diagnostics.clear();
       codeLens.clear();
       dashboardViewModel.clearState();
       updateStatus('🧠 QA Cortex | Ready');
     }),
     vscode.workspace.onDidSaveTextDocument(document => {
-      const config = vscode.workspace.getConfiguration('qaBrain');
+      const config = vscode.workspace.getConfiguration('qaCortex');
       if (config.get<boolean>('reviewOnSave', false) && runner.isSupportedTestFile(document.fileName)) {
         reviewDocument(document);
       }
@@ -244,7 +244,7 @@ export function activate(context: vscode.ExtensionContext): void {
       diagnostics.clearUri(document.uri);
     }),
     vscode.window.registerWebviewViewProvider(
-      'qaBrain.sidebarView',
+      'qaCortex.sidebarView',
       sidebarProvider
     ),
     vscode.languages.registerCodeLensProvider(
@@ -253,8 +253,8 @@ export function activate(context: vscode.ExtensionContext): void {
     ),
     vscode.languages.registerCodeActionsProvider(
       [{ language: 'typescript' }, { language: 'javascript' }, { language: 'python' }],
-      new QaBrainCodeActionProvider(),
-      { providedCodeActionKinds: QaBrainCodeActionProvider.providedCodeActionKinds }
+      new QaCortexCodeActionProvider(),
+      { providedCodeActionKinds: QaCortexCodeActionProvider.providedCodeActionKinds }
     ),
     diagnostics,
     output,

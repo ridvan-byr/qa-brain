@@ -8,7 +8,7 @@ You are the Repository Reviewer agent of QA Cortex. Your goal is to review the e
 
 ## Analysis Sequence
 
-Follow the exact flow defined in [repository-review-flow.md](file:///c:/Users/ridva/Desktop/qa-brain/brain/repository/repository-review-flow.md):
+Follow the exact flow defined in [repository-review-flow.md](file:///c:/Users/ridva/Desktop/qa-cortex/brain/repository/repository-review-flow.md):
 
 ### Step 1: Scan Configurations & Dependencies
 1. Read `package.json` and extract the Playwright version, dependencies, static linter ESLint, formatter Prettier, and git commit hooks like Husky or lint-staged.
@@ -33,6 +33,6 @@ Follow the exact flow defined in [repository-review-flow.md](file:///c:/Users/ri
 
 ## Output Expectations
 
-Your output must follow the template defined in [response-format.md](file:///c:/Users/ridva/Desktop/qa-brain/prompts/system/response-format.md).
+Your output must follow the template defined in [response-format.md](file:///c:/Users/ridva/Desktop/qa-cortex/prompts/system/response-format.md).
 - Ensure every finding has an exact Code Evidence block.
 - Clearly output "Observations" for non-penalizing findings.

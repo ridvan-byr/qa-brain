@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-export class QaBrainCodeActionProvider implements vscode.CodeActionProvider {
+export class QaCortexCodeActionProvider implements vscode.CodeActionProvider {
   public static readonly providedCodeActionKinds = [
     vscode.CodeActionKind.QuickFix
   ];
@@ -25,7 +25,7 @@ export class QaBrainCodeActionProvider implements vscode.CodeActionProvider {
       );
       showDetailsAction.command = {
         title: 'Show Finding Details',
-        command: 'qaBrain.showFindingDetails',
+        command: 'qaCortex.showFindingDetails',
         arguments: [diagnostic.message]
       };
       showDetailsAction.diagnostics = [diagnostic];
@@ -38,7 +38,7 @@ export class QaBrainCodeActionProvider implements vscode.CodeActionProvider {
       );
       openReportAction.command = {
         title: 'Open Report',
-        command: 'qaBrain.openLatestReport'
+        command: 'qaCortex.openLatestReport'
       };
       openReportAction.diagnostics = [diagnostic];
       codeActions.push(openReportAction);

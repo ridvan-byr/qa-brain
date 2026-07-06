@@ -11,7 +11,7 @@
     {
       "id": "selenium-01",
       "name": "selenium-javascript-examples",
-      "localPath": "C:/tmp/qa-brain-validation-repos/selenium-javascript-examples/WebdriverJS-Mocha-Template",
+      "localPath": "C:/tmp/qa-cortex-validation-repos/selenium-javascript-examples/WebdriverJS-Mocha-Template",
       "size": "small",
       "tags": [
         "selenium-webdriver",
@@ -40,7 +40,7 @@
     {
       "id": "selenium-02",
       "name": "demo-js",
-      "localPath": "C:/tmp/qa-brain-validation-repos/demo-js/selenium",
+      "localPath": "C:/tmp/qa-cortex-validation-repos/demo-js/selenium",
       "size": "small",
       "tags": [
         "selenium-webdriver",
@@ -69,7 +69,7 @@
     {
       "id": "selenium-03",
       "name": "selenium-webdriverjs-pom-example",
-      "localPath": "C:/tmp/qa-brain-validation-repos/selenium-webdriverjs-pom-example",
+      "localPath": "C:/tmp/qa-cortex-validation-repos/selenium-webdriverjs-pom-example",
       "size": "small",
       "tags": [
         "selenium-webdriver",
@@ -98,7 +98,7 @@
     {
       "id": "selenium-04",
       "name": "example-selenium-javascript-jest",
-      "localPath": "C:/tmp/qa-brain-validation-repos/example-selenium-javascript-jest",
+      "localPath": "C:/tmp/qa-cortex-validation-repos/example-selenium-javascript-jest",
       "size": "small",
       "tags": [
         "selenium-webdriver",
@@ -127,7 +127,7 @@
     {
       "id": "selenium-05",
       "name": "selenium-mocha",
-      "localPath": "C:/tmp/qa-brain-validation-repos/selenium-mocha",
+      "localPath": "C:/tmp/qa-cortex-validation-repos/selenium-mocha",
       "size": "small",
       "tags": [
         "selenium-webdriver",

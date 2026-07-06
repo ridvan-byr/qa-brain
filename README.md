@@ -2,9 +2,7 @@
 
 > Repository-aware, rule-driven QA review engine for test automation projects.
 
-**Status**: v0.1.3 - CLI, GitHub Action, MCP, and VS Code Marketplace client available.
-
-> QA Cortex was previously developed under the QA Brain name. Some package names, command names, Marketplace identifiers, and repository URLs may temporarily retain `qa-brain` for compatibility.
+**Status**: v0.1.3 - CLI, GitHub Action, MCP, and VS Code client available.
 
 ---
 
@@ -41,13 +39,13 @@ When `GEMINI_API_KEY` is available, QA Cortex asks Gemini to review the selected
 
 Install the VS Code client from Marketplace:
 
-https://marketplace.visualstudio.com/items?itemName=qa-brain.qa-brain-vscode-client
+Marketplace listing will be published under the QA Cortex identity.
 
 ### Local CLI / Core
 
 ```bash
-git clone https://github.com/ridvan-byr/qa-brain.git
-cd qa-brain
+git clone https://github.com/ridvan-byr/qa-cortex.git
+cd qa-cortex
 npm install
 npm run build
 ```
@@ -65,31 +63,31 @@ npm link
 Review a single file:
 
 ```bash
-qa-brain review tests/login.spec.ts
+qa-cortex review tests/login.spec.ts
 ```
 
 Review a directory:
 
 ```bash
-qa-brain review tests/
+qa-cortex review tests/
 ```
 
 Run with verbose diagnostics:
 
 ```bash
-qa-brain review tests/ --verbose
+qa-cortex review tests/ --verbose
 ```
 
 Save JSON output:
 
 ```bash
-qa-brain review tests/ --format json
+qa-cortex review tests/ --format json
 ```
 
 Run benchmark calibration:
 
 ```bash
-qa-brain benchmark
+qa-cortex benchmark
 ```
 
 ### CLI Options
@@ -102,7 +100,7 @@ qa-brain benchmark
 | `--format <type>` | Output format: `markdown` or `json` | `markdown` |
 | `--output <dir>` | Directory to save reports | `reviews/` |
 | `--provider <name>` | LLM provider. Currently only `gemini` is supported. | `gemini` |
-| `--config <path>` | Path to `qa-brain.config.json` | - |
+| `--config <path>` | Path to `qa-cortex.config.json` | - |
 
 ---
 
@@ -119,7 +117,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ridvan-byr/qa-brain@v0.1.0
+      - uses: ridvan-byr/qa-cortex@v0.1.0
         with:
           github-token: ${{ github.token }}
           gemini-api-key: ${{ secrets.GEMINI_API_KEY }}
@@ -151,7 +149,7 @@ ReviewPipeline
 
 ```bash
 npm run build
-qa-brain benchmark
+qa-cortex benchmark
 ```
 
 The benchmark suite is useful for regression checks, but it is not a substitute for real repository validation. Real-world validation across open-source Playwright repositories is planned in Sprint 11.
@@ -162,7 +160,7 @@ The benchmark suite is useful for regression checks, but it is not a substitute 
 
 QA Cortex is available as a VS Code extension:
 
-https://marketplace.visualstudio.com/items?itemName=qa-brain.qa-brain-vscode-client
+Marketplace listing will be published under the QA Cortex identity.
 
 The extension source lives under `extensions/vscode`.
 
@@ -187,13 +185,13 @@ Default configuration:
 
 | Setting | Default |
 | :--- | :--- |
-| `qaBrain.reviewMode` | `rule-only` |
-| `qaBrain.reviewOnSave` | `false` |
-| `qaBrain.openReportAfterReview` | `false` |
-| `qaBrain.showDiagnostics` | `true` |
-| `qaBrain.showCodeLens` | `true` |
-| `qaBrain.showStatusBar` | `true` |
-| `qaBrain.telemetryEnabled` | `false` |
+| `qaCortex.reviewMode` | `rule-only` |
+| `qaCortex.reviewOnSave` | `false` |
+| `qaCortex.openReportAfterReview` | `false` |
+| `qaCortex.showDiagnostics` | `true` |
+| `qaCortex.showCodeLens` | `true` |
+| `qaCortex.showStatusBar` | `true` |
+| `qaCortex.telemetryEnabled` | `false` |
 
 The VS Code client is designed to run in VS Code Extension Development Host on Windows, macOS, and Linux by relying on VS Code and Node path APIs rather than platform-specific shell behavior.
 

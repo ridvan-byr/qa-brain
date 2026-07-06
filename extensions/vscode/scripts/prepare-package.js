@@ -3,7 +3,7 @@ const path = require('path');
 
 const extensionRoot = path.resolve(__dirname, '..');
 const repoRoot = path.resolve(extensionRoot, '../..');
-const packageRoot = path.join(extensionRoot, 'qa-brain-core');
+const packageRoot = path.join(extensionRoot, 'qa-cortex-core');
 
 function copyDirectory(source, target) {
   if (!fs.existsSync(source)) {

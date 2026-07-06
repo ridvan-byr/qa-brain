@@ -3,7 +3,7 @@ import { GeminiProvider } from '../reviewer/GeminiProvider';
 import * as fs from 'fs';
 import * as path from 'path';
 
-export class QABrainCore {
+export class QACortexCore {
   /**
    * Main static runner to execute QA Cortex review over a target file.
    */
@@ -43,5 +43,5 @@ export class QABrainCore {
 const args = process.argv.slice(2);
 if (args.length > 0) {
   const target = args[0];
-  QABrainCore.runReview(target);
+  QACortexCore.runReview(target);
 }

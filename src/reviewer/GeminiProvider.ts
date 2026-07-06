@@ -179,7 +179,7 @@ export class GeminiProvider implements LLMProvider {
         const headers = {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${this.apiKey}`,
-          'HTTP-Referer': 'https://github.com/ridvan-byr/qa-brain',
+          'HTTP-Referer': 'https://github.com/ridvan-byr/qa-cortex',
           'X-Title': 'QA Cortex'
         };
         const body = {
@@ -305,7 +305,7 @@ Output JSON only. Do not wrap in markdown or add notes.`;
         const headers = {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${this.apiKey}`,
-          'HTTP-Referer': 'https://github.com/ridvan-byr/qa-brain',
+          'HTTP-Referer': 'https://github.com/ridvan-byr/qa-cortex',
           'X-Title': 'QA Cortex'
         };
         const body = {

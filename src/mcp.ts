@@ -38,7 +38,7 @@ function findNearestProjectRoot(startPath: string): string {
 }
 
 const server = new Server({
-  name: "qa-brain-mcp",
+  name: "qa-cortex-mcp",
   version: appVersion
 }, {
   capabilities: {

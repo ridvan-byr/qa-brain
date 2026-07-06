@@ -7,7 +7,7 @@ This file acts as a shared activity journal to synchronize state and context bet
 ## 2026-07-05 - Antigravity (Gemini 2.5 Flash)
 
 ### 1. Completed Sprint 13D: Selenium Calibration & Validation
-- **Target Repositories**: Cloned 5 public Selenium Node.js/Mocha/Jest test suites locally under `C:/tmp/qa-brain-validation-repos/` and configured validation paths in `validation/repositories.selenium.json`.
+- **Target Repositories**: Cloned 5 public Selenium Node.js/Mocha/Jest test suites locally under `C:/tmp/qa-cortex-validation-repos/` and configured validation paths in `validation/repositories.selenium.json`.
 - **Heuristics Calibrated**:
   - `src/core/Scanner.ts`: Extended `isTestFile` to match common Selenium file patterns (like `tests.js` and `test-*.ts`).
   - `src/evaluation/ValidationRunner.ts`: Relaxed `isLikelyFrameworkTest` to identify Selenium tests that abstract WebDriver builders behind custom utility managers (e.g. `DriverLifeCycle`).
@@ -43,7 +43,7 @@ This file acts as a shared activity journal to synchronize state and context bet
 ### 3. Completed Sprint 15: Framework-Neutral VS Code Client
 - **Core Decoupling**: Refactored the VS Code extension into a pure thin client. All rule verification and AST operations are strictly managed by the QA Cortex Core.
 - **Core-Driven Detection**: Integrated dynamic loading of Core modules (`Scanner`, `ContextBuilder`, `RepositoryLoader`) within the extension. `Scanner` is now the single source of truth for file eligibility.
-- **Manual Settings Overrides**: Added `qaBrain.frameworkOverride` workspace configuration option (`Auto`, `Playwright`, `Selenium`, `Disabled`).
+- **Manual Settings Overrides**: Added `qaCortex.frameworkOverride` workspace configuration option (`Auto`, `Playwright`, `Selenium`, `Disabled`).
 - **Graceful Error Management**: Intercepted unsupported file saves (e.g. `.py` files) to show warning notifications without throwing runtime exceptions.
 - **UI Enhancements**:
   - Registered Python language CodeLens provider.
@@ -56,8 +56,8 @@ This file acts as a shared activity journal to synchronize state and context bet
 
 ### 4. Completed Sprint 16: VS Code Diagnostics & Squiggles
 - **Diagnostics Lifecycle Management**: Configured auto-cleanup to delete diagnostics when documents are closed, and updated runs to completely replace old values on save (preventing duplicate diagnostics).
-- **CodeActions & Quick Fixes**: Created `extensions/vscode/src/codeActions.ts` and registered `QaBrainCodeActionProvider` to offer inline quick actions (`Show Finding Details` using modal popup, `Open Report`).
-- **Visual Attention Mode**: Implemented status bar background/emoji coloring modes based on quality score threshold parameters (`qaBrain.statusBarAttentionMode`).
+- **CodeActions & Quick Fixes**: Created `extensions/vscode/src/codeActions.ts` and registered `QaCortexCodeActionProvider` to offer inline quick actions (`Show Finding Details` using modal popup, `Open Report`).
+- **Visual Attention Mode**: Implemented status bar background/emoji coloring modes based on quality score threshold parameters (`qaCortex.statusBarAttentionMode`).
 - **CodeLens Customization**: Shortened CodeLens summary labels to `🧠 Quality X • Risk Y` and dynamically rendered the `📖 Open Report` CodeLens conditionally depending on report presence.
 - **Files Modified**:
   - `extensions/vscode/package.json` [MODIFY]
@@ -69,7 +69,7 @@ This file acts as a shared activity journal to synchronize state and context bet
 
 ### 5. Completed Sprint 17: Framework-Neutral VS Code Workspace UI (Phase 1)
 - **MVVM Architecture**: Implemented `DashboardViewModel` (`dashboardViewModel.ts` [NEW]) to decouple the Webview UI from execution logic. Quality, Risk, and Maintainability scores and deltas are processed in the ViewModel and cached via `workspaceState`.
-- **Sidebar Provider**: Created `QaBrainSidebarViewProvider` (`sidebarView.ts` [NEW]) implementing `vscode.WebviewViewProvider` to render native VS Code themed tabs (Review, Metrics).
+- **Sidebar Provider**: Created `QaCortexSidebarViewProvider` (`sidebarView.ts` [NEW]) implementing `vscode.WebviewViewProvider` to render native VS Code themed tabs (Review, Metrics).
 - **Navigation & Reveal Action**: Implemented `jumpToLine` command to navigate selection and `revealRule` to open rule files in a side panel with anchor support (e.g. `locator-review.md#xpath`).
 - **VS Code Typings**: Updated `vscode.d.ts` to include complete interfaces for Webview, WebviewView, WebviewViewProvider, Memento, ExtensionContext, and TextEditorEdit.
 - **Files Modified**:
@@ -108,15 +108,15 @@ The next focus is extension release packaging and marketplace hardening:
 ### Completed Sprint 19: VS Code Marketplace Release & Hardening
 - **Packaging**:
   - Added VS Code extension packaging metadata and scripts in `extensions/vscode/package.json`.
-  - Added `extensions/vscode/scripts/prepare-package.js` to copy compiled QA Cortex core and `knowledge/` assets into `extensions/vscode/qa-brain-core/` before packaging.
+  - Added `extensions/vscode/scripts/prepare-package.js` to copy compiled QA Cortex core and `knowledge/` assets into `extensions/vscode/qa-cortex-core/` before packaging.
   - Added `extensions/vscode/.vscodeignore` to exclude TypeScript source, tests, benchmarks, validation data, screenshots, source maps, and generated files.
   - Added `extensions/vscode/LICENSE` so `vsce package` passes marketplace license checks.
 - **Packaged Runtime Pathing**:
   - Added `extensions/vscode/src/extensionPaths.ts`.
-  - Updated `reviewRunner`, `sidebarView`, and `dashboardViewModel` to prefer packaged `qa-brain-core/` assets and fall back to the repository root in Extension Development Host.
+  - Updated `reviewRunner`, `sidebarView`, and `dashboardViewModel` to prefer packaged `qa-cortex-core/` assets and fall back to the repository root in Extension Development Host.
 - **Telemetry & Privacy**:
   - Added `extensions/vscode/src/telemetry.ts` with strict opt-in local JSONL logging.
-  - Telemetry default remains disabled via `qaBrain.telemetryEnabled: false`.
+  - Telemetry default remains disabled via `qaCortex.telemetryEnabled: false`.
   - Logged anonymized `review`, `testDesign`, `crash`, and `featureUsage` events without file paths, repository URLs, code, API keys, or secrets.
   - Documented telemetry privacy behavior in `README.md`.
 - **Rule Packs & Release Docs**:
@@ -132,7 +132,7 @@ The next focus is extension release packaging and marketplace hardening:
   - Generated VSIX checksum: `D7E61493369C4D09EF245D9FC1C56801EE50821044D7E3CD9B39450C7D440434`.
 
 ### Remaining Manual Release Steps
-- Install `extensions/vscode/qa-brain-vscode-client-0.1.0.vsix` in a clean VS Code profile.
+- Install `extensions/vscode/qa-cortex-vscode-client-0.1.0.vsix` in a clean VS Code profile.
 - Verify sidebar, review, test design, diagnostics, CodeLens, and telemetry opt-in behavior manually.
 - Publish the RC to VS Code Marketplace after publisher token setup.
 
@@ -156,7 +156,7 @@ The next focus is extension release packaging and marketplace hardening:
     - `QA Cortex: Review Current Test File`
     - `QA Cortex: Run Test Design Analysis`
     - `QA Cortex: Clear Diagnostics`
-  - Added `qaBrain.runTestDesign` to activation events and contributed commands.
+  - Added `qaCortex.runTestDesign` to activation events and contributed commands.
   - Added `ReviewRun.reviewScope` in `extensions/vscode/src/types.ts`.
   - Updated `extensions/vscode/src/reviewRunner.ts` so full-file reviews report `reviewScope: 'file'` and selection reviews report `reviewScope: 'selection'`.
   - Updated `extensions/vscode/src/dashboardViewModel.ts` with active file name, active file path, review scope, and `contextLimited` state.
@@ -174,7 +174,7 @@ The next focus is extension release packaging and marketplace hardening:
   - `npm test` passed.
   - `npm run compile` from `extensions/vscode` passed.
   - `npm run package` from `extensions/vscode` passed.
-  - Latest VSIX: `extensions/vscode/qa-brain-vscode-client-0.1.1.vsix`
+  - Latest VSIX: `extensions/vscode/qa-cortex-vscode-client-0.1.1.vsix`
   - `docs/release-artifacts.md` updated with the latest checksum.
 
 ## 2026-07-06 - Sprint 19.5 - Core Hardening & Stability
@@ -199,7 +199,7 @@ The next focus is extension release packaging and marketplace hardening:
 
 ### Next Steps for Release / Next Agent
 - Push Sprint 19.5 changes to GitHub.
-- Publish `qa-brain-vscode-client-0.1.1.vsix` to the VS Code Marketplace.
+- Publish `qa-cortex-vscode-client-0.1.1.vsix` to the VS Code Marketplace.
 - Kick off Sprint 20 (Python Core & Scanner integration).
 
 ## 2026-07-06 - Sprint 20 - Python Core & Scanner (v4.0 Core)
@@ -220,7 +220,7 @@ The next focus is extension release packaging and marketplace hardening:
 
 ### Next Steps for Release / Next Agent
 - Push Sprint 20 changes to GitHub.
-- Publish `qa-brain-vscode-client-0.1.2.vsix` to the VS Code Marketplace.
+- Publish `qa-cortex-vscode-client-0.1.2.vsix` to the VS Code Marketplace.
 - Update the marketplace changelog.
 - Kick off Sprint 21 (Python Selenium Adapter & Calibration).
 
@@ -241,29 +241,29 @@ The next focus is extension release packaging and marketplace hardening:
   - `npm test` passed.
   - `node dist/src/cli.js benchmark` passed with 12/12 benchmark cases.
   - `npm run compile` from `extensions/vscode` passed.
-  - `npm run package` from `extensions/vscode` passed and generated `qa-brain-vscode-client-0.1.2.vsix`.
+  - `npm run package` from `extensions/vscode` passed and generated `qa-cortex-vscode-client-0.1.2.vsix`.
 - **Working Tree Note**:
   - Generated validation/metrics report files contain timing-only drift from verification runs. Do not include those in the Sprint 20 commit unless intentionally refreshing generated reports.
 
-## 2026-07-06 - Brand Rename - QA Cortex v0.1.3
+## 2026-07-06 - QA Cortex Brand Migration v0.1.3
 
 - **Brand Decision**:
-  - User-facing product name changed from `QA Brain` to `QA Cortex` because the previous name may conflict with an existing protected brand.
-  - Compatibility identifiers such as `qa-brain`, `qaBrain`, extension commands, package names, repository URLs, and Marketplace item IDs remain unchanged for now.
+  - Product identity standardized as `QA Cortex`.
+  - Package names, CLI commands, MCP server name, VS Code command IDs, configuration keys, generated package directory, docs, and release metadata now use QA Cortex naming.
 - **Rename Scope**:
   - Updated user-facing docs, rule knowledge, prompts, reports, CLI/MCP/action messages, VS Code dashboard text, commands, notifications, diagnostics, status bar, output channel, and release metadata to use `QA Cortex`.
   - Updated `extensions/vscode/assets/icon.png` with the new QA Cortex icon asset supplied by the user.
   - Bumped root and VS Code extension manifests to `0.1.3`.
-  - Added `0.1.3` changelog entry documenting the rename and compatibility decision.
+  - Added `0.1.3` changelog entry documenting the QA Cortex migration.
 - **Verification Completed**:
   - `npm run build` passed.
   - `npm test` passed.
   - `node dist/src/cli.js benchmark` passed with 12/12 benchmark cases and no regression.
   - `npm run compile` from `extensions/vscode` passed.
-  - `npm run package` from `extensions/vscode` passed and generated `qa-brain-vscode-client-0.1.3.vsix`.
-  - VSIX SHA256: `EDC2D8D6D822EDBC3D77E7FAF94E5C1377ADDC5AC7DA04950202792E23966F92`.
+  - `npm run package` from `extensions/vscode` passed and generated `qa-cortex-vscode-client-0.1.3.vsix`.
+  - VSIX SHA256: `5D1B975B60FEA7620D19C4174114748BA546203CDC0EAF2271DD41B801F588B3`.
 
 ### Next Steps for User
-- Install or publish `extensions/vscode/qa-brain-vscode-client-0.1.3.vsix`.
-- Update the existing Marketplace listing display metadata to QA Cortex.
+- Install or publish `extensions/vscode/qa-cortex-vscode-client-0.1.3.vsix`.
+- Publish the new QA Cortex Marketplace listing/package identity.
 - Run a manual VS Code smoke test to confirm Activity Bar icon, dashboard title, command palette labels, status bar, output channel, and report title show QA Cortex.

@@ -13,7 +13,7 @@
       "id": "small-01",
       "name": "microsoft/playwright-mcp",
       "url": "https://github.com/microsoft/playwright-mcp",
-      "localPath": "C:/tmp/qa-brain-validation-repos/playwright-mcp",
+      "localPath": "C:/tmp/qa-cortex-validation-repos/playwright-mcp",
       "size": "small",
       "tags": ["mcp", "playwright-tooling"],
       "notes": "Small Playwright tooling project with real Playwright specs."
@@ -22,7 +22,7 @@
       "id": "small-02",
       "name": "imbhargav5/nextbase-nextjs-supabase-starter",
       "url": "https://github.com/imbhargav5/nextbase-nextjs-supabase-starter",
-      "localPath": "C:/tmp/qa-brain-validation-repos/nextbase",
+      "localPath": "C:/tmp/qa-cortex-validation-repos/nextbase",
       "size": "small",
       "tags": ["starter", "authentication-heavy"],
       "notes": "Small Next/Supabase starter with authentication-oriented flows."
@@ -31,7 +31,7 @@
       "id": "medium-01",
       "name": "MarcusFelling/demo.playwright",
       "url": "https://github.com/MarcusFelling/demo.playwright",
-      "localPath": "C:/tmp/qa-brain-validation-repos/demo-playwright",
+      "localPath": "C:/tmp/qa-cortex-validation-repos/demo-playwright",
       "size": "medium",
       "tags": ["demo", "page-object"],
       "notes": "Playwright demo repository with multiple representative specs."
@@ -40,7 +40,7 @@
       "id": "medium-02",
       "name": "vitalets/playwright-bdd",
       "url": "https://github.com/vitalets/playwright-bdd",
-      "localPath": "C:/tmp/qa-brain-validation-repos/playwright-bdd",
+      "localPath": "C:/tmp/qa-cortex-validation-repos/playwright-bdd",
       "size": "medium",
       "tags": ["bdd", "mixed-architecture"],
       "notes": "BDD-oriented Playwright project for non-standard architecture coverage."
@@ -49,7 +49,7 @@
       "id": "large-01",
       "name": "synpress-io/synpress",
       "url": "https://github.com/synpress-io/synpress",
-      "localPath": "C:/tmp/qa-brain-validation-repos/synpress",
+      "localPath": "C:/tmp/qa-cortex-validation-repos/synpress",
       "size": "large",
       "tags": ["web3", "fixture-heavy"],
       "notes": "Large Playwright-heavy repository with fixtures and browser extension flows."
@@ -58,7 +58,7 @@
       "id": "large-02",
       "name": "allure-framework/allure-js",
       "url": "https://github.com/allure-framework/allure-js",
-      "localPath": "C:/tmp/qa-brain-validation-repos/allure-js",
+      "localPath": "C:/tmp/qa-cortex-validation-repos/allure-js",
       "size": "large",
       "tags": ["reporting", "multi-project"],
       "notes": "Large multi-package repository with many test files."
@@ -67,7 +67,7 @@
       "id": "enterprise-01",
       "name": "serenity-js/serenity-js",
       "url": "https://github.com/serenity-js/serenity-js",
-      "localPath": "C:/tmp/qa-brain-validation-repos/serenity-js",
+      "localPath": "C:/tmp/qa-cortex-validation-repos/serenity-js",
       "size": "enterprise",
       "tags": ["enterprise-style", "multi-project", "bdd"],
       "notes": "Enterprise-style multi-package testing framework repository."
@@ -76,7 +76,7 @@
       "id": "api-01",
       "name": "microsoft/playwright-vscode",
       "url": "https://github.com/microsoft/playwright-vscode",
-      "localPath": "C:/tmp/qa-brain-validation-repos/playwright-vscode",
+      "localPath": "C:/tmp/qa-cortex-validation-repos/playwright-vscode",
       "size": "medium",
       "tags": ["api-heavy", "vscode-extension"],
       "notes": "Extension project with integration-style test coverage."
@@ -85,7 +85,7 @@
       "id": "auth-01",
       "name": "antiwork/shortest",
       "url": "https://github.com/antiwork/shortest",
-      "localPath": "C:/tmp/qa-brain-validation-repos/shortest",
+      "localPath": "C:/tmp/qa-cortex-validation-repos/shortest",
       "size": "medium",
       "tags": ["authentication-heavy", "ai-testing"],
       "notes": "AI testing project with multiple Playwright specs."
@@ -94,7 +94,7 @@
       "id": "multi-project-01",
       "name": "akshayp7/playwright-typescript-playwright-test",
       "url": "https://github.com/akshayp7/playwright-typescript-playwright-test",
-      "localPath": "C:/tmp/qa-brain-validation-repos/playwright-typescript",
+      "localPath": "C:/tmp/qa-cortex-validation-repos/playwright-typescript",
       "size": "medium",
       "tags": ["multi-project", "page-object"],
       "notes": "Playwright TypeScript sample with page-object style tests."

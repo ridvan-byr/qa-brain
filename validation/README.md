@@ -16,7 +16,7 @@ npm run validate -- validation/repositories.json
 or after build:
 
 ```bash
-qa-brain validate validation/repositories.json
+qa-cortex validate validation/repositories.json
 ```
 
 ## Outputs

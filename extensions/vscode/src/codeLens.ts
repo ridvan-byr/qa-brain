@@ -2,7 +2,7 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import type { LastReviewState } from './types';
 
-export class QaBrainCodeLensProvider implements vscode.CodeLensProvider {
+export class QaCortexCodeLensProvider implements vscode.CodeLensProvider {
   private reviews = new Map<string, LastReviewState>();
 
   public update(state: LastReviewState): void {
@@ -14,7 +14,7 @@ export class QaBrainCodeLensProvider implements vscode.CodeLensProvider {
   }
 
   public provideCodeLenses(document: vscode.TextDocument): vscode.CodeLens[] {
-    const config = vscode.workspace.getConfiguration('qaBrain');
+    const config = vscode.workspace.getConfiguration('qaCortex');
     if (!config.get<boolean>('showCodeLens', true)) return [];
 
     // Language-agnostic test file check using dynamic Scanner loading
@@ -40,7 +40,7 @@ export class QaBrainCodeLensProvider implements vscode.CodeLensProvider {
     const lenses: vscode.CodeLens[] = [
       new vscode.CodeLens(top, {
         title: summary,
-        command: 'qaBrain.reviewCurrentFile',
+        command: 'qaCortex.reviewCurrentFile',
         arguments: [document.uri],
       })
     ];
@@ -49,7 +49,7 @@ export class QaBrainCodeLensProvider implements vscode.CodeLensProvider {
       lenses.push(
         new vscode.CodeLens(top, {
           title: '📖 Open Report',
-          command: 'qaBrain.openLatestReport',
+          command: 'qaCortex.openLatestReport',
           arguments: [vscode.Uri.file(state.reportPath)]
         })
       );

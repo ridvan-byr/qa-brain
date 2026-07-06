@@ -58,9 +58,9 @@ This review analyzes the `examples/bad/hardcoded-wait.spec.ts` test case. The an
 
 ## References
 
-- [playwright-best-practices](file:///c:/Users/ridva/Desktop/qa-brain/knowledge/playwright/README.md)
-- [waiting-review.md](file:///c:/Users/ridva/Desktop/qa-brain/knowledge/playwright/review-rules/waiting-review.md)
-- [locator-review.md](file:///c:/Users/ridva/Desktop/qa-brain/knowledge/playwright/review-rules/locator-review.md)
+- [playwright-best-practices](file:///c:/Users/ridva/Desktop/qa-cortex/knowledge/playwright/README.md)
+- [waiting-review.md](file:///c:/Users/ridva/Desktop/qa-cortex/knowledge/playwright/review-rules/waiting-review.md)
+- [locator-review.md](file:///c:/Users/ridva/Desktop/qa-cortex/knowledge/playwright/review-rules/locator-review.md)
 
 ---
 

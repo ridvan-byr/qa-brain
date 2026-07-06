@@ -110,7 +110,7 @@ Framework support labels are defined in `docs/framework-support-policy.md`.
 - **Status**: Completed.
 - [x] Created validation workspace under `validation/`.
 - [x] Added `ValidationRunner` for repository selection checks, rule coverage, review time, and finding triage reports.
-- [x] Added `qa-brain validate [config]` CLI command and `npm run validate` script.
+- [x] Added `qa-cortex validate [config]` CLI command and `npm run validate` script.
 - [x] Selected and cloned 10 open-source Playwright repositories locally for the initial validation run.
 - [x] Generated initial Rule Only validation report: 10 repositories, 226 files reviewed, 59 findings, 13 rule coverage entries.
 - [x] Calibrated noisy assertion/isolation heuristics and reduced findings from 59 to 26 while keeping benchmark suite green.
@@ -249,7 +249,7 @@ Architecture Freeze milestone before Sprint 13C:
 ### ✅ Sprint 19 — VS Code Marketplace Release & Hardening
 - **Objective**: Configure packaging, set up opt-in telemetry, organize rule packs, and prepare RC packaging.
 - **Status**: Completed and published to the VS Code Marketplace.
-- [x] Added strict opt-in telemetry with `qaBrain.telemetryEnabled` defaulting to `false`.
+- [x] Added strict opt-in telemetry with `qaCortex.telemetryEnabled` defaulting to `false`.
 - [x] Added anonymized local telemetry events for review, test design, crash, and feature usage.
 - [x] Added versioned rule pack manifest at `knowledge/rule-pack.json`.
 - [x] Added extension package asset preparation for compiled QA Cortex core and knowledge files.
@@ -257,7 +257,7 @@ Architecture Freeze milestone before Sprint 13C:
 - [x] Added extension marketplace metadata, package scripts, root license copy, changelog, versioning policy, and release checklist.
 - [x] Generated local VSIX RC package and SHA256 checksum.
 - [x] Publish extension Release Candidate (RC) to VS Code Marketplace after clean-profile smoke test and publisher token setup.
-- [x] Published Marketplace listing: https://marketplace.visualstudio.com/items?itemName=qa-brain.qa-brain-vscode-client
+- [x] Published Marketplace listing: https://marketplace.visualstudio.com/items?itemName=qa-cortex.qa-cortex-vscode-client
 
 ### ✅ Sprint 19.5 — Core Hardening & Stability
 - **Objective**: Address critical correctness and maintainability risks found during external project review before expanding to Python support.

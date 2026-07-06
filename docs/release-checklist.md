@@ -15,13 +15,13 @@ Use this checklist before publishing a release candidate or marketplace build.
 - [ ] `CHANGELOG.md` is updated.
 - [ ] `.vscodeignore` excludes tests, benchmarks, validation data, screenshots, and source maps.
 - [ ] Compiled extension files are included under `out/`.
-- [ ] Compiled QA Cortex core is included under `qa-brain-core/dist/`.
-- [ ] Rule assets and `knowledge/rule-pack.json` are included under `qa-brain-core/knowledge/`.
+- [ ] Compiled QA Cortex core is included under `qa-cortex-core/dist/`.
+- [ ] Rule assets and `knowledge/rule-pack.json` are included under `qa-cortex-core/knowledge/`.
 - [ ] SHA256 checksum is generated for the VSIX.
 
 ## Privacy
 
-- [ ] `qaBrain.telemetryEnabled` defaults to `false`.
+- [ ] `qaCortex.telemetryEnabled` defaults to `false`.
 - [ ] No telemetry is written when telemetry is disabled.
 - [ ] Telemetry payloads include `schemaVersion` and `extensionVersion`.
 - [ ] Telemetry never includes file paths, repository URIs, source code, API keys, or secrets.

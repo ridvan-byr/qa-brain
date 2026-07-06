@@ -26,25 +26,19 @@ You can also select a code block and run `QA Cortex: Review Selection` for a con
 
 ## Configuration
 
-The extension keeps the existing `qaBrain.*` setting keys for compatibility.
-
 Common settings:
 
-- `qaBrain.reviewOnSave`: run review when a supported test file is saved.
-- `qaBrain.showDiagnostics`: show findings in the Problems panel.
-- `qaBrain.showCodeLens`: show CodeLens summaries on supported test files.
-- `qaBrain.showStatusBar`: show the QA Cortex status bar item.
-- `qaBrain.telemetryEnabled`: opt in to local anonymized telemetry. Disabled by default.
-- `qaBrain.apiProvider`: optional provider fallback, such as Gemini, OpenAI, Anthropic, or OpenRouter.
-- `qaBrain.apiKey`: API key for the selected optional provider.
+- `qaCortex.reviewOnSave`: run review when a supported test file is saved.
+- `qaCortex.showDiagnostics`: show findings in the Problems panel.
+- `qaCortex.showCodeLens`: show CodeLens summaries on supported test files.
+- `qaCortex.showStatusBar`: show the QA Cortex status bar item.
+- `qaCortex.telemetryEnabled`: opt in to local anonymized telemetry. Disabled by default.
+- `qaCortex.apiProvider`: optional provider fallback, such as Gemini, OpenAI, Anthropic, or OpenRouter.
+- `qaCortex.apiKey`: API key for the selected optional provider.
 
 ## Privacy
 
 Telemetry is disabled by default. When enabled, telemetry is local and anonymized. QA Cortex does not record file paths, repository URLs, source code, API keys, or secrets.
-
-## Compatibility Note
-
-QA Cortex was previously developed under the QA Brain name. Some internal identifiers, command IDs, and package names may still use `qa-brain` or `qaBrain` for compatibility.
 
 ## License
 

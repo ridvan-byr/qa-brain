@@ -1,11 +1,11 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { resolveQaBrainRoot } from './extensionPaths';
+import { resolveQaCortexRoot } from './extensionPaths';
 import type { DashboardViewModel, DashboardState } from './dashboardViewModel';
 import type { TelemetryManager } from './telemetry';
 
-export class QaBrainSidebarViewProvider implements vscode.WebviewViewProvider {
+export class QaCortexSidebarViewProvider implements vscode.WebviewViewProvider {
   private view?: vscode.WebviewView;
   private readonly repoRoot: string;
 
@@ -14,7 +14,7 @@ export class QaBrainSidebarViewProvider implements vscode.WebviewViewProvider {
     private readonly viewModel: DashboardViewModel,
     private readonly telemetry?: TelemetryManager
   ) {
-    this.repoRoot = resolveQaBrainRoot();
+    this.repoRoot = resolveQaCortexRoot();
   }
 
   public resolveWebviewView(
@@ -111,13 +111,13 @@ export class QaBrainSidebarViewProvider implements vscode.WebviewViewProvider {
           {
             const activeFilePath = this.viewModel.getCurrentState()?.activeFilePath;
             const targetUri = activeFilePath ? vscode.Uri.file(activeFilePath) : undefined;
-            vscode.commands.executeCommand('qaBrain.reviewCurrentFile', targetUri);
+            vscode.commands.executeCommand('qaCortex.reviewCurrentFile', targetUri);
           }
           break;
 
         case 'runSelection':
           this.telemetry?.track('featureUsage', { feature: 'runSelectionFromSidebar' });
-          vscode.commands.executeCommand('qaBrain.reviewSelection');
+          vscode.commands.executeCommand('qaCortex.reviewSelection');
           break;
 
         case 'runDesign':
@@ -125,25 +125,25 @@ export class QaBrainSidebarViewProvider implements vscode.WebviewViewProvider {
           {
             const activeFilePath = this.viewModel.getCurrentState()?.activeFilePath;
             const targetUri = activeFilePath ? vscode.Uri.file(activeFilePath) : undefined;
-            vscode.commands.executeCommand('qaBrain.runTestDesign', targetUri);
+            vscode.commands.executeCommand('qaCortex.runTestDesign', targetUri);
           }
           break;
 
         case 'openReport':
           this.telemetry?.track('featureUsage', { feature: 'openReportFromSidebar' });
-          vscode.commands.executeCommand('qaBrain.openLatestReport');
+          vscode.commands.executeCommand('qaCortex.openLatestReport');
           break;
 
         case 'clear':
           this.telemetry?.track('featureUsage', { feature: 'clearFromSidebar' });
-          vscode.commands.executeCommand('qaBrain.clearDiagnostics');
+          vscode.commands.executeCommand('qaCortex.clearDiagnostics');
           break;
 
         case 'saveApiKey':
           this.telemetry?.track('featureUsage', { feature: 'saveApiKey' });
           {
             const key: string = message.apiKey || '';
-            await vscode.workspace.getConfiguration('qaBrain').update('apiKey', key.trim(), vscode.ConfigurationTarget.Global);
+            await vscode.workspace.getConfiguration('qaCortex').update('apiKey', key.trim(), vscode.ConfigurationTarget.Global);
             vscode.window.showInformationMessage('QA Cortex: API Key successfully saved and configured.');
             this.pushState();
           }
@@ -152,7 +152,7 @@ export class QaBrainSidebarViewProvider implements vscode.WebviewViewProvider {
         case 'saveApiConfig':
           this.telemetry?.track('featureUsage', { feature: 'saveApiConfig' });
           {
-            const config = vscode.workspace.getConfiguration('qaBrain');
+            const config = vscode.workspace.getConfiguration('qaCortex');
             await config.update('apiProvider', message.apiProvider, vscode.ConfigurationTarget.Global);
             await config.update('apiKey', (message.apiKey || '').trim(), vscode.ConfigurationTarget.Global);
             await config.update('apiModel', (message.apiModel || '').trim(), vscode.ConfigurationTarget.Global);

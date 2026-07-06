@@ -16,7 +16,7 @@ export interface PRReviewSummary {
 }
 
 export class PRCommentFormatter {
-  private static readonly COMMENT_MARKER = '<!-- qa-brain-review -->';
+  private static readonly COMMENT_MARKER = '<!-- qa-cortex-review -->';
 
   /**
    * Formats the review results into a structured PR comment.
@@ -72,7 +72,7 @@ export class PRCommentFormatter {
     }
 
     lines.push('\n---');
-    lines.push('*Powered by [QA Cortex](https://github.com/ridvan-byr/qa-brain) v0.1.0*');
+    lines.push('*Powered by [QA Cortex](https://github.com/ridvan-byr/qa-cortex) v0.1.0*');
 
     return lines.join('\n');
   }

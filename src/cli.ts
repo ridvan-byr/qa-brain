@@ -13,7 +13,7 @@ import * as path from 'path';
 function printHelp(): void {
   console.log(`
 QA Cortex CLI - v0.1.0
-Usage: qa-brain <command> [options]
+Usage: qa-cortex <command> [options]
 
 Commands:
   review <path>     Scan a test file or directory for Playwright rules and score it.
@@ -30,11 +30,11 @@ Options:
   --verbose         Print verbose debug information during run.
 
 Examples:
-  qa-brain review benchmarks/playwright/locator/xpath.spec.ts
-  qa-brain review benchmarks/playwright/
-  qa-brain review . --verbose
-  qa-brain benchmark
-  qa-brain validate validation/repositories.json
+  qa-cortex review benchmarks/playwright/locator/xpath.spec.ts
+  qa-cortex review benchmarks/playwright/
+  qa-cortex review . --verbose
+  qa-cortex benchmark
+  qa-cortex validate validation/repositories.json
   `);
 }
 

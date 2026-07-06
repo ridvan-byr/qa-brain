@@ -1,9 +1,9 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-export function resolveQaBrainRoot(): string {
+export function resolveQaCortexRoot(): string {
   const extensionRoot = path.resolve(__dirname, '../..');
-  const packagedRoot = path.join(extensionRoot, 'qa-brain-core');
+  const packagedRoot = path.join(extensionRoot, 'qa-cortex-core');
 
   if (fs.existsSync(path.join(packagedRoot, 'dist', 'src'))) {
     return packagedRoot;

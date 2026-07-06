@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { resolveQaBrainRoot } from './extensionPaths';
+import { resolveQaCortexRoot } from './extensionPaths';
 import type { ReviewRun } from './types';
 import { VsCodeLanguageModelProvider } from './lmProvider';
 
@@ -62,7 +62,7 @@ export class DashboardViewModel {
     const score = run.result.score;
 
     // 1. Calculate Quality Deltas
-    const stateKey = `qaBrain.lastScore.${filePath}`;
+    const stateKey = `qaCortex.lastScore.${filePath}`;
     const cached = this.context.workspaceState.get<{
       quality: number;
       risk: number;
@@ -121,13 +121,13 @@ export class DashboardViewModel {
 
   public async runTestDesign(filePath: string, workspaceRoot: string): Promise<void> {
     try {
-      const repoRoot = resolveQaBrainRoot();
+      const repoRoot = resolveQaCortexRoot();
       const corePath = path.join(repoRoot, 'dist', 'src');
       
       const { TestDesignEngine } = require(path.join(corePath, 'design', 'TestDesignEngine.js'));
       const { GeminiProvider } = require(path.join(corePath, 'reviewer', 'GeminiProvider.js'));
 
-      const config = vscode.workspace.getConfiguration('qaBrain');
+      const config = vscode.workspace.getConfiguration('qaCortex');
       const apiProvider = config.get<string>('apiProvider', 'Gemini');
       const apiKeySetting = config.get<string>('apiKey', '') || (apiProvider === 'Gemini' ? process.env.GEMINI_API_KEY : '') || process.env.QA_BRAIN_API_KEY || '';
       const apiModel = config.get<string>('apiModel', '');
@@ -177,7 +177,7 @@ export class DashboardViewModel {
 
   public getCurrentState(): DashboardState | undefined {
     if (this.currentState) {
-      const config = vscode.workspace.getConfiguration('qaBrain');
+      const config = vscode.workspace.getConfiguration('qaCortex');
       const apiProvider = config.get<string>('apiProvider', 'Gemini');
       this.currentState.apiKey = config.get<string>('apiKey', '') || (apiProvider === 'Gemini' ? process.env.GEMINI_API_KEY : '') || process.env.QA_BRAIN_API_KEY || '';
       this.currentState.apiProvider = apiProvider;
@@ -211,9 +211,9 @@ export class DashboardViewModel {
   private updateWorkspaceInsights(filePath: string, run: ReviewRun): void {
     const state = this.context.workspaceState;
     
-    let files = state.get<string[]>('qaBrain.reviewedFilesList') || [];
-    let scoresMap = state.get<Record<string, { quality: number; risk: number; maintainability: number; findings: string[] }>>('qaBrain.fileScoresMap') || {};
-    let rulesCount = state.get<Record<string, number>>('qaBrain.rulesCount') || {};
+    let files = state.get<string[]>('qaCortex.reviewedFilesList') || [];
+    let scoresMap = state.get<Record<string, { quality: number; risk: number; maintainability: number; findings: string[] }>>('qaCortex.fileScoresMap') || {};
+    let rulesCount = state.get<Record<string, number>>('qaCortex.rulesCount') || {};
 
     // 1. Remove old version of the file's rule violations if it was reviewed before
     if (scoresMap[filePath]) {
@@ -270,16 +270,16 @@ export class DashboardViewModel {
     }
 
     // 6. Save back to state
-    state.update('qaBrain.reviewedFilesList', files);
-    state.update('qaBrain.fileScoresMap', scoresMap);
-    state.update('qaBrain.rulesCount', rulesCount);
+    state.update('qaCortex.reviewedFilesList', files);
+    state.update('qaCortex.fileScoresMap', scoresMap);
+    state.update('qaCortex.rulesCount', rulesCount);
   }
 
   private calculateInsights(): WorkspaceInsights {
     const state = this.context.workspaceState;
-    const files = state.get<string[]>('qaBrain.reviewedFilesList') || [];
-    const scoresMap = state.get<Record<string, { quality: number; risk: number; maintainability: number; findings: string[] }>>('qaBrain.fileScoresMap') || {};
-    const rulesCount = state.get<Record<string, number>>('qaBrain.rulesCount') || {};
+    const files = state.get<string[]>('qaCortex.reviewedFilesList') || [];
+    const scoresMap = state.get<Record<string, { quality: number; risk: number; maintainability: number; findings: string[] }>>('qaCortex.fileScoresMap') || {};
+    const rulesCount = state.get<Record<string, number>>('qaCortex.rulesCount') || {};
 
     // 1. Calculate top risky files
     const riskyFiles = files

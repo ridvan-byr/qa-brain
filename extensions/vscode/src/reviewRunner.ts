@@ -3,7 +3,7 @@ import * as os from 'os';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import type { ExtensionContext, TextDocument } from 'vscode';
-import { resolveQaBrainRoot } from './extensionPaths';
+import { resolveQaCortexRoot } from './extensionPaths';
 import type { ReviewRun } from './types';
 import { VsCodeLanguageModelProvider } from './lmProvider';
 
@@ -11,7 +11,7 @@ export class ReviewRunner {
   private readonly repoRoot: string;
 
   constructor(private readonly context: ExtensionContext) {
-    this.repoRoot = resolveQaBrainRoot();
+    this.repoRoot = resolveQaCortexRoot();
   }
 
   public isSupportedTestFile(filePath: string): boolean {
@@ -32,7 +32,7 @@ export class ReviewRunner {
   }
 
   public async reviewFile(filePath: string, workspaceRoot?: string): Promise<ReviewRun> {
-    const config = vscode.workspace.getConfiguration('qaBrain');
+    const config = vscode.workspace.getConfiguration('qaCortex');
     const frameworkOverride = config.get<string>('frameworkOverride', 'Auto');
 
     if (frameworkOverride === 'Disabled') {

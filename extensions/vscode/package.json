@@ -1,18 +1,18 @@
 {
-  "name": "qa-brain-vscode-client",
+  "name": "qa-cortex-vscode-client",
   "displayName": "QA Cortex",
   "description": "Framework-neutral VS Code client for QA Cortex deterministic test review and design analysis.",
   "version": "0.1.3",
-  "publisher": "qa-brain",
+  "publisher": "qa-cortex",
   "license": "MIT",
   "icon": "assets/icon.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ridvan-byr/qa-brain"
+    "url": "https://github.com/ridvan-byr/qa-cortex"
   },
-  "homepage": "https://github.com/ridvan-byr/qa-brain#readme",
+  "homepage": "https://github.com/ridvan-byr/qa-cortex#readme",
   "bugs": {
-    "url": "https://github.com/ridvan-byr/qa-brain/issues"
+    "url": "https://github.com/ridvan-byr/qa-cortex/issues"
   },
   "keywords": [
     "qa",
@@ -32,12 +32,12 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:qaBrain.reviewCurrentFile",
-    "onCommand:qaBrain.reviewSelection",
-    "onCommand:qaBrain.reviewChangedFiles",
-    "onCommand:qaBrain.runTestDesign",
-    "onCommand:qaBrain.openLatestReport",
-    "onCommand:qaBrain.clearDiagnostics",
+    "onCommand:qaCortex.reviewCurrentFile",
+    "onCommand:qaCortex.reviewSelection",
+    "onCommand:qaCortex.reviewChangedFiles",
+    "onCommand:qaCortex.runTestDesign",
+    "onCommand:qaCortex.openLatestReport",
+    "onCommand:qaCortex.clearDiagnostics",
     "onLanguage:typescript",
     "onLanguage:javascript",
     "onLanguage:python"
@@ -46,37 +46,37 @@
   "contributes": {
     "commands": [
       {
-        "command": "qaBrain.reviewCurrentFile",
+        "command": "qaCortex.reviewCurrentFile",
         "title": "QA Cortex: Review Current Test File",
         "category": "QA Cortex"
       },
       {
-        "command": "qaBrain.reviewSelection",
+        "command": "qaCortex.reviewSelection",
         "title": "QA Cortex: Review Selection",
         "category": "QA Cortex"
       },
       {
-        "command": "qaBrain.reviewChangedFiles",
+        "command": "qaCortex.reviewChangedFiles",
         "title": "QA Cortex: Review Changed Files",
         "category": "QA Cortex"
       },
       {
-        "command": "qaBrain.runTestDesign",
+        "command": "qaCortex.runTestDesign",
         "title": "QA Cortex: Run Test Design Analysis",
         "category": "QA Cortex"
       },
       {
-        "command": "qaBrain.openLatestReport",
+        "command": "qaCortex.openLatestReport",
         "title": "QA Cortex: Open Latest Report",
         "category": "QA Cortex"
       },
       {
-        "command": "qaBrain.clearDiagnostics",
+        "command": "qaCortex.clearDiagnostics",
         "title": "QA Cortex: Clear Diagnostics",
         "category": "QA Cortex"
       },
       {
-        "command": "qaBrain.showFindingDetails",
+        "command": "qaCortex.showFindingDetails",
         "title": "QA Cortex: Show Finding Details",
         "category": "QA Cortex"
       }
@@ -84,29 +84,29 @@
     "menus": {
       "editor/context": [
         {
-          "command": "qaBrain.reviewSelection",
+          "command": "qaCortex.reviewSelection",
           "when": "editorHasSelection && resourceLangId =~ /^(typescript|javascript|python)$/",
           "group": "navigation@1"
         },
         {
-          "command": "qaBrain.reviewCurrentFile",
+          "command": "qaCortex.reviewCurrentFile",
           "when": "resourceLangId =~ /^(typescript|javascript|python)$/",
           "group": "navigation@2"
         },
         {
-          "command": "qaBrain.clearDiagnostics",
+          "command": "qaCortex.clearDiagnostics",
           "when": "resourceLangId =~ /^(typescript|javascript|python)$/",
           "group": "navigation@3"
         },
         {
-          "command": "qaBrain.runTestDesign",
+          "command": "qaCortex.runTestDesign",
           "when": "resourceLangId =~ /^(typescript|javascript|python)$/",
           "group": "navigation@4"
         }
       ],
       "editor/title": [
         {
-          "command": "qaBrain.reviewCurrentFile",
+          "command": "qaCortex.reviewCurrentFile",
           "when": "resourceLangId =~ /^(typescript|javascript|python)$/",
           "group": "navigation@10"
         }
@@ -115,17 +115,17 @@
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "qa-brain-sidebar",
+          "id": "qa-cortex-sidebar",
           "title": "QA Cortex",
           "icon": "assets/activity-icon.svg"
         }
       ]
     },
     "views": {
-      "qa-brain-sidebar": [
+      "qa-cortex-sidebar": [
         {
           "type": "webview",
-          "id": "qaBrain.sidebarView",
+          "id": "qaCortex.sidebarView",
           "name": "QA Cortex Dashboard"
         }
       ]
@@ -133,7 +133,7 @@
     "configuration": {
       "title": "QA Cortex",
       "properties": {
-        "qaBrain.reviewMode": {
+        "qaCortex.reviewMode": {
           "type": "string",
           "default": "rule-only",
           "enum": [
@@ -141,28 +141,28 @@
           ],
           "description": "Review mode. Supports rule-only mode."
         },
-        "qaBrain.apiProvider": {
+        "qaCortex.apiProvider": {
           "type": "string",
           "default": "Gemini",
           "enum": ["Gemini", "OpenAI", "Anthropic", "OpenRouter"],
           "description": "The LLM Provider to use as a fallback if no active native IDE Language Model is found."
         },
-        "qaBrain.apiKey": {
+        "qaCortex.apiKey": {
           "type": "string",
           "default": "",
           "description": "The API Key for the selected LLM Provider."
         },
-        "qaBrain.apiModel": {
+        "qaCortex.apiModel": {
           "type": "string",
           "default": "",
           "description": "Optional override for the model name (e.g. gpt-4o, claude-3-5-sonnet-latest). Leave blank for default."
         },
-        "qaBrain.apiEndpoint": {
+        "qaCortex.apiEndpoint": {
           "type": "string",
           "default": "",
           "description": "Optional custom API endpoint URL for the selected provider (e.g., custom OpenAI proxies or OpenRouter target)."
         },
-        "qaBrain.frameworkOverride": {
+        "qaCortex.frameworkOverride": {
           "type": "string",
           "default": "Auto",
           "enum": [
@@ -173,17 +173,17 @@
           ],
           "description": "Override framework detection. If Auto, QA Cortex will automatically detect workspace framework dependencies. If Disabled, review on save is paused."
         },
-        "qaBrain.reviewOnSave": {
+        "qaCortex.reviewOnSave": {
           "type": "boolean",
           "default": false,
           "description": "Run QA Cortex when a supported test file is saved."
         },
-        "qaBrain.openReportAfterReview": {
+        "qaCortex.openReportAfterReview": {
           "type": "boolean",
           "default": false,
           "description": "Open the generated Markdown report after each review."
         },
-        "qaBrain.includePatterns": {
+        "qaCortex.includePatterns": {
           "type": "array",
           "default": [
             "**/*.spec.ts",
@@ -199,7 +199,7 @@
           },
           "description": "File patterns eligible for QA Cortex review."
         },
-        "qaBrain.excludePatterns": {
+        "qaCortex.excludePatterns": {
           "type": "array",
           "default": [
             "**/node_modules/**",
@@ -211,28 +211,28 @@
           },
           "description": "File patterns excluded from QA Cortex review."
         },
-        "qaBrain.showDiagnostics": {
+        "qaCortex.showDiagnostics": {
           "type": "boolean",
           "default": true,
           "description": "Show QA Cortex findings in the Problems panel."
         },
-        "qaBrain.showCodeLens": {
+        "qaCortex.showCodeLens": {
           "type": "boolean",
           "default": true,
           "description": "Show QA Cortex CodeLens summary on supported test files."
         },
-        "qaBrain.showStatusBar": {
+        "qaCortex.showStatusBar": {
           "type": "boolean",
           "default": true,
           "description": "Show QA Cortex status bar item."
         },
-        "qaBrain.statusBarAttentionMode": {
+        "qaCortex.statusBarAttentionMode": {
           "type": "string",
           "default": "icon",
           "enum": ["off", "icon", "background"],
           "description": "How the status bar draws attention on errors. 'icon' changes emoji to warning, 'background' colors the entire status bar, 'off' disables indicators."
         },
-        "qaBrain.telemetryEnabled": {
+        "qaCortex.telemetryEnabled": {
           "type": "boolean",
           "default": false,
           "description": "Opt in to local anonymized QA Cortex telemetry. Disabled by default. Telemetry never records file paths, repository URIs, source code, or secrets."

@@ -1,4 +1,4 @@
-name: QA Brain Review
+name: QA Cortex Review
 
 on:
   pull_request:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   review:
-    name: QA Brain Test Review
+    name: QA Cortex Test Review
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
@@ -18,8 +18,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Run QA Brain Review
-        uses: ridvan-byr/qa-brain@main
+      - name: Run QA Cortex Review
+        uses: ridvan-byr/qa-cortex@main
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           # gemini-api-key: ${{ secrets.GEMINI_API_KEY }}  # Optional: enable LLM mode

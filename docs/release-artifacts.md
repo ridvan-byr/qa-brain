@@ -7,11 +7,11 @@ Published: Pending Marketplace update
 
 Marketplace:
 
-https://marketplace.visualstudio.com/items?itemName=qa-brain.qa-brain-vscode-client
+https://marketplace.visualstudio.com/items?itemName=qa-cortex.qa-cortex-vscode-client
 
 | Artifact | SHA256 |
 | :--- | :--- |
-| `extensions/vscode/qa-brain-vscode-client-0.1.3.vsix` | `EDC2D8D6D822EDBC3D77E7FAF94E5C1377ADDC5AC7DA04950202792E23966F92` |
+| `extensions/vscode/qa-cortex-vscode-client-0.1.3.vsix` | `5D1B975B60FEA7620D19C4174114748BA546203CDC0EAF2271DD41B801F588B3` |
 
 The VSIX file is generated locally and intentionally ignored by git. Recreate it with:
 

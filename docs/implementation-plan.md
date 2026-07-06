@@ -274,14 +274,14 @@ Bu sprintte yazilan sey sadece bir extension degil, QA Cortex'in ilk GUI/client 
 
 ### Config
 
-- `qaBrain.reviewMode`: `rule-only`
-- `qaBrain.reviewOnSave`: `false`
-- `qaBrain.openReportAfterReview`: `false`
-- `qaBrain.includePatterns`
-- `qaBrain.excludePatterns`
-- `qaBrain.showDiagnostics`
-- `qaBrain.showCodeLens`
-- `qaBrain.showStatusBar`
+- `qaCortex.reviewMode`: `rule-only`
+- `qaCortex.reviewOnSave`: `false`
+- `qaCortex.openReportAfterReview`: `false`
+- `qaCortex.includePatterns`
+- `qaCortex.excludePatterns`
+- `qaCortex.showDiagnostics`
+- `qaCortex.showCodeLens`
+- `qaCortex.showStatusBar`
 
 ### UX Flow
 

@@ -87,7 +87,7 @@ Generated: 2026-07-06T11:51:23.767Z
 - Repository: antiwork/shortest
 - File: packages/shortest/src/core/runner/test-case.ts
 - Severity: Medium
-- Evidence: `C:\tmp\qa-brain-validation-repos\shortest\packages\shortest\src\core\runner\test-case.ts`
+- Evidence: `C:\tmp\qa-cortex-validation-repos\shortest\packages\shortest\src\core\runner\test-case.ts`
 - Recommendation: Add an assertion for the expected UI state, navigation, response, or persisted data after the action.
 - Triage: TBD
 - Action: New benchmark / Rule improvement / Documented justification
@@ -97,7 +97,7 @@ Generated: 2026-07-06T11:51:23.767Z
 - Repository: antiwork/shortest
 - File: packages/shortest/tests/e2e/test-ai.ts
 - Severity: Medium
-- Evidence: `C:\tmp\qa-brain-validation-repos\shortest\packages\shortest\tests\e2e\test-ai.ts`
+- Evidence: `C:\tmp\qa-cortex-validation-repos\shortest\packages\shortest\tests\e2e\test-ai.ts`
 - Recommendation: Add an assertion for the expected UI state, navigation, response, or persisted data after the action.
 - Triage: TBD
 - Action: New benchmark / Rule improvement / Documented justification
@@ -107,7 +107,7 @@ Generated: 2026-07-06T11:51:23.767Z
 - Repository: antiwork/shortest
 - File: packages/shortest/tests/e2e/test-browser.ts
 - Severity: Medium
-- Evidence: `C:\tmp\qa-brain-validation-repos\shortest\packages\shortest\tests\e2e\test-browser.ts`
+- Evidence: `C:\tmp\qa-cortex-validation-repos\shortest\packages\shortest\tests\e2e\test-browser.ts`
 - Recommendation: Add an assertion for the expected UI state, navigation, response, or persisted data after the action.
 - Triage: TBD
 - Action: New benchmark / Rule improvement / Documented justification
@@ -117,7 +117,7 @@ Generated: 2026-07-06T11:51:23.767Z
 - Repository: antiwork/shortest
 - File: packages/shortest/tests/e2e/test-email-rendering.ts
 - Severity: Medium
-- Evidence: `C:\tmp\qa-brain-validation-repos\shortest\packages\shortest\tests\e2e\test-email-rendering.ts`
+- Evidence: `C:\tmp\qa-cortex-validation-repos\shortest\packages\shortest\tests\e2e\test-email-rendering.ts`
 - Recommendation: Add an assertion for the expected UI state, navigation, response, or persisted data after the action.
 - Triage: TBD
 - Action: New benchmark / Rule improvement / Documented justification
@@ -137,7 +137,7 @@ Generated: 2026-07-06T11:51:23.767Z
 - Repository: antiwork/shortest
 - File: packages/shortest/tests/e2e/test-helpers.ts
 - Severity: Medium
-- Evidence: `C:\tmp\qa-brain-validation-repos\shortest\packages\shortest\tests\e2e\test-helpers.ts`
+- Evidence: `C:\tmp\qa-cortex-validation-repos\shortest\packages\shortest\tests\e2e\test-helpers.ts`
 - Recommendation: Add an assertion for the expected UI state, navigation, response, or persisted data after the action.
 - Triage: TBD
 - Action: New benchmark / Rule improvement / Documented justification
@@ -147,7 +147,7 @@ Generated: 2026-07-06T11:51:23.767Z
 - Repository: antiwork/shortest
 - File: packages/shortest/tests/e2e/test-keyboard.ts
 - Severity: Medium
-- Evidence: `C:\tmp\qa-brain-validation-repos\shortest\packages\shortest\tests\e2e\test-keyboard.ts`
+- Evidence: `C:\tmp\qa-cortex-validation-repos\shortest\packages\shortest\tests\e2e\test-keyboard.ts`
 - Recommendation: Add an assertion for the expected UI state, navigation, response, or persisted data after the action.
 - Triage: TBD
 - Action: New benchmark / Rule improvement / Documented justification
@@ -157,7 +157,7 @@ Generated: 2026-07-06T11:51:23.767Z
 - Repository: antiwork/shortest
 - File: packages/shortest/tests/e2e/test-loop.ts
 - Severity: Medium
-- Evidence: `C:\tmp\qa-brain-validation-repos\shortest\packages\shortest\tests\e2e\test-loop.ts`
+- Evidence: `C:\tmp\qa-cortex-validation-repos\shortest\packages\shortest\tests\e2e\test-loop.ts`
 - Recommendation: Add an assertion for the expected UI state, navigation, response, or persisted data after the action.
 - Triage: TBD
 - Action: New benchmark / Rule improvement / Documented justification

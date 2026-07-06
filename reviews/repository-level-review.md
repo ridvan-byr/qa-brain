@@ -1,6 +1,6 @@
 # QA Cortex Repository-Level Audit Report
 
-This report presents a full-repository evaluation of the `qa-brain` test automation workspace, mapping configurations, POM architectures, fixture isolation, and split coverage across all test files.
+This report presents a full-repository evaluation of the `qa-cortex` test automation workspace, mapping configurations, POM architectures, fixture isolation, and split coverage across all test files.
 
 ---
 
@@ -12,11 +12,11 @@ This report presents a full-repository evaluation of the `qa-brain` test automat
 - **Runner Configuration**: Default local execution, standard spec matches.
 
 ### 2. Page Object Models (POMs)
-- **`LoginPage`**: Discovered inside [login.spec.ts](file:///c:/Users/ridva/Desktop/qa-brain/examples/good/login.spec.ts). Properly encapsulates page navigation and credentials entry fields using role-based locators.
-- **POM Violations**: Selectors for login are leaked inside [xpath.spec.ts](file:///c:/Users/ridva/Desktop/qa-brain/examples/bad/xpath.spec.ts) and [duplicate-code.spec.ts](file:///c:/Users/ridva/Desktop/qa-brain/examples/bad/duplicate-code.spec.ts) instead of reusing the `LoginPage` class.
+- **`LoginPage`**: Discovered inside [login.spec.ts](file:///c:/Users/ridva/Desktop/qa-cortex/examples/good/login.spec.ts). Properly encapsulates page navigation and credentials entry fields using role-based locators.
+- **POM Violations**: Selectors for login are leaked inside [xpath.spec.ts](file:///c:/Users/ridva/Desktop/qa-cortex/examples/bad/xpath.spec.ts) and [duplicate-code.spec.ts](file:///c:/Users/ridva/Desktop/qa-cortex/examples/bad/duplicate-code.spec.ts) instead of reusing the `LoginPage` class.
 
 ### 3. Custom Fixtures
-- **`CustomFixtures`**: Discovered inside [checkout.spec.ts](file:///c:/Users/ridva/Desktop/qa-brain/examples/good/checkout.spec.ts). Implements `authenticatedPage` extending `base` test to isolate authentication state per test run.
+- **`CustomFixtures`**: Discovered inside [checkout.spec.ts](file:///c:/Users/ridva/Desktop/qa-cortex/examples/good/checkout.spec.ts). Implements `authenticatedPage` extending `base` test to isolate authentication state per test run.
 
 ---
 
@@ -26,10 +26,10 @@ The repository spec files are mapped to the following business domains to evalua
 
 | Feature Domain | Spec Files Associated | File Coverage | Feature Coverage |
 | :--- | :--- | :--- | :--- |
-| **Authentication** | [login.spec.ts](file:///c:/Users/ridva/Desktop/qa-brain/examples/good/login.spec.ts)<br>[xpath.spec.ts](file:///c:/Users/ridva/Desktop/qa-brain/examples/bad/xpath.spec.ts)<br>[duplicate-code.spec.ts](file:///c:/Users/ridva/Desktop/qa-brain/examples/bad/duplicate-code.spec.ts) | - `login.spec.ts`: 80/100<br>- `xpath.spec.ts`: 20/100 | **90 / 100**<br>(POM, isolated logins, and successful end-to-end paths are covered, but negative validation remains a gap). |
-| **Search** | [search.spec.ts](file:///c:/Users/ridva/Desktop/qa-brain/examples/good/search.spec.ts)<br>[flaky.spec.ts](file:///c:/Users/ridva/Desktop/qa-brain/examples/bad/flaky.spec.ts) | - `search.spec.ts`: 95/100<br>- `flaky.spec.ts`: 30/100 | **95 / 100**<br>(Includes happy path, boundary values, Unicode locale validation, and SQLi security input validations in search.spec.ts). |
-| **Commerce / Transactions** | [checkout.spec.ts](file:///c:/Users/ridva/Desktop/qa-brain/examples/good/checkout.spec.ts) | - `checkout.spec.ts`: 90/100 | **90 / 100** |
-| **File Management** | [upload.spec.ts](file:///c:/Users/ridva/Desktop/qa-brain/examples/good/upload.spec.ts) | - `upload.spec.ts`: 95/100 | **95 / 100** |
+| **Authentication** | [login.spec.ts](file:///c:/Users/ridva/Desktop/qa-cortex/examples/good/login.spec.ts)<br>[xpath.spec.ts](file:///c:/Users/ridva/Desktop/qa-cortex/examples/bad/xpath.spec.ts)<br>[duplicate-code.spec.ts](file:///c:/Users/ridva/Desktop/qa-cortex/examples/bad/duplicate-code.spec.ts) | - `login.spec.ts`: 80/100<br>- `xpath.spec.ts`: 20/100 | **90 / 100**<br>(POM, isolated logins, and successful end-to-end paths are covered, but negative validation remains a gap). |
+| **Search** | [search.spec.ts](file:///c:/Users/ridva/Desktop/qa-cortex/examples/good/search.spec.ts)<br>[flaky.spec.ts](file:///c:/Users/ridva/Desktop/qa-cortex/examples/bad/flaky.spec.ts) | - `search.spec.ts`: 95/100<br>- `flaky.spec.ts`: 30/100 | **95 / 100**<br>(Includes happy path, boundary values, Unicode locale validation, and SQLi security input validations in search.spec.ts). |
+| **Commerce / Transactions** | [checkout.spec.ts](file:///c:/Users/ridva/Desktop/qa-cortex/examples/good/checkout.spec.ts) | - `checkout.spec.ts`: 90/100 | **90 / 100** |
+| **File Management** | [upload.spec.ts](file:///c:/Users/ridva/Desktop/qa-cortex/examples/good/upload.spec.ts) | - `upload.spec.ts`: 95/100 | **95 / 100** |
 
 ---
 
@@ -42,7 +42,7 @@ The repository spec files are mapped to the following business domains to evalua
   - Justification:
     - [x] Global mutable variable `let createdUserId` detected.
     - [x] Tests mutate and read this variable across block boundaries.
-- **Evidence**: [shared-state.spec.ts:L4-22](file:///c:/Users/ridva/Desktop/qa-brain/examples/bad/shared-state.spec.ts#L4-L22)
+- **Evidence**: [shared-state.spec.ts:L4-22](file:///c:/Users/ridva/Desktop/qa-cortex/examples/bad/shared-state.spec.ts#L4-L22)
 - **Recommendation**: Avoid global variables. Implement data-cleanup in hooks or utilize custom fixtures to isolate user setup per test.
 
 ### Finding 2: Brittle Selectors & Duplicate Authentication
@@ -52,7 +52,7 @@ The repository spec files are mapped to the following business domains to evalua
   - Justification:
     - [x] Absolute XPath prefixes matched (`xpath=//html`).
     - [x] Duplicated login sequences matched in sibling specs.
-- **Evidence**: [xpath.spec.ts](file:///c:/Users/ridva/Desktop/qa-brain/examples/bad/xpath.spec.ts) and [duplicate-code.spec.ts](file:///c:/Users/ridva/Desktop/qa-brain/examples/bad/duplicate-code.spec.ts)
+- **Evidence**: [xpath.spec.ts](file:///c:/Users/ridva/Desktop/qa-cortex/examples/bad/xpath.spec.ts) and [duplicate-code.spec.ts](file:///c:/Users/ridva/Desktop/qa-cortex/examples/bad/duplicate-code.spec.ts)
 - **Recommendation**: Refactor bad specs to reuse `LoginPage` and role-based locators.
 
 ---
