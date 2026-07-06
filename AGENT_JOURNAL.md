@@ -174,25 +174,30 @@ The next focus is extension release packaging and marketplace hardening:
   - `npm test` passed.
   - `npm run compile` from `extensions/vscode` passed.
   - `npm run package` from `extensions/vscode` passed.
-  - Latest VSIX: `extensions/vscode/qa-brain-vscode-client-0.1.0.vsix`
-  - Latest VSIX SHA256: `3D96682A19D548C05D2948FDDE111544C64AFA107148AAD7AEE8D52C0B97B364`
+  - Latest VSIX: `extensions/vscode/qa-brain-vscode-client-0.1.1.vsix`
   - `docs/release-artifacts.md` updated with the latest checksum.
 
-### Current Working Tree Notes
-- There are many uncommitted Sprint 19 / VS Code Marketplace RC changes.
-- `extensions/vscode/qa-brain-vscode-client-0.1.0.vsix` is generated locally and intentionally ignored by git.
-- `extensions/vscode/qa-brain-core/` is generated during packaging and intentionally ignored by git.
+## 2026-07-06 - Sprint 19.5 - Core Hardening & Stability
 
-### Next Manual Checks For User / Next Agent
-- Reinstall latest VSIX:
-  - `code --install-extension "C:\Users\ridva\Desktop\qa-brain\extensions\vscode\qa-brain-vscode-client-0.1.0.vsix" --force`
-- Reload VS Code with `Developer: Reload Window`.
-- Verify:
-  - Activity Bar icon renders acceptably.
-  - Dashboard opens.
-  - Right-click menu shows QA Brain commands.
-  - `Review Selection` works from context menu.
-  - Selection review shows `Selection` badge and context-limited warning.
-  - Dashboard `Review File` runs full-file review after a selection review.
-  - Dashboard `Run Design`, `Open Report`, and `Clear` work.
-- Remaining release step: VS Code Marketplace publish after clean-profile smoke test, screenshot prep, and publisher token setup.
+- **MCP Root Detection**:
+  - Resolved `ReviewPipeline` and `TestDesignEngine` root mapping issues in `src/mcp.ts` using `findNearestProjectRoot` traversing helper.
+- **LLM Normalizer**:
+  - Created standalone `src/reviewer/LLMNormalizer.ts` for sanitizing and validating raw LLM response JSON shapes.
+  - Delegated `review` and `designTests` parsing to `LLMNormalizer` in `src/reviewer/GeminiProvider.ts`.
+- **Consolidated Assertion Helper**:
+  - Created `src/utils/assertionHelper.ts` containing the shared `hasAssertionSignal` logic.
+  - Deleted 4 duplicate metot declarations in `GeminiProvider.ts`, `KnowledgeRouter.ts`, `PlaywrightAdapter.ts`, and `SeleniumAdapter.ts`.
+- **Deterministic Merge Contract**:
+  - Updated `ReviewPipeline.ts` deduplication logic to preserve highest severity, highest confidence level, and sort findings by Line -> Title.
+- **Unicode Regex Generalization**:
+  - Replaced overfit 'türkçe'/'🧴' string matches with generic non-ASCII regex check `/[^\x00-\x7F]/` in `src/scorer/ScoringEngine.ts`.
+- **Mimari Karar Günlüğü**:
+  - Created `docs/architecture-decisions.md` containing 7 ADR entries.
+- **Verification**:
+  - Root `npm test` and `node dist/src/cli.js benchmark` (Passed: 12, Failed: 0, Precision: 100%) passed successfully.
+  - VS Code client compiles and packages version `0.1.1` successfully.
+
+### Next Steps for Release / Next Agent
+- Push Sprint 19.5 changes to GitHub.
+- Publish `qa-brain-vscode-client-0.1.1.vsix` to the VS Code Marketplace.
+- Kick off Sprint 20 (Python Core & Scanner integration).

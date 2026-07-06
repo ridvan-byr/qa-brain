@@ -51,8 +51,8 @@ export class ReviewPipeline {
     console.log('5. Executing LLM Review...');
     const llmOutput = await this.llm.review(context, ruleContents);
 
-    // Deduplicate findings by title
-    const deduplicatedFindings = this.deduplicateFindings(llmOutput.findings);
+    // Deduplicate findings by title and sort deterministically
+    const deduplicatedFindings = this.deduplicateFindings(llmOutput.findings, context.targetFile.content);
 
     console.log('6. Calculating Quality & Risk Scores...');
     const score = this.scorer.calculateScore(context, deduplicatedFindings);
@@ -74,7 +74,14 @@ export class ReviewPipeline {
     };
   }
 
-  private deduplicateFindings(findings: any[]): any[] {
+  private getHigherSeverity(sev1: string, sev2: string): 'Critical' | 'High' | 'Medium' | 'Low' {
+    const order = ['Low', 'Medium', 'High', 'Critical'];
+    const idx1 = order.indexOf(sev1);
+    const idx2 = order.indexOf(sev2);
+    return (idx2 > idx1 ? sev2 : sev1) as any;
+  }
+
+  private deduplicateFindings(findings: any[], fileContent: string): any[] {
     const grouped = new Map<string, any>();
 
     for (const f of findings) {
@@ -82,21 +89,46 @@ export class ReviewPipeline {
       if (grouped.has(key)) {
         const existing = grouped.get(key)!;
         existing.evidence = `${existing.evidence}\n  ${f.evidence}`;
+        existing.severity = this.getHigherSeverity(existing.severity, f.severity);
+        existing.confidence.level = Math.max(existing.confidence.level || 0, f.confidence?.level || 0);
         existing.confidence.justification = Array.from(new Set([
-          ...existing.confidence.justification,
-          ...f.confidence.justification
+          ...(existing.confidence.justification || []),
+          ...(f.confidence?.justification || [])
         ]));
       } else {
         grouped.set(key, {
           ...f,
           confidence: {
             ...f.confidence,
-            justification: [...f.confidence.justification]
+            justification: [...(f.confidence?.justification || [])]
           }
         });
       }
     }
 
-    return Array.from(grouped.values());
+    const list = Array.from(grouped.values());
+
+    const findLineOfEvidence = (evidence: string): number => {
+      if (!evidence) return 999999;
+      const firstLineOfEvidence = evidence.split('\n')[0].trim().toLowerCase();
+      if (!firstLineOfEvidence) return 999999;
+
+      const lines = fileContent.split(/\r?\n/);
+      for (let i = 0; i < lines.length; i++) {
+        if (lines[i].toLowerCase().includes(firstLineOfEvidence)) {
+          return i + 1;
+        }
+      }
+      return 999999;
+    };
+
+    return list.sort((a, b) => {
+      const lineA = findLineOfEvidence(a.evidence);
+      const lineB = findLineOfEvidence(b.evidence);
+      if (lineA !== lineB) {
+        return lineA - lineB;
+      }
+      return a.title.localeCompare(b.title);
+    });
   }
 }

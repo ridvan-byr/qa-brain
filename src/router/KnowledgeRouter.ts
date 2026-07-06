@@ -1,6 +1,7 @@
 import type { ReviewContext } from '../types/ReviewContext';
 import type { FrameworkName, FrameworkSignal } from '../framework/types';
 import { getBaseKnowledgeFiles, getKnowledgeFilesForSignals } from '../framework/KnowledgeProfiles';
+import { hasAssertionSignal } from '../utils/assertionHelper';
 
 export class KnowledgeRouter {
   /**
@@ -125,28 +126,7 @@ export class KnowledgeRouter {
   }
 
   private hasAssertionSignal(content: string): boolean {
-    return [
-      /\bexpect\s*\(/,
-      /\bassert\w*\s*\./,
-      /\bassert\w*\s*\(/,
-      /\bEnsure\.that\s*\(/,
-      /\bCheck\.whether\s*\(/,
-      /\bactor\.attemptsTo\s*\(/,
-      /\battemptsTo\s*\(/,
-      /\bseeIf\s*\(/,
-      /\bexpectationTo\w+\s*\(/,
-      /\btoEqual\s*\(/,
-      /\btoBe\s*\(/,
-      /\btoContain\s*\(/,
-      /\btoHave\w+\s*\(/,
-      /\bresponse\.(?:ok|status)\s*\(/,
-      /\brequest\.(?:get|post|put|patch|delete)\s*\(/,
-      /\bshortest\s*\(/,
-      /\btest\.(?:skip|fixme|fail)\s*\(/,
-      /\beyes\.check\s*\(/,
-      /\bpercySnapshot\s*\(/,
-      /\.\b(?:validate|verify|assert)\w*\s*\(/,
-    ].some(pattern => pattern.test(content));
+    return hasAssertionSignal(content);
   }
 
   private isFrameworkBehaviorContext(filePath: string, content: string): boolean {

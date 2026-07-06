@@ -137,8 +137,9 @@ export class ScoringEngine {
       score -= 15;
     }
 
-    // Check Unicode/Locale
-    if (context.targetFile.detectedFeature === 'Search' && !content.includes('türkçe') && !content.includes('🧴')) {
+    // Check Unicode/Locale: checks for non-ASCII characters (e.g. Turkish characters, emojis) representing i18n search test data
+    const hasUnicodeCharacters = /[^\x00-\x7F]/.test(content);
+    if (context.targetFile.detectedFeature === 'Search' && !hasUnicodeCharacters) {
       score -= 10;
     }
 

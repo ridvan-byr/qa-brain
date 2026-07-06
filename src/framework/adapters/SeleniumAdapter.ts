@@ -6,6 +6,7 @@ import type {
   KnowledgeProfile,
 } from '../types';
 import { getBaseKnowledgeFiles, getKnowledgeFilesForSignals } from '../KnowledgeProfiles';
+import { hasAssertionSignal } from '../../utils/assertionHelper';
 
 export class SeleniumAdapter implements FrameworkAdapter {
   public readonly name = 'selenium' as const;
@@ -96,18 +97,6 @@ export class SeleniumAdapter implements FrameworkAdapter {
   }
 
   private hasAssertionSignal(content: string): boolean {
-    return [
-      /\bexpect\s*\(/,
-      /\bassert\w*\s*\./,
-      /\bassert\w*\s*\(/,
-      /\bshould\s*\./,
-      /\bchai\.expect\s*\(/,
-      /\btoEqual\s*\(/,
-      /\btoBe\s*\(/,
-      /\btoContain\s*\(/,
-      /\beyes\.check\s*\(/,
-      /\bpercySnapshot\s*\(/,
-      /\.\b(?:validate|verify|assert)\w*\s*\(/,
-    ].some(pattern => pattern.test(content));
+    return hasAssertionSignal(content);
   }
 }

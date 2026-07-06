@@ -22,6 +22,21 @@ try {
   // Fail silently, fallback to default version
 }
 
+function findNearestProjectRoot(startPath: string): string {
+  let currentDir = fs.statSync(startPath).isDirectory() ? startPath : path.dirname(startPath);
+  while (true) {
+    if (fs.existsSync(path.join(currentDir, 'package.json'))) {
+      return currentDir;
+    }
+    const parentDir = path.dirname(currentDir);
+    if (parentDir === currentDir) {
+      break;
+    }
+    currentDir = parentDir;
+  }
+  return fs.statSync(startPath).isDirectory() ? startPath : path.dirname(startPath);
+}
+
 const server = new Server({
   name: "qa-brain-mcp",
   version: appVersion
@@ -121,7 +136,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           throw new Error(`File must be a valid test file name: ${filePath}`);
         }
         
-        const pipeline = new ReviewPipeline(".", provider);
+        const projectRoot = findNearestProjectRoot(filePath);
+        const pipeline = new ReviewPipeline(projectRoot, provider);
         const { result } = await pipeline.runPipeline(filePath);
         return {
           content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
@@ -144,7 +160,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           throw new Error(`File must be a valid test file name: ${filePath}`);
         }
 
-        const engine = new TestDesignEngine(".", provider);
+        const projectRoot = findNearestProjectRoot(filePath);
+        const engine = new TestDesignEngine(projectRoot, provider);
         const designResult = await engine.designTests(filePath);
         return {
           content: [{ type: "text", text: JSON.stringify(designResult, null, 2) }]
@@ -178,7 +195,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           };
         }
 
-        const pipeline = new ReviewPipeline(".", provider);
+        const projectRoot = findNearestProjectRoot(dirPath);
+        const pipeline = new ReviewPipeline(projectRoot, provider);
         const summary = await Scanner.runScan(files, pipeline, { maxFiles, ignorePatterns });
 
         return {

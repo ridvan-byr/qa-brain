@@ -6,6 +6,7 @@ import type {
   KnowledgeProfile,
 } from '../types';
 import { getBaseKnowledgeFiles, getKnowledgeFilesForSignals } from '../KnowledgeProfiles';
+import { hasAssertionSignal } from '../../utils/assertionHelper';
 
 export class PlaywrightAdapter implements FrameworkAdapter {
   public readonly name = 'playwright';
@@ -114,24 +115,6 @@ export class PlaywrightAdapter implements FrameworkAdapter {
   }
 
   private hasAssertionSignal(content: string): boolean {
-    return [
-      /\bexpect\s*\(/,
-      /\bassert\w*\s*\./,
-      /\bassert\w*\s*\(/,
-      /\bEnsure\.that\s*\(/,
-      /\bCheck\.whether\s*\(/,
-      /\bactor\.attemptsTo\s*\(/,
-      /\battemptsTo\s*\(/,
-      /\bseeIf\s*\(/,
-      /\bexpectationTo\w+\s*\(/,
-      /\btoEqual\s*\(/,
-      /\btoBe\s*\(/,
-      /\btoContain\s*\(/,
-      /\btoHave\w+\s*\(/,
-      /\bresponse\.(?:ok|status)\s*\(/,
-      /\brequest\.(?:get|post|put|patch|delete)\s*\(/,
-      /\bshortest\s*\(/,
-      /\btest\.(?:skip|fixme|fail)\s*\(/,
-    ].some(pattern => pattern.test(content));
+    return hasAssertionSignal(content);
   }
 }

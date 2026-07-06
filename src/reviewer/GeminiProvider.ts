@@ -3,6 +3,8 @@ import type { ReviewContext } from '../types/ReviewContext';
 import type { Finding } from '../types/Finding';
 import type { ReviewResult } from '../types/ReviewResult';
 import type { TestDesignResult } from '../types/TestDesignResult';
+import { LLMNormalizer } from './LLMNormalizer';
+import { hasAssertionSignal } from '../utils/assertionHelper';
 
 try {
   require('dotenv').config();
@@ -193,16 +195,7 @@ export class GeminiProvider implements LLMProvider {
       }
 
       const parsed = JSON.parse(this.cleanJsonText(rawText));
-
-      return {
-        summary: parsed.summary || 'No summary provided.',
-        findings: parsed.findings || [],
-        strengths: parsed.strengths || [],
-        improvements: parsed.improvements || [],
-        observations: parsed.observations || [],
-        references: parsed.references || [],
-        finalVerdict: parsed.finalVerdict || 'Needs Improvement',
-      };
+      return LLMNormalizer.normalizeReviewResult(parsed);
     } catch (error) {
       console.warn(`${this.provider} API call failed, falling back to deterministic rule review.`, error);
       return this.generateRuleEngineReview(context);
@@ -328,13 +321,8 @@ Output JSON only. Do not wrap in markdown or add notes.`;
       }
 
       const parsed = JSON.parse(this.cleanJsonText(rawText));
-
-      return {
-        fileName: context.targetFile.filePath,
-        framework: context.framework?.adapterName || (context.targetFile.detectedFramework?.toLowerCase() as any) || 'unknown',
-        coverageScore: parsed.coverageScore !== undefined ? parsed.coverageScore : 50,
-        missingScenarios: parsed.missingScenarios || [],
-      };
+      const framework = context.framework?.adapterName || (context.targetFile.detectedFramework?.toLowerCase() as any) || 'unknown';
+      return LLMNormalizer.normalizeTestDesignResult(parsed, context.targetFile.filePath, framework);
     } catch (error) {
       console.warn(`${this.provider} API call failed, falling back to deterministic rule test design.`, error);
       return this.generateRuleEngineTestDesign(context);
@@ -525,31 +513,7 @@ Output JSON only. Do not wrap in markdown or add notes.`;
   }
 
   private hasAssertionSignal(content: string): boolean {
-    const assertionPatterns = [
-      /\bexpect\s*\(/,
-      /\bassert\w*\s*\./,
-      /\bassert\w*\s*\(/,
-      /\bshould\s*\./,
-      /\bchai\.expect\s*\(/,
-      /\bEnsure\.that\s*\(/,
-      /\bCheck\.whether\s*\(/,
-      /\bactor\.attemptsTo\s*\(/,
-      /\battemptsTo\s*\(/,
-      /\bseeIf\s*\(/,
-      /\bexpectationTo\w+\s*\(/,
-      /\btoEqual\s*\(/,
-      /\btoBe\s*\(/,
-      /\btoContain\s*\(/,
-      /\btoHave\w+\s*\(/,
-      /\bresponse\.(?:ok|status)\s*\(/,
-      /\brequest\.(?:get|post|put|patch|delete)\s*\(/,
-      /\bshortest\s*\(/,
-      /\btest\.(?:skip|fixme|fail)\s*\(/,
-      /\beyes\.check\s*\(/,
-      /\bpercySnapshot\s*\(/,
-      /\.\b(?:validate|verify|assert)\w*\s*\(/,
-    ];
-    return assertionPatterns.some(pattern => pattern.test(content));
+    return hasAssertionSignal(content);
   }
 
   private isFrameworkBehaviorContext(filePath: string, content: string): boolean {
