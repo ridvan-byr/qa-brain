@@ -220,122 +220,172 @@ export class QaCortexSidebarViewProvider implements vscode.WebviewViewProvider {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QA Cortex Dashboard</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    
     body {
       background-color: var(--vscode-sideBar-background);
       color: var(--vscode-sideBar-foreground);
-      font-family: var(--vscode-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif);
+      font-family: 'Inter', var(--vscode-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
       font-size: var(--vscode-font-size, 13px);
       margin: 0;
-      padding: 12px;
+      padding: 14px;
       box-sizing: border-box;
+      line-height: 1.4;
+      -webkit-font-smoothing: antialiased;
     }
     .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--vscode-panel-border);
     }
     .title {
-      font-size: 1.2em;
-      font-weight: bold;
+      font-size: 1.15em;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      background: linear-gradient(135deg, var(--vscode-sideBar-foreground), var(--vscode-textLink-foreground, #3794ff));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
     .framework-badge {
-      font-size: 0.85em;
-      background-color: var(--vscode-badge-background);
-      color: var(--vscode-badge-foreground);
-      padding: 2px 6px;
-      border-radius: 3px;
+      font-size: 0.8em;
+      font-weight: 600;
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      color: #ffffff;
+      padding: 3px 8px;
+      border-radius: 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
     .tabs {
       display: flex;
-      flex-wrap: wrap;
       border-bottom: 1px solid var(--vscode-panel-border);
       margin-bottom: 16px;
-      gap: 2px;
+      gap: 12px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .tabs::-webkit-scrollbar {
+      display: none;
     }
     .tab {
-      padding: 6px 10px;
+      padding: 8px 4px;
       cursor: pointer;
       border-bottom: 2px solid transparent;
       color: var(--vscode-tab-inactiveForeground);
       font-weight: 500;
-      font-size: 0.95em;
+      font-size: 0.9em;
+      white-space: nowrap;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .tab:hover {
+      color: var(--vscode-tab-activeForeground);
     }
     .tab.active {
       border-bottom-color: var(--vscode-button-background);
       color: var(--vscode-tab-activeForeground);
-      font-weight: bold;
+      font-weight: 600;
     }
     .tab-content {
       display: none;
+      animation: fadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .tab-content.active {
       display: block;
     }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
     .no-review {
       text-align: center;
-      padding: 30px 15px;
-      opacity: 0.8;
+      padding: 40px 20px;
+      opacity: 0.85;
+      background-color: var(--vscode-editor-background);
+      border: 1px dashed var(--vscode-panel-border);
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+    .no-review p {
+      margin-bottom: 16px;
+      font-size: 0.95em;
     }
     .file-meta {
-      font-size: 0.9em;
+      font-size: 0.85em;
       opacity: 0.85;
-      margin: -6px 0 10px;
-      word-break: break-word;
+      margin: -8px 0 12px;
+      word-break: break-all;
+      background-color: var(--vscode-sideBarSectionHeader-background, rgba(0, 0, 0, 0.1));
+      padding: 6px 10px;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
     .scope-badge {
-      display: inline-block;
       background-color: var(--vscode-badge-background);
       color: var(--vscode-badge-foreground);
-      padding: 1px 6px;
-      border-radius: 3px;
-      margin-left: 4px;
-      font-size: 0.85em;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.8em;
+      font-weight: 600;
     }
     .action-row {
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
-      margin: 0 0 14px;
+      margin: 0 0 16px;
     }
     .context-note {
       border-left: 3px solid var(--vscode-editorWarning-foreground, #cca700);
-      background-color: var(--vscode-inputValidation-warningBackground, transparent);
+      background-color: var(--vscode-inputValidation-warningBackground, rgba(204, 167, 0, 0.1));
       color: var(--vscode-sideBar-foreground);
-      padding: 8px 10px;
-      margin-bottom: 12px;
-      font-size: 0.9em;
+      padding: 10px 12px;
+      margin-bottom: 14px;
+      font-size: 0.85em;
+      border-radius: 0 6px 6px 0;
     }
     .card {
       background-color: var(--vscode-editor-background);
       border: 1px solid var(--vscode-panel-border);
-      border-radius: 4px;
-      padding: 10px;
-      margin-bottom: 10px;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
       box-sizing: border-box;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .card.clickable {
       cursor: pointer;
     }
     .card.clickable:hover {
       border-color: var(--vscode-focusBorder);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
     .card-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      font-weight: bold;
-      margin-bottom: 6px;
-      gap: 6px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      gap: 8px;
     }
     .card-title {
-      font-size: 1.05em;
+      font-size: 1.02em;
+      line-height: 1.3;
     }
     .severity-badge {
-      font-size: 0.8em;
-      padding: 1px 4px;
-      border-radius: 2px;
+      font-size: 0.75em;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
       white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
     }
     .severity-badge.critical, .severity-badge.high, .severity-badge.high-crit {
       background-color: var(--vscode-testing-iconFailedColor, #a1260d);
@@ -351,30 +401,36 @@ export class QaCortexSidebarViewProvider implements vscode.WebviewViewProvider {
     }
     .card-meta {
       font-size: 0.85em;
-      opacity: 0.8;
-      margin-bottom: 6px;
+      opacity: 0.75;
+      margin-bottom: 8px;
+      font-family: var(--vscode-editor-font-family, monospace);
+      word-break: break-all;
     }
     .card-rec {
       font-size: 0.9em;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
+      line-height: 1.4;
     }
     .card-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
-      margin-top: 6px;
+      margin-top: 8px;
     }
     .btn {
       background-color: var(--vscode-button-background);
       color: var(--vscode-button-foreground);
       border: none;
-      padding: 4px 8px;
+      padding: 6px 12px;
       cursor: pointer;
-      border-radius: 2px;
+      border-radius: 6px;
       font-size: 0.85em;
+      font-weight: 600;
+      transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .btn:hover {
       background-color: var(--vscode-button-hoverBackground);
+      transform: translateY(-0.5px);
     }
     .btn.secondary {
       background-color: var(--vscode-button-secondaryBackground, #3a3d41);
@@ -383,30 +439,74 @@ export class QaCortexSidebarViewProvider implements vscode.WebviewViewProvider {
     .btn.secondary:hover {
       background-color: var(--vscode-button-secondaryHoverBackground, #45494e);
     }
-    .metric-row {
+    
+    /* Premium Visual Metric Cards */
+    .metric-card {
+      margin-bottom: 14px;
+      background-color: var(--vscode-editor-background);
+      border: 1px solid var(--vscode-panel-border);
+      border-radius: 8px;
+      padding: 12px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+    .metric-header {
       display: flex;
       justify-content: space-between;
-      padding: 8px 0;
-      border-bottom: 1px dashed var(--vscode-panel-border);
+      align-items: center;
+      margin-bottom: 8px;
+      font-weight: 600;
     }
     .metric-name {
-      font-weight: 500;
+      font-size: 0.95em;
     }
     .metric-value {
-      font-weight: bold;
+      font-size: 1.05em;
       display: flex;
       gap: 6px;
       align-items: center;
     }
+    .progress-bar-track {
+      height: 6px;
+      background-color: var(--vscode-panel-border);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .progress-bar-fill.quality {
+      background: linear-gradient(90deg, #10b981, #059669);
+    }
+    .progress-bar-fill.risk {
+      background: linear-gradient(90deg, #f59e0b, #ef4444);
+    }
+    .progress-bar-fill.maintainability {
+      background: linear-gradient(90deg, #8b5cf6, #3b82f6);
+    }
+    
+    .metric-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px dashed var(--vscode-panel-border);
+      align-items: center;
+    }
     .trend {
-      font-size: 0.9em;
-      font-weight: normal;
+      font-size: 0.85em;
+      font-weight: 600;
+      padding: 1px 4px;
+      border-radius: 4px;
     }
     .trend.up {
-      color: #388a34;
+      color: #10b981;
+      background-color: rgba(16, 185, 129, 0.1);
     }
     .trend.down {
-      color: #a1260d;
+      color: #ef4444;
+      background-color: rgba(239, 68, 68, 0.1);
     }
     .trend.neutral {
       opacity: 0.5;
@@ -414,25 +514,42 @@ export class QaCortexSidebarViewProvider implements vscode.WebviewViewProvider {
     .template-box {
       background-color: var(--vscode-textCodeBlock-background, #1e1e1e);
       border: 1px solid var(--vscode-panel-border);
-      border-radius: 3px;
-      padding: 6px;
-      margin-top: 6px;
+      border-radius: 6px;
+      padding: 10px;
+      margin-top: 10px;
       font-family: var(--vscode-editor-font-family, monospace);
       font-size: 0.85em;
       overflow-x: auto;
       white-space: pre;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
     }
     .list-heading {
-      font-weight: bold;
-      margin-top: 15px;
-      margin-bottom: 6px;
-      font-size: 1.05em;
+      font-weight: 700;
+      margin-top: 20px;
+      margin-bottom: 8px;
+      font-size: 1.02em;
       border-bottom: 1px solid var(--vscode-panel-border);
-      padding-bottom: 4px;
+      padding-bottom: 6px;
+      color: var(--vscode-sideBar-foreground);
     }
     .insight-item {
-      padding: 6px 0;
+      padding: 8px 10px;
       border-bottom: 1px solid var(--vscode-panel-border);
+      font-size: 0.9em;
+      line-height: 1.45;
+      background-color: var(--vscode-editor-background);
+      border-radius: 6px;
+      margin-bottom: 6px;
+    }
+    /* Settings panel inputs styled */
+    #settings-panel input, #settings-panel select {
+      border: 1px solid var(--vscode-input-border) !important;
+      border-radius: 6px !important;
+      padding: 6px 8px !important;
+    }
+    #settings-panel input:focus, #settings-panel select:focus {
+      outline: none !important;
+      border-color: var(--vscode-focusBorder) !important;
     }
   </style>
 </head>
@@ -815,7 +932,17 @@ export class QaCortexSidebarViewProvider implements vscode.WebviewViewProvider {
       // 3. Render Coverage Tab (Test Design Coverage)
       const coverageView = document.getElementById('coverage-view');
       const covScore = state.testDesign ? state.testDesign.coverageScore : 100;
-      let covHtml = contextNote + \`<div style="font-size: 1.1em; font-weight: bold; margin-bottom: 12px;">Test Design Coverage Score: \${covScore}%</div>\`;
+      let covHtml = contextNote + \`
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-name">Overall Coverage Score</span>
+            <span class="metric-value">\${covScore}%</span>
+          </div>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill maintainability" style="width: \${covScore}%"></div>
+          </div>
+        </div>
+      \`;
 
       if (state.testDesignCoverage && state.testDesignCoverage.length > 0) {
         covHtml += \`<div class="list-heading">Technique Breakdown</div>\`;
@@ -834,26 +961,43 @@ export class QaCortexSidebarViewProvider implements vscode.WebviewViewProvider {
       // 4. Render Metrics Tab
       const metricsView = document.getElementById('metrics-view');
       metricsView.innerHTML = contextNote + \`
-        <div class="metric-row">
-          <span class="metric-name">Quality Score</span>
-          <span class="metric-value">
-            \${state.qualityScore}
-            \${renderDelta(state.qualityDelta, true)}
-          </span>
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-name">Quality Score</span>
+            <span class="metric-value">
+              \${state.qualityScore}%
+              \${renderDelta(state.qualityDelta, true)}
+            </span>
+          </div>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill quality" style="width: \${state.qualityScore}%"></div>
+          </div>
         </div>
-        <div class="metric-row">
-          <span class="metric-name">Risk Score</span>
-          <span class="metric-value">
-            \${state.riskScore}
-            \${renderDelta(state.riskDelta, false)}
-          </span>
+        
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-name">Risk Score</span>
+            <span class="metric-value">
+              \${state.riskScore}%
+              \${renderDelta(state.riskDelta, false)}
+            </span>
+          </div>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill risk" style="width: \${state.riskScore}%"></div>
+          </div>
         </div>
-        <div class="metric-row">
-          <span class="metric-name">Maintainability</span>
-          <span class="metric-value">
-            \${state.maintainabilityScore}
-            \${renderDelta(state.maintainabilityDelta, true)}
-          </span>
+        
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-name">Maintainability Score</span>
+            <span class="metric-value">
+              \${state.maintainabilityScore}%
+              \${renderDelta(state.maintainabilityDelta, true)}
+            </span>
+          </div>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill maintainability" style="width: \${state.maintainabilityScore}%"></div>
+          </div>
         </div>
       \`;
 
