@@ -8,12 +8,13 @@ import { ContextBuilder } from './loader/ContextBuilder.js';
 import { KnowledgeRouter } from './router/KnowledgeRouter.js';
 import { Scanner } from './core/Scanner.js';
 import { AIInstructionExporter } from './core/AIInstructionExporter.js';
+import { SarifExporter } from './reporter/SarifExporter.js';
 import * as fs from 'fs';
 import * as path from 'path';
 
 function printHelp(): void {
   console.log(`
-QA Cortex CLI - v0.1.0
+QA Cortex CLI - v0.2.0
 Usage: qa-cortex <command> [options]
 
 Commands:
@@ -25,16 +26,18 @@ Commands:
 Options:
   -h, --help        Show this help message.
   -v, --version     Show version number.
-  --format <type>   Output format: markdown (default) or json.
+  --format <type>   Output format: markdown (default), json, or sarif.
   --output <dir>    Directory to save reports (default: reviews/).
   --provider <name> LLM provider name (default: gemini).
   --config <path>   Path to configuration file.
   --verbose         Print verbose debug information during run.
+  --fail-under <score> Fail the review run (exit code 1) if quality score drops below this threshold.
 
 Examples:
   qa-cortex review benchmarks/playwright/locator/xpath.spec.ts
   qa-cortex review benchmarks/playwright/
   qa-cortex review . --verbose
+  qa-cortex review . --fail-under 70
   qa-cortex benchmark
   qa-cortex validate validation/repositories.json
   qa-cortex init-rules .
@@ -50,7 +53,7 @@ async function run(): Promise<void> {
   }
 
   if (args.includes('--version') || args.includes('-v')) {
-    console.log('QA Cortex v0.1.0');
+    console.log('QA Cortex v0.2.0');
     process.exit(0);
   }
 
@@ -92,6 +95,7 @@ async function run(): Promise<void> {
     let providerName = 'gemini';
     let configPath = '';
     let verbose = false;
+    let failUnder: number | undefined = undefined;
 
     // Helper parser
     for (let i = 2; i < args.length; i++) {
@@ -100,6 +104,7 @@ async function run(): Promise<void> {
       else if (args[i] === '--provider') providerName = args[++i];
       else if (args[i] === '--config') configPath = args[++i];
       else if (args[i] === '--verbose') verbose = true;
+      else if (args[i] === '--fail-under') failUnder = Number(args[++i]);
     }
 
     // Load configuration file if present
@@ -112,6 +117,7 @@ async function run(): Promise<void> {
         if (config.provider) providerName = config.provider;
         if (config.verbose) verbose = config.verbose;
         if (config.ignore) ignorePatterns = config.ignore;
+        if (config.failUnder !== undefined) failUnder = Number(config.failUnder);
       } catch (err: any) {
         console.error(`Warning: Failed to parse config file: ${err.message}`);
       }
@@ -162,17 +168,25 @@ async function run(): Promise<void> {
     };
     let totalCriticalFindings = 0;
     let index = 1;
+    let minQualityScore = 100;
+    const allResults: { file: string; content: string; result: any }[] = [];
 
     for (const file of filesToScan) {
       const relPath = path.relative('.', file);
       console.log(`[${index}/${filesToScan.length}] ${relPath} analiz ediliyor...`);
       
+      const fileContent = fs.readFileSync(file, 'utf8');
       const startTime = Date.now();
       const { report, result } = await pipeline.runPipeline(file);
       const durationMs = Date.now() - startTime;
 
+      allResults.push({ file, content: fileContent, result });
+
+      if (result.score.qualityScore < minQualityScore) {
+        minQualityScore = result.score.qualityScore;
+      }
+
       if (verbose) {
-        const fileContent = fs.readFileSync(file, 'utf8');
         const context = new ContextBuilder(new RepositoryLoader('.')).buildContext(file, fileContent);
         const mappedRules = new KnowledgeRouter().routeKnowledge(context);
         
@@ -197,16 +211,27 @@ async function run(): Promise<void> {
         fs.mkdirSync(outputDir, { recursive: true });
       }
 
-      const fileBase = path.basename(file).replace(/\.(ts|js)$/, '');
+      const fileBase = path.basename(file).replace(/\.[^.]+$/, '');
       if (format === 'json') {
         const outPath = path.join(outputDir, `${fileBase}-review.json`);
         fs.writeFileSync(outPath, JSON.stringify(result, null, 2), 'utf8');
-      } else {
+      } else if (format === 'markdown') {
         const outPath = path.join(outputDir, `${fileBase}-review.md`);
         fs.writeFileSync(outPath, report, 'utf8');
       }
 
       index++;
+    }
+
+    // Save consolidated SARIF report if requested
+    if (format === 'sarif') {
+      if (!fs.existsSync(outputDir)) {
+        fs.mkdirSync(outputDir, { recursive: true });
+      }
+      const sarifContent = SarifExporter.generateSarif(allResults);
+      const outPath = path.join(outputDir, `qa-cortex-report.sarif`);
+      fs.writeFileSync(outPath, sarifContent, 'utf8');
+      console.log(`Saved consolidated SARIF report to: ${outPath}`);
     }
 
     // Print Repository Summary
@@ -222,6 +247,15 @@ async function run(): Promise<void> {
     console.log(`==========================================`);
 
     // Determine exit code
+    if (failUnder !== undefined) {
+      if (minQualityScore < failUnder) {
+        console.error(`\nError: Quality gate failed! Minimum quality score is ${minQualityScore}, which is below the threshold of ${failUnder}.`);
+        process.exit(1);
+      }
+      console.log(`\nQuality gate passed! Minimum quality score is ${minQualityScore} (threshold: ${failUnder}).`);
+      process.exit(0);
+    }
+
     const hasPoorOrCritical = verdictStats.Poor > 0 || totalCriticalFindings > 0;
     process.exit(hasPoorOrCritical ? 1 : 0);
   }
