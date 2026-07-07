@@ -7,6 +7,7 @@ import { RepositoryLoader } from './loader/RepositoryLoader.js';
 import { ContextBuilder } from './loader/ContextBuilder.js';
 import { KnowledgeRouter } from './router/KnowledgeRouter.js';
 import { Scanner } from './core/Scanner.js';
+import { AIInstructionExporter } from './core/AIInstructionExporter.js';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -19,6 +20,7 @@ Commands:
   review <path>     Scan a test file or directory for Playwright rules and score it.
   benchmark         Run the calibration benchmark suite.
   validate [config] Run real repository validation from a validation config.
+  init-rules [path] Export QA Cortex rules to AI editor configuration files (.cursorrules, .agents/AGENTS.md, etc).
 
 Options:
   -h, --help        Show this help message.
@@ -35,6 +37,7 @@ Examples:
   qa-cortex review . --verbose
   qa-cortex benchmark
   qa-cortex validate validation/repositories.json
+  qa-cortex init-rules .
   `);
 }
 
@@ -61,6 +64,18 @@ async function run(): Promise<void> {
   if (command === 'validate') {
     await ValidationRunner.run(args[1]);
     process.exit(0);
+  }
+
+  if (command === 'init-rules') {
+    const targetPath = args[1] || '.';
+    try {
+      AIInstructionExporter.exportRules(targetPath);
+      console.log('\nRules successfully exported! AI editors (Cursor, Windsurf, Copilot, Antigravity) opened in the target project will now follow QA Cortex standards.');
+      process.exit(0);
+    } catch (err: any) {
+      console.error(`Error: Failed to export rules: ${err.message}`);
+      process.exit(1);
+    }
   }
 
   if (command === 'review') {

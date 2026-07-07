@@ -12,5 +12,5 @@
     "ignoreDeprecations": "6.0",
     "types": ["node"]
   },
-  "exclude": ["node_modules", "dist"]
+  "exclude": ["node_modules", "dist", "validation/repos"]
 }
