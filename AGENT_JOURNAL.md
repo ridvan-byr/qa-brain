@@ -300,4 +300,32 @@ Aşağıdaki maddeler, projenin sonraki aşamalarında yapılacak genel iyileşt
    - **Yenilenen Sekme (Tab) Tasarımı**: Aktif sekmeyi gösteren şık bir alt çizgi geçiş efekti ve tab içerikleri için pürüzsüz geçiş (fade-in) animasyonları eklenecek.
    - **Ayarlar Paneli Estetiği**: ⚙️ Butonuna basıldığında açılan panelin formu; yuvarlatılmış köşeler, odaklanıldığında (focus) parlayan kenarlıklar ve temiz yerleşim ile premium bir kart haline getirilecek.
 
+---
+
+## 2026-07-07 - Antigravity (Gemini 2.5 Flash)
+
+### 1. Completed Sprint 23: Python Selenium Adapter & Test Design Support — [TAMAMLANDI]
+- **Core Engine & Python Integration**:
+  - Implemented `PythonSeleniumAdapter` with 4 local deterministic rules (XPath locator detection, hardcoded wait checks, missing webdriver shutdown, and missing assertions).
+  - Resolved false positives on comment lines by cleaning and stripping comments before running regexes in `PythonSeleniumAdapter.buildSignals`.
+  - Added file extension checks to `PlaywrightAdapter.detect()` and `SeleniumAdapter.detect()` to prevent JS/TS adapters from claiming `.py` files.
+- **CLI & Review Runner**:
+  - Activated CLI Python reviews by removing the Python review bypass block in `cli.ts`.
+  - Removed VS Code extension checks blocking `.py` reviews in `reviewRunner.ts` and `extension.ts`.
+- **Test Design Engine prompt**:
+  - Updated `designTests` system instructions in `GeminiProvider.ts` to output Python/pytest boilerplates for `.py` target files.
+- **Validation Run & calibration**:
+  - Cloned and tested real open-source Python Selenium repositories, successfully capturing real test smells (like `time.sleep` in `python-selenium-framework-example`).
+  - Validation metrics published in [selenium-calibration-report.md](file:///c:/Users/ridva/Desktop/qa-brain/validation/reports/selenium-calibration-report.md).
+- **SemVer Versioning**:
+  - Standardized all codebase metadata by bumping version to `0.2.0` in both root `package.json` and extension `package.json`.
+  - Updated `ROADMAP.md` and `CHANGELOG.md`.
+
+### 2. Next Roadmap Strategy (v1.0.0 - Production Release Gates)
+The next milestone focuses on production-ready quality gates and reporting interfaces:
+- **Quality Gates CLI Integration**: Fail pipeline builds (Exit Code 1) if quality score drops below configurable thresholds.
+- **SARIF Report Format Export**: Allow CI pipelines to output findings in standardized Static Analysis Results Interchange Format (SARIF) to integrate with GitHub Advanced Security.
+- **VS Code Extension Webview UI Polish**: Implement the premium styling guidelines (gradients, HSL colors, Google fonts Inter/Outfit, progress indicators, settings card transitions) in the sidebar Webview to wow the user.
+
+
 
