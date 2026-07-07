@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.0
+
+- Added **Python Selenium Adapter** support for pytest framework, including 4 deterministic rule engines (XPath locators, hardcoded waits, missing driver teardowns, and missing assertion statements).
+- Implemented file extension-based framework filtering to prevent Node.js Playwright/Selenium adapters from claiming Python files.
+- Integrated Python support into `cli.ts` review execution, enabling direct CLI audits for `.py` test files.
+- Updated `GeminiProvider` test design prompts to dynamically output Python/pytest code templates for `.py` specs.
+- Removed VS Code extension checks blocking `.py` files, enabling both "Review" and "Test Design" sidebar tab features for Python.
+- Configured real open-source Python Selenium repository calibration in the validation suite, confirming zero-false-positive detection on real-world test suites.
+
 ## 0.1.0
 
 - First official release of **QA Cortex** (formerly QA Brain).

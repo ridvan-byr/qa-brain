@@ -11,7 +11,7 @@ This roadmap details completed sprints and outlines the path toward building the
 | Milestone | Focus | Status |
 | :--- | :--- | :--- |
 | v0.1.0 | Core stability, Vitest migration, GitHub Actions CI, and generalization | Completed |
-| v0.2.0 | Python Adapter and calibration on Python repositories | Planned |
+| v0.2.0 | Python Adapter and calibration on Python repositories | Completed |
 | v1.0.0 | Stable release gates and production-ready quality gates | Planned |
 
 Framework support labels are defined in `docs/framework-support-policy.md`.
@@ -292,13 +292,18 @@ Architecture Freeze milestone before Sprint 13C:
 - [x] Updated `Scanner.ts` isTestFile regex to eliminate false positive matching of library source files (e.g., `test-case.ts`).
 - [x] Updated `README.md` to accurately define Rule Engine vs LLM performance characteristics.
 
+### ✅ Sprint 23 — Python Adapter & Calibration
+- **Objective**: Build Python Selenium adapter, calibrate on open-source Python repos, and activate Python review/scoring in CLI and VS Code.
+- **Status**: Completed.
+- [x] Created `PythonSeleniumAdapter` with 4 local deterministic rules (time.sleep, By.XPATH, missing quit, missing assert).
+- [x] Implemented file extension-based framework isolation to prevent JS/TS adapters from claiming Python files.
+- [x] Updated `GeminiProvider` test design prompts to generate pytest + Selenium templates for `.py` files.
+- [x] Enabled single-file review CLI validation for Python files and verified 9/9 Vitest unit tests pass.
+- [x] Calibrated Python Selenium rules on real-world repositories (e.g. `python-selenium-framework-example`), successfully flagging real test smells.
+
 ---
 
 ## Future Roadmap
-
-### ⬜ Sprint 23 — Python Adapter & Calibration
-- **Objective**: Build Python Selenium adapter, calibrate on open-source Python repos, and activate Python review/scoring in CLI and VS Code.
-- **Status**: Planned.
 
 ### ⬜ v1.0.0 — Production Release Gates
 - **Objective**: Deliver configurable quality gates, SARIF export, and baseline comparison features.
