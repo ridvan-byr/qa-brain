@@ -31,16 +31,25 @@ export class GeminiProvider implements LLMProvider {
   private async makeRequest(url: string, headers: Record<string, string>, body: any): Promise<any> {
     const payload = JSON.stringify(body);
     if (typeof globalThis.fetch === 'function') {
-      const response = await globalThis.fetch(url, {
-        method: 'POST',
-        headers,
-        body: payload,
-      });
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`HTTP Error ${response.status}: ${errorText}`);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 20000);
+      try {
+        const response = await globalThis.fetch(url, {
+          method: 'POST',
+          headers,
+          body: payload,
+          signal: controller.signal,
+        });
+        clearTimeout(timeoutId);
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`HTTP Error ${response.status}: ${errorText}`);
+        }
+        return await response.json();
+      } catch (err) {
+        clearTimeout(timeoutId);
+        throw err;
       }
-      return await response.json();
     } else {
       const https = require('https');
       const { URL } = require('url');
@@ -51,6 +60,7 @@ export class GeminiProvider implements LLMProvider {
           hostname: parsedUrl.hostname,
           port: parsedUrl.port || 443,
           path: parsedUrl.pathname + parsedUrl.search,
+          timeout: 20000,
           headers: {
             ...headers,
             'Content-Length': Buffer.byteLength(payload),
@@ -73,6 +83,10 @@ export class GeminiProvider implements LLMProvider {
           });
         });
         req.on('error', reject);
+        req.on('timeout', () => {
+          req.destroy();
+          reject(new Error('Request timed out after 20 seconds'));
+        });
         req.write(payload);
         req.end();
       });
@@ -126,17 +140,26 @@ export class GeminiProvider implements LLMProvider {
           const response = await this.makeRequest(this.endpoint, headers, body);
           rawText = response.choices?.[0]?.message?.content || '{}';
         } else {
-          const { GoogleGenAI } = await import('@google/genai');
-          const ai = new GoogleGenAI({ apiKey: this.apiKey });
-          const response = await ai.models.generateContent({
-            model: modelName,
-            contents: userPrompt,
-            config: {
-              systemInstruction,
-              responseMimeType: 'application/json',
+          const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${this.apiKey}`;
+          const headers = {
+            'Content-Type': 'application/json'
+          };
+          const body = {
+            contents: [
+              {
+                role: 'user',
+                parts: [{ text: userPrompt }]
+              }
+            ],
+            systemInstruction: {
+              parts: [{ text: systemInstruction }]
             },
-          });
-          rawText = response.text || '{}';
+            generationConfig: {
+              responseMimeType: 'application/json'
+            }
+          };
+          const response = await this.makeRequest(url, headers, body);
+          rawText = response.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
         }
       } else if (this.provider === 'OpenAI') {
         const modelName = this.model || 'gpt-4o';
@@ -252,17 +275,26 @@ Output JSON only. Do not wrap in markdown or add notes.`;
           const response = await this.makeRequest(this.endpoint, headers, body);
           rawText = response.choices?.[0]?.message?.content || '{}';
         } else {
-          const { GoogleGenAI } = await import('@google/genai');
-          const ai = new GoogleGenAI({ apiKey: this.apiKey });
-          const response = await ai.models.generateContent({
-            model: modelName,
-            contents: userPrompt,
-            config: {
-              systemInstruction,
-              responseMimeType: 'application/json',
+          const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${this.apiKey}`;
+          const headers = {
+            'Content-Type': 'application/json'
+          };
+          const body = {
+            contents: [
+              {
+                role: 'user',
+                parts: [{ text: userPrompt }]
+              }
+            ],
+            systemInstruction: {
+              parts: [{ text: systemInstruction }]
             },
-          });
-          rawText = response.text || '{}';
+            generationConfig: {
+              responseMimeType: 'application/json'
+            }
+          };
+          const response = await this.makeRequest(url, headers, body);
+          rawText = response.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
         }
       } else if (this.provider === 'OpenAI') {
         const modelName = this.model || 'gpt-4o';

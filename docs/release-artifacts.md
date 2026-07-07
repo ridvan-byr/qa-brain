@@ -11,7 +11,7 @@ https://marketplace.visualstudio.com/items?itemName=qa-cortex.qa-cortex-vscode-c
 
 | Artifact | SHA256 |
 | :--- | :--- |
-| `extensions/vscode/qa-cortex-vscode-client-0.1.0.vsix` | `D8F143571B826E1960F77857B01E7B724A4894C864D4C07832E1FC4465D4FF43` |
+| `extensions/vscode/qa-cortex-vscode-client-0.1.0.vsix` | `11AC633B9D4ADDAD9AD43723A523A4F11F00B98527B027B63B7F9280926BBF65` |
 
 The VSIX file is generated locally and intentionally ignored by git. Recreate it with:
 

@@ -52,13 +52,25 @@ ${context.targetFile.content}
         finalVerdict: parsed.finalVerdict || 'Needs Improvement',
       };
     } catch (err: any) {
-      console.warn("VS Code Language Model review failed, falling back to local deterministic rules:", err);
-      vscode.window.showWarningMessage(`QA Cortex: Falling back to local rules. (Reason: ${err.message || err})`);
+      console.warn("VS Code Language Model review failed, falling back to direct API or local rules:", err);
+      
+      const config = vscode.workspace.getConfiguration('qaCortex');
+      const apiProvider = config.get<string>('apiProvider', 'Gemini');
+      const apiKeyVal = config.get<string>('apiKey', '');
+      const hasApiKey = apiKeyVal || process.env.QA_CORTEX_API_KEY || process.env.GEMINI_API_KEY;
+
+      if (hasApiKey) {
+        vscode.window.showInformationMessage(`QA Cortex: VS Code Language Model not available. Falling back to direct API provider (${apiProvider}).`);
+      } else {
+        vscode.window.showWarningMessage(`QA Cortex: Falling back to local rules. (Reason: ${err.message || err})`);
+      }
       
       const result = await this.geminiFallback.review(context, ruleContents);
       result.observations = [
         ...(result.observations || []),
-        `VS Code Language Model fell back to local rules. (Reason: ${err.message || err})`
+        hasApiKey 
+          ? `Fell back to direct API provider (${apiProvider}) because VS Code Language Model was unavailable.`
+          : `VS Code Language Model fell back to local rules. (Reason: ${err.message || err})`
       ];
       return result;
     }
@@ -120,8 +132,19 @@ ${context.targetFile.content}
         missingScenarios: parsed.missingScenarios || [],
       };
     } catch (err: any) {
-      console.warn("VS Code Language Model test design failed, falling back to local deterministic rules:", err);
-      vscode.window.showWarningMessage(`QA Cortex: Falling back to local rules for Test Design. (Reason: ${err.message || err})`);
+      console.warn("VS Code Language Model test design failed, falling back to direct API or local rules:", err);
+      
+      const config = vscode.workspace.getConfiguration('qaCortex');
+      const apiProvider = config.get<string>('apiProvider', 'Gemini');
+      const apiKeyVal = config.get<string>('apiKey', '');
+      const hasApiKey = apiKeyVal || process.env.QA_CORTEX_API_KEY || process.env.GEMINI_API_KEY;
+
+      if (hasApiKey) {
+        vscode.window.showInformationMessage(`QA Cortex: VS Code Language Model not available. Falling back to direct API provider (${apiProvider}) for Test Design.`);
+      } else {
+        vscode.window.showWarningMessage(`QA Cortex: Falling back to local rules for Test Design. (Reason: ${err.message || err})`);
+      }
+      
       return this.geminiFallback.designTests(context, ruleContents);
     }
   }

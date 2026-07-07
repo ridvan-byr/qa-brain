@@ -4,20 +4,58 @@ import type { TestDesignResult, MissingScenario } from '../types/TestDesignResul
 
 export class LLMNormalizer {
   public static normalizeReviewResult(parsed: any): Omit<ReviewResult, 'score'> {
-    const rawFindings = Array.isArray(parsed?.findings) ? parsed.findings : [];
+    const rawFindings = Array.isArray(parsed) ? parsed : (Array.isArray(parsed?.findings) ? parsed.findings : []);
     const normalizedFindings: Finding[] = rawFindings.map((f: any) => {
-      const confidence = f?.confidence || {};
+      const getVal = (obj: any, keys: string[]): string => {
+        if (!obj) return '';
+        for (const k of keys) {
+          const lowerK = k.toLowerCase();
+          for (const actualKey of Object.keys(obj)) {
+            if (actualKey.toLowerCase() === lowerK) {
+              const val = obj[actualKey];
+              if (typeof val === 'string') return val.trim();
+              if (typeof val === 'number') return String(val);
+            }
+          }
+        }
+        return '';
+      };
+
+      const ruleIdVal = getVal(f, ['ruleId', 'rule_id', 'ruleName', 'rule_name']);
+      const titleVal = getVal(f, ['title', 'ruleName', 'rule_name', 'ruleId', 'rule_id']) || 'Unspecified Code Issue';
+      const descriptionVal = getVal(f, ['description', 'message']);
+      const severityVal = getVal(f, ['severity']);
+      const evidenceVal = getVal(f, ['evidence', 'codeEvidence', 'snippet', 'code_evidence']);
+      const recommendationVal = getVal(f, ['recommendation', 'suggestion', 'codeCorrection', 'code_correction', 'suggestedAction', 'suggested_action']);
+
+      let confidenceLevel = 80;
+      let justification: string[] = [];
+      const rawConfidence = f?.confidence;
+      if (typeof rawConfidence === 'number') {
+        confidenceLevel = rawConfidence;
+      } else if (rawConfidence && typeof rawConfidence === 'object') {
+        const levelVal = rawConfidence.level;
+        if (typeof levelVal === 'number') {
+          confidenceLevel = levelVal;
+        } else if (typeof levelVal === 'string') {
+          confidenceLevel = parseInt(levelVal, 10) || 80;
+        }
+        if (Array.isArray(rawConfidence.justification)) {
+          justification = rawConfidence.justification.map(String);
+        }
+      }
+
       return {
-        ruleId: typeof f?.ruleId === 'string' ? f.ruleId.trim() : undefined,
-        category: this.normalizeFindingCategory(f?.category, f?.title),
-        title: typeof f?.title === 'string' ? f.title.trim() : 'Unspecified Code Issue',
-        description: typeof f?.description === 'string' ? f.description.trim() : '',
-        severity: this.normalizeSeverity(f?.severity),
-        evidence: typeof f?.evidence === 'string' ? f.evidence.trim() : '',
-        recommendation: typeof f?.recommendation === 'string' ? f.recommendation.trim() : '',
+        ruleId: ruleIdVal || undefined,
+        category: this.normalizeFindingCategory(getVal(f, ['category']), titleVal),
+        title: titleVal,
+        description: descriptionVal,
+        severity: this.normalizeSeverity(severityVal),
+        evidence: evidenceVal,
+        recommendation: recommendationVal,
         confidence: {
-          level: typeof confidence.level === 'number' ? confidence.level : 80,
-          justification: Array.isArray(confidence.justification) ? confidence.justification.map(String) : []
+          level: confidenceLevel,
+          justification
         }
       };
     });
@@ -34,20 +72,46 @@ export class LLMNormalizer {
   }
 
   public static normalizeTestDesignResult(parsed: any, filePath: string, framework: string): TestDesignResult {
-    const rawScenarios = Array.isArray(parsed?.missingScenarios) ? parsed.missingScenarios : [];
+    const rawScenarios = Array.isArray(parsed) ? parsed : (Array.isArray(parsed?.missingScenarios) ? parsed.missingScenarios : []);
     const normalizedScenarios: MissingScenario[] = rawScenarios.map((s: any) => {
-      const template = s?.suggestedTemplate || {};
+      const getVal = (obj: any, keys: string[]): string => {
+        if (!obj) return '';
+        for (const k of keys) {
+          const lowerK = k.toLowerCase();
+          for (const actualKey of Object.keys(obj)) {
+            if (actualKey.toLowerCase() === lowerK) {
+              const val = obj[actualKey];
+              if (typeof val === 'string') return val.trim();
+              if (typeof val === 'number') return String(val);
+            }
+          }
+        }
+        return '';
+      };
+
+      const idVal = getVal(s, ['id', 'scenarioId', 'scenario_id']);
+      const titleVal = getVal(s, ['title', 'name']) || 'Missing Scenario';
+      const categoryVal = getVal(s, ['category']);
+      const descriptionVal = getVal(s, ['description', 'whatToVerify', 'what_to_verify']);
+      const explanationVal = getVal(s, ['explanation', 'qaRationale', 'qa_rationale', 'reason']);
+      const criticalityVal = getVal(s, ['criticality', 'severity']);
+      const evidenceVal = getVal(s, ['evidence', 'evidenceLine', 'evidence_line']);
+
+      const template = s?.suggestedTemplate || s?.template || {};
+      const playwrightTemplate = getVal(template, ['playwright', 'playwrightTemplate', 'playwright_template']);
+      const seleniumTemplate = getVal(template, ['selenium', 'seleniumTemplate', 'selenium_template']);
+
       return {
-        id: typeof s?.id === 'string' ? s.id.trim() : `TS_${Math.random().toString(36).substring(2, 7).toUpperCase()}`,
-        title: typeof s?.title === 'string' ? s.title.trim() : 'Missing Scenario',
-        category: this.normalizeCategory(s?.category),
-        description: typeof s?.description === 'string' ? s.description.trim() : '',
-        explanation: typeof s?.explanation === 'string' ? s.explanation.trim() : '',
-        criticality: this.normalizeCriticality(s?.criticality),
-        evidence: typeof s?.evidence === 'string' ? s.evidence.trim() : '',
+        id: idVal || `TS_${Math.random().toString(36).substring(2, 7).toUpperCase()}`,
+        title: titleVal,
+        category: this.normalizeCategory(categoryVal),
+        description: descriptionVal,
+        explanation: explanationVal,
+        criticality: this.normalizeCriticality(criticalityVal),
+        evidence: evidenceVal,
         suggestedTemplate: {
-          playwright: typeof template.playwright === 'string' ? template.playwright : '',
-          selenium: typeof template.selenium === 'string' ? template.selenium : ''
+          playwright: playwrightTemplate,
+          selenium: seleniumTemplate
         }
       };
     });

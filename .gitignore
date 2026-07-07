@@ -5,3 +5,4 @@ dist/
 extensions/vscode/out/
 extensions/vscode/qa-cortex-core/
 extensions/vscode/*.vsix
+.venv/

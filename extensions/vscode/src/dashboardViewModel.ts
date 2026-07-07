@@ -176,14 +176,7 @@ export class DashboardViewModel {
   }
 
   public getCurrentState(): DashboardState | undefined {
-    if (this.currentState) {
-      const config = vscode.workspace.getConfiguration('qaCortex');
-      const apiProvider = config.get<string>('apiProvider', 'Gemini');
-      this.currentState.apiKey = config.get<string>('apiKey', '') || (apiProvider === 'Gemini' ? process.env.GEMINI_API_KEY : '') || process.env.QA_CORTEX_API_KEY || '';
-      this.currentState.apiProvider = apiProvider;
-      this.currentState.apiModel = config.get<string>('apiModel', '');
-      this.currentState.apiEndpoint = config.get<string>('apiEndpoint', '');
-    }
+    this.populateConfigFields();
     return this.currentState;
   }
 
@@ -320,9 +313,21 @@ export class DashboardViewModel {
 
   private notifyStateChanged(): void {
     if (this.currentState) {
+      this.populateConfigFields();
       for (const cb of this.onStateChangedCallbacks) {
         cb(this.currentState);
       }
+    }
+  }
+
+  private populateConfigFields(): void {
+    if (this.currentState) {
+      const config = vscode.workspace.getConfiguration('qaCortex');
+      const apiProvider = config.get<string>('apiProvider', 'Gemini');
+      this.currentState.apiKey = config.get<string>('apiKey', '') || (apiProvider === 'Gemini' ? process.env.GEMINI_API_KEY : '') || process.env.QA_CORTEX_API_KEY || '';
+      this.currentState.apiProvider = apiProvider;
+      this.currentState.apiModel = config.get<string>('apiModel', '');
+      this.currentState.apiEndpoint = config.get<string>('apiEndpoint', '');
     }
   }
 }

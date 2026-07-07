@@ -1,6 +1,6 @@
 {
   "maxFilesPerRepository": 50,
-  "runGeminiComparison": false,
+  "runGeminiComparison": true,
   "outputDir": "validation/reports",
   "ignorePatterns": [
     "**/node_modules/**",
